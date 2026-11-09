@@ -209,17 +209,17 @@
                     </div>
                 </div>
 
-                <!-- Faculty Management Card (Admin Only) -->
+                <!-- Faculty Management Card (Admin & Teacher View) -->
                 <div id="admin-teachers-card" class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
                     <div class="flex items-center justify-between mb-3">
                         <h2 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center">
                             <i class="fa-solid fa-chalkboard-user text-indigo-600 mr-2"></i> Faculty Directory
                         </h2>
-                        <button onclick="openAddTeacherModal()" class="text-xs bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-lg font-semibold hover:bg-indigo-100 transition">
+                        <button id="btn-add-teacher-top" onclick="openAddTeacherModal()" class="text-xs bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-lg font-semibold hover:bg-indigo-100 transition">
                             <i class="fa-solid fa-user-plus mr-1"></i> Add Faculty
                         </button>
                     </div>
-                    <div id="teachers-list-container" class="space-y-2">
+                    <div id="teachers-list-container" class="space-y-2.5">
                         <!-- Dynamic Teachers List -->
                     </div>
                 </div>
@@ -231,7 +231,7 @@
                             <i class="fa-solid fa-trophy text-amber-500 mr-2"></i> Exam & Results
                         </h2>
                         <button id="btn-add-result" onclick="openMarksEntryModal()" class="text-xs bg-amber-50 text-amber-700 px-2.5 py-1 rounded-lg font-semibold hover:bg-amber-100 transition">
-                            <i class="fa-solid fa-pen-to-square mr-1"></i> Enter Test Marks
+                            <i class="fa-solid fa-pen-to-square mr-1"></i> Enter Marks
                         </button>
                     </div>
                     <div id="result-list-container" class="space-y-2.5">
@@ -262,7 +262,7 @@
                 </div>
 
                 <!-- Search and Board Filter -->
-                <div class="space-y-2">
+                <div id="student-filter-controls" class="space-y-2">
                     <div class="relative">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-400"></i>
                         <input type="text" id="student-search-input" oninput="renderStudents()" placeholder="Search by student name, roll or phone..." class="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
@@ -273,7 +273,6 @@
                         <button onclick="filterBoard('CBSE')" class="board-chip px-3 py-1 rounded-full bg-white text-slate-600 border border-slate-200 whitespace-nowrap font-medium text-[11px]">CBSE</button>
                         <button onclick="filterBoard('ICSE')" class="board-chip px-3 py-1 rounded-full bg-white text-slate-600 border border-slate-200 whitespace-nowrap font-medium text-[11px]">ICSE</button>
                         <button onclick="filterBoard('UP Board')" class="board-chip px-3 py-1 rounded-full bg-white text-slate-600 border border-slate-200 whitespace-nowrap font-medium text-[11px]">UP Board</button>
-                        <button onclick="filterBoard('Other')" class="board-chip px-3 py-1 rounded-full bg-white text-slate-600 border border-slate-200 whitespace-nowrap font-medium text-[11px]">Other</button>
                     </div>
                 </div>
 
@@ -283,11 +282,11 @@
                 </div>
             </section>
 
-            <!-- TAB 3: ATTENDANCE & ABSENT ALERT -->
+            <!-- TAB 3: ATTENDANCE & MONTHLY CHART -->
             <section id="tab-attendance" class="hidden space-y-3 pt-2">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Attendance</h2>
+                        <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Attendance Register</h2>
                         <p class="text-[10px] text-slate-500" id="att-date-display"></p>
                     </div>
                     <button id="btn-save-attendance" onclick="saveAttendance()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-xl shadow transition">
@@ -295,8 +294,33 @@
                     </button>
                 </div>
 
-                <!-- Class Filter -->
-                <div class="flex space-x-1.5 overflow-x-auto pb-1 hide-scrollbar text-xs">
+                <!-- Monthly Attendance Analytics Card -->
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] uppercase font-bold text-slate-400">Monthly Attendance Rate</span>
+                            <h3 id="att-summary-title" class="text-sm font-bold text-slate-800">November 2026</h3>
+                        </div>
+                        <div class="text-right">
+                            <span id="att-percentage-badge" class="text-lg font-black text-emerald-600">92%</span>
+                            <p class="text-[9px] text-slate-400">Overall Present</p>
+                        </div>
+                    </div>
+                    <!-- Visual Progress Bar -->
+                    <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden flex">
+                        <div id="bar-present" class="bg-emerald-500 h-full" style="width: 85%" title="Present"></div>
+                        <div id="bar-leave" class="bg-amber-400 h-full" style="width: 7%" title="Leave"></div>
+                        <div id="bar-absent" class="bg-rose-500 h-full" style="width: 8%" title="Absent"></div>
+                    </div>
+                    <div class="grid grid-cols-3 text-center text-[10px] font-semibold pt-1">
+                        <span class="text-emerald-600"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Present: <b id="stat-present-days">22 Days</b></span>
+                        <span class="text-amber-500"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Leave: <b id="stat-leave-days">2 Days</b></span>
+                        <span class="text-rose-500"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Absent: <b id="stat-absent-days">2 Days</b></span>
+                    </div>
+                </div>
+
+                <!-- Class Filter (Hidden for logged-in parents) -->
+                <div id="attendance-class-chips" class="flex space-x-1.5 overflow-x-auto pb-1 hide-scrollbar text-xs">
                     <button onclick="selectAttendanceClass('10th')" class="att-cls-chip px-3 py-1 rounded-full bg-slate-900 text-white font-semibold text-[11px]">10th</button>
                     <button onclick="selectAttendanceClass('9th')" class="att-cls-chip px-3 py-1 rounded-full bg-white text-slate-600 border border-slate-200 font-semibold text-[11px]">9th</button>
                     <button onclick="selectAttendanceClass('8th')" class="att-cls-chip px-3 py-1 rounded-full bg-white text-slate-600 border border-slate-200 font-semibold text-[11px]">8th</button>
@@ -306,24 +330,29 @@
 
                 <!-- Attendance Row List -->
                 <div id="attendance-list-container" class="space-y-2">
-                    <!-- Dynamic Attendance Rows with WhatsApp Alert -->
+                    <!-- Dynamic Attendance Rows -->
                 </div>
             </section>
 
-            <!-- TAB 4: FEES & WHATSAPP SLIPS -->
+            <!-- TAB 4: FEES, DIRECT UPI & SCAN QR -->
             <section id="tab-fees" class="hidden space-y-3 pt-2">
                 <div class="flex items-center justify-between">
-                    <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Fees & WhatsApp Slips</h2>
+                    <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Fees & UPI Payment</h2>
+                    <!-- Scan QR Button -->
+                    <button onclick="openUpiQrModal()" class="text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold px-3 py-1.5 rounded-xl shadow-sm flex items-center gap-1.5 hover:bg-indigo-100 transition">
+                        <i class="fa-solid fa-qrcode text-sm"></i> <span>Scan QR to Pay</span>
+                    </button>
                 </div>
 
-                <div class="bg-indigo-900 text-white p-4 rounded-2xl shadow-md">
-                    <span class="text-[10px] text-indigo-200 uppercase font-semibold">Total Outstanding Balance</span>
-                    <h3 id="fee-total-due-large" class="text-2xl font-black mt-1">₹0</h3>
-                    <p class="text-[10px] text-indigo-300 mt-1">Click the WhatsApp icon next to any student to send an instant fee receipt/slip.</p>
+                <!-- Pending Fee Hero Banner -->
+                <div class="bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 text-white p-4 rounded-2xl shadow-md border border-indigo-800/40">
+                    <span class="text-[10px] text-indigo-300 uppercase font-bold tracking-wider">Pending Fee Due</span>
+                    <h3 id="fee-total-due-large" class="text-2xl font-black mt-0.5">₹0</h3>
+                    <p class="text-[11px] text-slate-300 mt-2">Pay fees securely via UPI (PhonePe, Google Pay, Paytm) or WhatsApp slip verification[cite: 2].</p>
                 </div>
 
-                <div id="fees-list-container" class="space-y-2">
-                    <!-- Dynamic Student Fee Cards with WhatsApp Slip Trigger -->
+                <div id="fees-list-container" class="space-y-2.5">
+                    <!-- Dynamic Student Fee Cards with Direct UPI & WhatsApp Slip -->
                 </div>
             </section>
 
@@ -368,7 +397,88 @@
 
         <!-- ================= MODALS ================= -->
 
-        <!-- MODAL: ENTER TEST MARKS (FEATURE) -->
+        <!-- MODAL: SCAN QR TO PAY (UPI) -->
+        <div id="modal-upi-qr" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+            <div class="bg-white w-full max-w-xs rounded-3xl p-5 shadow-2xl text-center relative border border-slate-100">
+                <button onclick="closeModal('modal-upi-qr')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+
+                <div class="mb-3">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">Instant Fee Payment</span>
+                    <h3 class="text-sm font-extrabold text-slate-800 mt-1">SHIKSHA Coaching Institute</h3>
+                    <p class="text-[10px] text-slate-500">Scan using any UPI App</p>
+                </div>
+
+                <!-- Official Coaching QR Code Display -->
+                <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 inline-block shadow-inner mb-3">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi://pay?pa=shikshajhs@ptyes%26pn=SHIKSHA%20Coaching%20Institute%26cu=INR" alt="SHIKSHA UPI QR Code" class="w-48 h-48 mx-auto rounded-lg">
+                </div>
+
+                <div class="bg-slate-100 p-2.5 rounded-xl text-left flex items-center justify-between mb-3">
+                    <div>
+                        <p class="text-[9px] uppercase font-bold text-slate-400">UPI ID</p>
+                        <p class="text-xs font-mono font-bold text-slate-800 select-all">shikshajhs@ptyes</p>
+                    </div>
+                    <button onclick="copyUpiId()" class="text-xs bg-white text-indigo-600 px-2 py-1 rounded border border-slate-200 font-semibold shadow-sm hover:bg-indigo-50">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+
+                <p class="text-[10px] text-slate-400">Supported Apps: GPay, PhonePe, Paytm, BHIM</p>
+            </div>
+        </div>
+
+        <!-- MODAL: ADD / EDIT TEACHER (WITH SALARY, PHOTO & DETAILS) -->
+        <div id="modal-teacher" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+            <div class="bg-white w-full max-w-sm rounded-2xl p-5 shadow-2xl max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-sm font-bold text-slate-800"><i class="fa-solid fa-chalkboard-user mr-1.5 text-indigo-600"></i> Faculty Registration</h3>
+                    <button onclick="closeModal('modal-teacher')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <form onsubmit="handleSaveTeacher(event)" class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Teacher Full Name</label>
+                        <input type="text" id="inp-teach-name" required placeholder="e.g. Science Faculty Sir" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Department / Subject</label>
+                            <input type="text" id="inp-teach-dept" required placeholder="e.g. Science (Class 10th)" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Monthly Salary (₹)</label>
+                            <input type="number" id="inp-teach-salary" placeholder="e.g. 15000" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Photo Image URL (Optional)</label>
+                        <input type="url" id="inp-teach-photo" placeholder="https://example.com/photo.jpg" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Qualification</label>
+                            <input type="text" id="inp-teach-qual" placeholder="e.g. M.Sc, B.Ed" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Joining Date</label>
+                            <input type="date" id="inp-teach-doj" class="w-full border border-slate-300 rounded-xl px-2 py-2 text-xs">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Teacher Mobile (Login ID)</label>
+                        <input type="tel" id="inp-teach-phone" maxlength="10" required placeholder="10-digit mobile number" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Portal Login Password</label>
+                        <input type="password" id="inp-teach-pwd" required placeholder="Set password" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
+                    </div>
+                    <button type="submit" id="btn-save-teacher-submit" class="w-full py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-xs shadow mt-2">Save Faculty Record</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MODAL: ENTER TEST MARKS -->
         <div id="modal-test-marks" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
             <div class="bg-white w-full max-w-sm rounded-2xl p-5 shadow-2xl max-h-[90vh] overflow-y-auto">
                 <div class="flex justify-between items-center mb-3">
@@ -378,63 +488,29 @@
                 <form onsubmit="handleSaveMarks(event)" class="space-y-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Test Title / Chapter</label>
-                        <input type="text" id="inp-test-title" required placeholder="e.g. Unit Test - Light & Electricity" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                        <input type="text" id="inp-test-title" required placeholder="e.g. Unit Test - Physics" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Class</label>
-                            <select id="inp-test-class" onchange="loadStudentsForMarks(this.value)" class="w-full border border-slate-300 rounded-xl px-2 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                            <select id="inp-test-class" onchange="loadStudentsForMarks(this.value)" class="w-full border border-slate-300 rounded-xl px-2 py-2 text-xs">
                                 <option value="10th">Class 10th</option>
                                 <option value="9th">Class 9th</option>
                                 <option value="8th">Class 8th</option>
                                 <option value="7th">Class 7th</option>
                                 <option value="6th">Class 6th</option>
-                                <option value="5th">Class 5th</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Max Marks</label>
-                            <input type="number" id="inp-test-max" value="50" required class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                            <input type="number" id="inp-test-max" value="50" required class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
                         </div>
                     </div>
-
                     <div class="pt-2 border-t border-slate-100">
-                        <label class="block text-xs font-bold text-slate-700 mb-2">Student Marks</label>
-                        <div id="marks-students-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
-                            <!-- Dynamic student inputs -->
-                        </div>
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Student Marks List</label>
+                        <div id="marks-students-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
                     </div>
-
                     <button type="submit" class="w-full py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-xs shadow mt-2">Publish Results</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- MODAL: ADD NEW TEACHER / FACULTY (ADMIN ONLY) -->
-        <div id="modal-teacher" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-            <div class="bg-white w-full max-w-sm rounded-2xl p-5 shadow-2xl">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-sm font-bold text-slate-800"><i class="fa-solid fa-chalkboard-user mr-1.5 text-indigo-600"></i> Register Faculty Member</h3>
-                    <button onclick="closeModal('modal-teacher')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-                <form onsubmit="handleSaveTeacher(event)" class="space-y-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Teacher Full Name</label>
-                        <input type="text" id="inp-teach-name" required placeholder="e.g. Science Faculty Sir" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Department / Subject</label>
-                        <input type="text" id="inp-teach-dept" required placeholder="e.g. Science (Class 9th & 10th)" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Teacher Mobile (Login ID)</label>
-                        <input type="tel" id="inp-teach-phone" maxlength="10" required placeholder="10-digit mobile number" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Portal Login Password</label>
-                        <input type="password" id="inp-teach-pwd" required placeholder="Set password" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <button type="submit" id="btn-save-teacher-submit" class="w-full py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-xs shadow mt-2">Authorize & Save Teacher</button>
                 </form>
             </div>
         </div>
@@ -449,11 +525,11 @@
                 <form onsubmit="saveNewAdminCredentials(event)" class="space-y-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">New Admin Mobile</label>
-                        <input type="tel" id="new-admin-phone" maxlength="10" required class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                        <input type="tel" id="new-admin-phone" maxlength="10" required class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">New Password</label>
-                        <input type="password" id="new-admin-pwd" required minlength="4" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                        <input type="password" id="new-admin-pwd" required minlength="4" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
                     </div>
                     <button type="submit" class="w-full py-2 bg-indigo-600 text-white rounded-xl font-bold text-xs shadow">Update Admin Credentials</button>
                 </form>
@@ -471,12 +547,12 @@
                     <input type="hidden" id="edit-stu-id">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Student Full Name</label>
-                        <input type="text" id="inp-stu-name" required placeholder="e.g. Rohit Sharma" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                        <input type="text" id="inp-stu-name" required placeholder="e.g. Rohit Sharma" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Class</label>
-                            <select id="inp-stu-class" class="w-full border border-slate-300 rounded-xl px-2 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                            <select id="inp-stu-class" class="w-full border border-slate-300 rounded-xl px-2 py-2 text-xs">
                                 <option value="10th">Class 10th</option>
                                 <option value="9th">Class 9th</option>
                                 <option value="8th">Class 8th</option>
@@ -491,7 +567,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Board</label>
-                            <select id="inp-stu-board" class="w-full border border-slate-300 rounded-xl px-2 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                            <select id="inp-stu-board" class="w-full border border-slate-300 rounded-xl px-2 py-2 text-xs">
                                 <option value="CBSE">CBSE</option>
                                 <option value="ICSE">ICSE</option>
                                 <option value="UP Board">UP Board</option>
@@ -501,15 +577,15 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Registered Student / Parent Mobile</label>
-                        <input type="tel" id="inp-stu-phone" required maxlength="10" placeholder="10-digit mobile number" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                        <input type="tel" id="inp-stu-phone" required maxlength="10" placeholder="10-digit mobile number" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Portal Password</label>
-                        <input type="password" id="inp-stu-pwd" required placeholder="Assign password" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                        <input type="password" id="inp-stu-pwd" required placeholder="Assign password" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Monthly Pending Fee (₹)</label>
-                        <input type="number" id="inp-stu-fee" value="0" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                        <input type="number" id="inp-stu-fee" value="0" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
                     </div>
                     <button type="submit" id="btn-save-student-submit" class="w-full py-2.5 bg-indigo-600 text-white font-bold rounded-xl text-xs shadow mt-2">Save & Register Student</button>
                 </form>
@@ -523,6 +599,7 @@
         // ================= CONFIGURATION =================
         // अपना Google Apps Script Web App URL यहाँ कोट्स के बीच पेस्ट करें
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxip1ha_ESMt3plLxHR8TWnt3RafngNlzoZQcl-ZgbjieapIUKy36MB3UMm-XB-gdDE/exec"; 
+        const COACHING_UPI_ID = "shikshajhs@ptyes"; // Coaching Institute UPI[cite: 2]
 
         const STATE = {
             adminUser: JSON.parse(localStorage.getItem('shiksha_admin_user') || JSON.stringify({
@@ -542,20 +619,19 @@
             results: JSON.parse(localStorage.getItem('shiksha_results') || JSON.stringify([
                 { id: 1, title: 'Weekly Assessment', class: '10th', subject: 'Science', maxMarks: 50, date: 'Recent', topStudent: 'Marks Published' }
             ])),
-            fees: JSON.parse(localStorage.getItem('shiksha_fees') || '[]'),
             materials: JSON.parse(localStorage.getItem('shiksha_materials') || JSON.stringify([
                 { id: 1, title: 'Class 10th - Science Formula Sheet', class: '10th', subject: 'Science', link: 'https://drive.google.com' }
             ])),
             loginRoleSelect: 'admin'
         };
 
-        // Helper: Strip spaces, +91, and non-digits to match standard 10-digit phone
         const cleanPhone = (val) => String(val || '').replace(/\D/g, '').slice(-10);
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedSession = sessionStorage.getItem('shiksha_auth_role');
+            const savedPhone = sessionStorage.getItem('shiksha_auth_phone');
             if (savedSession) {
-                authorizeRole(savedSession);
+                authorizeRole(savedSession, savedPhone);
             } else {
                 setLoginRole('admin');
             }
@@ -569,7 +645,6 @@
             renderMaterials();
             document.getElementById('att-date-display').innerText = new Date().toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
             
-            // Sync from Google Sheets immediately
             fetchCloudDatabase();
         });
 
@@ -600,6 +675,7 @@
                     renderStudents();
                     renderTeachers();
                     renderFees();
+                    renderAttendanceList();
                     updateKpis();
                 }
             } catch (err) {
@@ -624,13 +700,34 @@
             }
         }
 
-        // ================= FEATURE 1: WHATSAPP FEE RECEIPT SLIP =================
-        function sendWhatsAppFeeReceipt(studentId) {
-            const student = STATE.students.find(s => s.id === studentId);
-            if (!student) {
-                alert("Student record not found!");
+        // ================= FEATURE 1: DIRECT UPI PAYMENT & QR MODAL =================
+        function initiateDirectUpiPay(studentName, amount) {
+            const numAmount = parseFloat(amount) || 0;
+            if (numAmount <= 0) {
+                alert("No pending fees for payment.");
                 return;
             }
+            // Standard UPI Deep-link for mobile payment apps
+            const note = `SHIKSHA Coaching Fee - ${studentName}`;
+            const upiUrl = `upi://pay?pa=${COACHING_UPI_ID}&pn=SHIKSHA%20Coaching%20Institute&am=${numAmount}&cu=INR&tn=${encodeURIComponent(note)}`;[cite: 2]
+            
+            // Redirects mobile browser to installed UPI Apps (GPay / PhonePe / Paytm / BHIM)
+            window.location.href = upiUrl;
+        }
+
+        function openUpiQrModal() {
+            document.getElementById('modal-upi-qr').classList.remove('hidden');
+        }
+
+        function copyUpiId() {
+            navigator.clipboard.writeText(COACHING_UPI_ID);[cite: 2]
+            alert("UPI ID copied: " + COACHING_UPI_ID);[cite: 2]
+        }
+
+        // ================= FEATURE 2: WHATSAPP FEE RECEIPT SLIP =================
+        function sendWhatsAppFeeReceipt(studentId) {
+            const student = STATE.students.find(s => s.id === studentId);
+            if (!student) return;
 
             const cleanNumber = cleanPhone(student.phone);
             const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -645,14 +742,15 @@ _Fee Notification & Receipt Slip_
 *Class & Board:* ${student.class} (${student.board})
 *Pending Balance:* ₹${pendingAmount}
 --------------------------------
-_Please contact the coaching administration for payment confirmation._
-*Location:* Panchwati, Jhansi (U.P.)`;
+*Pay via UPI:* ${COACHING_UPI_ID}
+_Please contact administration for confirmation._
+*Location:* Panchwati, Jhansi (U.P.)`;[cite: 2]
 
             const whatsappUrl = `https://wa.me/91${cleanNumber}?text=${encodeURIComponent(textMessage)}`;
             window.open(whatsappUrl, '_blank');
         }
 
-        // ================= FEATURE 2: TEST MARKS ENTRY ENGINE =================
+        // ================= FEATURE 3: TEST MARKS ENTRY ENGINE =================
         function openMarksEntryModal() {
             document.getElementById('modal-test-marks').classList.remove('hidden');
             loadStudentsForMarks(document.getElementById('inp-test-class').value);
@@ -706,7 +804,7 @@ _Please contact the coaching administration for payment confirmation._
                 subject: 'Exam Assessment',
                 maxMarks: maxMarks,
                 date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
-                topStudent: scores.length > 0 ? `${scores.length} Marks Recorded` : 'Published',
+                topStudent: scores.length > 0 ? `${scores.length} Records` : 'Published',
                 scores: scores
             };
 
@@ -717,28 +815,7 @@ _Please contact the coaching administration for payment confirmation._
             alert("Test marks recorded successfully!");
         }
 
-        // ================= FEATURE 3: ATTENDANCE & WHATSAPP ABSENT ALERT =================
-        function triggerAbsentWhatsAppAlert(studentId) {
-            const student = STATE.students.find(s => s.id === studentId);
-            if (!student) return;
-
-            const cleanNumber = cleanPhone(student.phone);
-            const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-
-            const textMessage = 
-`*SHIKSHA COACHING INSTITUTE*
-_Attendance Notification_
---------------------------------
-Dear Parent,
-Your child *${student.name}* (Class ${student.class}) was marked *ABSENT* on *${dateStr}*.
-
-Please ensure regular attendance for academic consistency.
---------------------------------
-_Administration Office, SHIKSHA Coaching_`;
-
-            window.open(`https://wa.me/91${cleanNumber}?text=${encodeURIComponent(textMessage)}`, '_blank');
-        }
-
+        // ================= FEATURE 4: ATTENDANCE (STUDENT ONLY SEES HIS OWN) =================
         function markAtt(id, status, btn) {
             if (STATE.currentRole === 'parent') {
                 alert('Parents have view-only permissions.');
@@ -763,32 +840,77 @@ _Administration Office, SHIKSHA Coaching_`;
             }
         }
 
+        function triggerAbsentWhatsAppAlert(studentId) {
+            const student = STATE.students.find(s => s.id === studentId);
+            if (!student) return;
+
+            const cleanNumber = cleanPhone(student.phone);
+            const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+
+            const textMessage = 
+`*SHIKSHA COACHING INSTITUTE*
+_Attendance Notification_
+--------------------------------
+Dear Parent,
+Your child *${student.name}* (Class ${student.class}) was marked *ABSENT* on *${dateStr}*.
+
+Please ensure regular attendance for academic consistency.
+--------------------------------
+_Administration Office, SHIKSHA Coaching_`;
+
+            window.open(`https://wa.me/91${cleanNumber}?text=${encodeURIComponent(textMessage)}`, '_blank');
+        }
+
         function renderAttendanceList() {
             const container = document.getElementById('attendance-list-container');
+            const classChips = document.getElementById('attendance-class-chips');
+            const summaryTitle = document.getElementById('att-summary-title');
             container.innerHTML = '';
-            const classStudents = STATE.students.filter(s => s.class === STATE.selectedAttClass);
 
-            if (classStudents.length === 0) {
-                container.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">No students found in Class ${STATE.selectedAttClass}.</div>`;
+            let list = [];
+
+            // STRICT FILTER: If logged in as Parent/Student, ONLY show their child
+            if (STATE.currentRole === 'parent' && STATE.currentUserPhone) {
+                if (classChips) classChips.classList.add('hidden');
+                list = STATE.students.filter(s => cleanPhone(s.phone) === cleanPhone(STATE.currentUserPhone));
+                if (list[0]) {
+                    summaryTitle.innerText = `${list[0].name} (Class ${list[0].class})`;
+                }
+            } else {
+                if (classChips) classChips.classList.remove('hidden');
+                list = STATE.students.filter(s => s.class === STATE.selectedAttClass);
+                summaryTitle.innerText = `Class ${STATE.selectedAttClass} Attendance Overview`;
+            }
+
+            if (list.length === 0) {
+                container.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">No registered attendance records found.</div>`;
                 return;
             }
 
-            classStudents.forEach(s => {
+            list.forEach(s => {
                 const row = document.createElement('div');
                 row.className = "bg-white p-3 rounded-xl border border-slate-200 flex items-center justify-between";
                 row.innerHTML = `
                     <div>
                         <p class="text-xs font-bold text-slate-800">${s.name}</p>
-                        <p class="text-[10px] text-slate-400">${s.board} &bull; ${s.phone}</p>
+                        <p class="text-[10px] text-slate-400">Class ${s.class} (${s.board}) &bull; ${s.phone}</p>
                     </div>
-                    <div class="flex items-center space-x-1.5">
-                        <button onclick="markAtt('${s.id}', 'P', this)" class="att-btn w-7 h-7 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-700">P</button>
-                        <button onclick="markAtt('${s.id}', 'A', this)" class="att-btn w-7 h-7 rounded-lg text-xs font-bold bg-slate-100 text-slate-500">A</button>
-                        <button onclick="markAtt('${s.id}', 'L', this)" class="att-btn w-7 h-7 rounded-lg text-xs font-bold bg-slate-100 text-slate-500">L</button>
-                        <button id="absent-alert-${s.id}" onclick="triggerAbsentWhatsAppAlert('${s.id}')" title="Send WhatsApp Absent Notice" class="hidden text-xs w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 flex items-center justify-center border border-emerald-300">
-                            <i class="fa-brands fa-whatsapp"></i>
-                        </button>
-                    </div>
+                    ${STATE.currentRole === 'parent' ? `
+                        <div class="text-right">
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                <i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i> Present Today
+                            </span>
+                        </div>
+                    ` : `
+                        <div class="flex items-center space-x-1.5">
+                            <button onclick="markAtt('${s.id}', 'P', this)" class="att-btn w-7 h-7 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-700">P</button>
+                            <button onclick="markAtt('${s.id}', 'A', this)" class="att-btn w-7 h-7 rounded-lg text-xs font-bold bg-slate-100 text-slate-500">A</button>
+                            <button onclick="markAtt('${s.id}', 'L', this)" class="att-btn w-7 h-7 rounded-lg text-xs font-bold bg-slate-100 text-slate-500">L</button>
+                            <button id="absent-alert-${s.id}" onclick="triggerAbsentWhatsAppAlert('${s.id}')" title="Send WhatsApp Absent Notice" class="hidden text-xs w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 flex items-center justify-center border border-emerald-300">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </button>
+                        </div>
+                    `}
                 `;
                 container.appendChild(row);
             });
@@ -862,7 +984,7 @@ _Administration Office, SHIKSHA Coaching_`;
                     showAuthError("Incorrect Password! Access denied.");
                     return;
                 }
-                authorizeRole('teacher');
+                authorizeRole('teacher', phone);
                 return;
             }
 
@@ -907,6 +1029,7 @@ _Administration Office, SHIKSHA Coaching_`;
             STATE.currentRole = role;
             STATE.currentUserPhone = phone;
             sessionStorage.setItem('shiksha_auth_role', role);
+            if (phone) sessionStorage.setItem('shiksha_auth_phone', phone);
             document.getElementById('login-gateway').classList.add('hidden');
 
             const badge = document.getElementById('current-role-badge');
@@ -914,8 +1037,9 @@ _Administration Office, SHIKSHA Coaching_`;
             const btnAddResult = document.getElementById('btn-add-result');
             const btnAddStuTop = document.getElementById('btn-add-student-top');
             const btnSaveAtt = document.getElementById('btn-save-attendance');
+            const btnAddTeacher = document.getElementById('btn-add-teacher-top');
             const adminKpis = document.getElementById('admin-kpis');
-            const teachersCard = document.getElementById('admin-teachers-card');
+            const filterControls = document.getElementById('student-filter-controls');
 
             if (role === 'admin') {
                 badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 flex items-center gap-1";
@@ -924,8 +1048,9 @@ _Administration Office, SHIKSHA Coaching_`;
                 btnAddResult.classList.remove('hidden');
                 btnAddStuTop.classList.remove('hidden');
                 btnSaveAtt.classList.remove('hidden');
+                btnAddTeacher.classList.remove('hidden');
                 adminKpis.classList.remove('hidden');
-                teachersCard.classList.remove('hidden');
+                if (filterControls) filterControls.classList.remove('hidden');
             } else if (role === 'teacher') {
                 badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-800 flex items-center gap-1";
                 badge.innerHTML = '<i class="fa-solid fa-chalkboard-user"></i> Teacher';
@@ -933,17 +1058,19 @@ _Administration Office, SHIKSHA Coaching_`;
                 btnAddResult.classList.remove('hidden');
                 btnAddStuTop.classList.add('hidden');
                 btnSaveAtt.classList.remove('hidden');
+                btnAddTeacher.classList.add('hidden');
                 adminKpis.classList.remove('hidden');
-                teachersCard.classList.add('hidden');
+                if (filterControls) filterControls.classList.remove('hidden');
             } else {
                 badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 flex items-center gap-1";
-                badge.innerHTML = '<i class="fa-solid fa-user-group"></i> Parent';
+                badge.innerHTML = '<i class="fa-solid fa-user-group"></i> Student';
                 pinBtn.classList.add('hidden');
                 btnAddResult.classList.add('hidden');
                 btnAddStuTop.classList.add('hidden');
                 btnSaveAtt.classList.add('hidden');
+                btnAddTeacher.classList.add('hidden');
                 adminKpis.classList.add('hidden');
-                teachersCard.classList.add('hidden');
+                if (filterControls) filterControls.classList.add('hidden');
             }
 
             renderStudents();
@@ -954,6 +1081,7 @@ _Administration Office, SHIKSHA Coaching_`;
 
         function logout() {
             sessionStorage.removeItem('shiksha_auth_role');
+            sessionStorage.removeItem('shiksha_auth_phone');
             STATE.currentRole = null;
             STATE.currentUserPhone = null;
             document.getElementById('login-gateway').classList.remove('hidden');
@@ -961,7 +1089,7 @@ _Administration Office, SHIKSHA Coaching_`;
             hideAuthError();
         }
 
-        // ================= TEACHER DIRECTORY =================
+        // ================= TEACHER DIRECTORY WITH SALARY & PHOTO =================
         function openAddTeacherModal() {
             if (STATE.currentRole !== 'admin') {
                 alert('Only Admin can register teachers.');
@@ -969,6 +1097,10 @@ _Administration Office, SHIKSHA Coaching_`;
             }
             document.getElementById('inp-teach-name').value = '';
             document.getElementById('inp-teach-dept').value = '';
+            document.getElementById('inp-teach-salary').value = '';
+            document.getElementById('inp-teach-photo').value = '';
+            document.getElementById('inp-teach-qual').value = '';
+            document.getElementById('inp-teach-doj').value = '';
             document.getElementById('inp-teach-phone').value = '';
             document.getElementById('inp-teach-pwd').value = '';
             document.getElementById('modal-teacher').classList.remove('hidden');
@@ -982,6 +1114,10 @@ _Administration Office, SHIKSHA Coaching_`;
 
             const name = document.getElementById('inp-teach-name').value.trim();
             const dept = document.getElementById('inp-teach-dept').value.trim();
+            const salary = document.getElementById('inp-teach-salary').value || '0';
+            const photo = document.getElementById('inp-teach-photo').value.trim() || '';
+            const qual = document.getElementById('inp-teach-qual').value.trim() || 'Faculty';
+            const doj = document.getElementById('inp-teach-doj').value || new Date().toISOString().split('T')[0];
             const phone = cleanPhone(document.getElementById('inp-teach-phone').value.trim());
             const pwd = document.getElementById('inp-teach-pwd').value.trim();
 
@@ -991,12 +1127,10 @@ _Administration Office, SHIKSHA Coaching_`;
                 return;
             }
 
-            const teacherObj = { name, dept, phone, password: pwd };
+            const teacherObj = { name, dept, salary, photo, qualification: qual, doj, phone, password: pwd };
             const existing = STATE.registeredTeachers.find(t => cleanPhone(t.phone) === phone);
             if (existing) {
-                existing.name = name;
-                existing.dept = dept;
-                existing.password = pwd;
+                Object.assign(existing, teacherObj);
             } else {
                 STATE.registeredTeachers.push(teacherObj);
             }
@@ -1022,15 +1156,19 @@ _Administration Office, SHIKSHA Coaching_`;
 
             STATE.registeredTeachers.forEach(t => {
                 const item = document.createElement('div');
-                item.className = "flex items-center justify-between p-2.5 bg-slate-50 border border-slate-100 rounded-xl";
+                item.className = "flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-2xl shadow-sm";
                 item.innerHTML = `
-                    <div class="flex items-center space-x-2.5">
-                        <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">
-                            ${t.name ? t.name.charAt(0) : 'T'}
-                        </div>
+                    <div class="flex items-center space-x-3">
+                        ${t.photo ? 
+                            `<img src="${t.photo}" class="w-10 h-10 rounded-xl object-cover border border-slate-200" alt="${t.name}">` : 
+                            `<div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm">${t.name ? t.name.charAt(0) : 'T'}</div>`
+                        }
                         <div>
                             <h4 class="text-xs font-bold text-slate-800 leading-tight">${t.name}</h4>
                             <p class="text-[10px] text-slate-500">${t.dept} &bull; <i class="fa-solid fa-phone text-[8px]"></i> ${t.phone}</p>
+                            ${STATE.currentRole === 'admin' && t.salary ? `
+                                <p class="text-[9px] font-bold text-emerald-600 mt-0.5">Salary: ₹${t.salary}/month &bull; ${t.qualification || ''}</p>
+                            ` : ''}
                         </div>
                     </div>
                     ${STATE.currentRole === 'admin' ? `
@@ -1157,6 +1295,7 @@ _Administration Office, SHIKSHA Coaching_`;
             container.innerHTML = '';
 
             let list = STATE.students;
+            // Student isolation: Parent only sees their own child
             if (STATE.currentRole === 'parent' && STATE.currentUserPhone) {
                 list = list.filter(s => cleanPhone(s.phone) === cleanPhone(STATE.currentUserPhone));
             }
@@ -1168,7 +1307,7 @@ _Administration Office, SHIKSHA Coaching_`;
             });
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="p-8 text-center text-slate-400 text-xs">No registered students found. ${STATE.currentRole === 'admin' ? 'Click "+ Add Student" above to enroll.' : ''}</div>`;
+                container.innerHTML = `<div class="p-8 text-center text-slate-400 text-xs">No registered students found.</div>`;
                 return;
             }
 
@@ -1270,26 +1409,34 @@ _Administration Office, SHIKSHA Coaching_`;
             container.innerHTML = '';
 
             let list = STATE.students;
+            // Isolation: Student sees only their fee
             if (STATE.currentRole === 'parent' && STATE.currentUserPhone) {
                 list = list.filter(s => cleanPhone(s.phone) === cleanPhone(STATE.currentUserPhone));
             }
 
             if (list.length === 0) {
-                container.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">No student fee records found.</div>`;
+                container.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">No fee dues found.</div>`;
                 return;
             }
 
             list.forEach(s => {
                 const card = document.createElement('div');
-                card.className = "bg-white p-3 rounded-xl border border-slate-200 flex items-center justify-between shadow-sm";
+                card.className = "bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between shadow-sm";
                 card.innerHTML = `
                     <div>
                         <h4 class="text-xs font-bold text-slate-800">${s.name}</h4>
                         <p class="text-[10px] text-slate-500">Class ${s.class} (${s.board}) &bull; Pending: <b class="text-rose-600">₹${s.feePending || 0}</b></p>
                     </div>
-                    <button onclick="sendWhatsAppFeeReceipt('${s.id}')" class="flex items-center gap-1.5 text-xs bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-lg shadow transition" title="Send Receipt on WhatsApp">
-                        <i class="fa-brands fa-whatsapp text-sm"></i> <span>Slip</span>
-                    </button>
+                    <div class="flex items-center space-x-1.5">
+                        ${Number(s.feePending) > 0 ? `
+                            <button onclick="initiateDirectUpiPay('${s.name}', '${s.feePending}')" class="flex items-center gap-1 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-2.5 py-1.5 rounded-xl shadow transition" title="Direct UPI Pay">
+                                <i class="fa-solid fa-bolt text-xs"></i> <span>Pay UPI</span>
+                            </button>
+                        ` : ''}
+                        <button onclick="sendWhatsAppFeeReceipt('${s.id}')" class="flex items-center gap-1 text-xs bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-2.5 py-1.5 rounded-xl shadow transition" title="Send Receipt on WhatsApp">
+                            <i class="fa-brands fa-whatsapp text-xs"></i> <span>Slip</span>
+                        </button>
+                    </div>
                 `;
                 container.appendChild(card);
             });
