@@ -707,11 +707,8 @@
                 alert("No pending fees for payment.");
                 return;
             }
-            // Standard UPI Deep-link for mobile payment apps
             const note = `SHIKSHA Coaching Fee - ${studentName}`;
-            const upiUrl = `upi://pay?pa=${COACHING_UPI_ID}&pn=SHIKSHA%20Coaching%20Institute&am=${numAmount}&cu=INR&tn=${encodeURIComponent(note)}`;[cite: 2]
-            
-            // Redirects mobile browser to installed UPI Apps (GPay / PhonePe / Paytm / BHIM)
+            const upiUrl = `upi://pay?pa=${COACHING_UPI_ID}&pn=SHIKSHA%20Coaching%20Institute&am=${numAmount}&cu=INR&tn=${encodeURIComponent(note)}`;
             window.location.href = upiUrl;
         }
 
@@ -720,8 +717,8 @@
         }
 
         function copyUpiId() {
-            navigator.clipboard.writeText(COACHING_UPI_ID);[cite: 2]
-            alert("UPI ID copied: " + COACHING_UPI_ID);[cite: 2]
+            navigator.clipboard.writeText(COACHING_UPI_ID);
+            alert("UPI ID copied: " + COACHING_UPI_ID);
         }
 
         // ================= FEATURE 2: WHATSAPP FEE RECEIPT SLIP =================
@@ -744,7 +741,7 @@ _Fee Notification & Receipt Slip_
 --------------------------------
 *Pay via UPI:* ${COACHING_UPI_ID}
 _Please contact administration for confirmation._
-*Location:* Panchwati, Jhansi (U.P.)`;[cite: 2]
+*Location:* Panchwati, Jhansi (U.P.)`;
 
             const whatsappUrl = `https://wa.me/91${cleanNumber}?text=${encodeURIComponent(textMessage)}`;
             window.open(whatsappUrl, '_blank');
