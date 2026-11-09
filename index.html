@@ -84,7 +84,7 @@
                         <i class="fa-solid fa-chalkboard-user"></i> <span>Teacher</span>
                     </button>
                     <button type="button" onclick="setLoginRole('parent')" id="role-btn-parent" class="py-2 rounded-lg text-slate-400 transition flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-user-group"></i> <span>Parent</span>
+                        <i class="fa-solid fa-user-group"></i> <span>Student</span>
                     </button>
                 </div>
 
@@ -282,44 +282,52 @@
                 </div>
             </section>
 
-            <!-- TAB 3: ATTENDANCE & MONTHLY CHART -->
+            <!-- TAB 3: ATTENDANCE, DYNAMIC CALENDAR & ADMIN HOLIDAY POWER -->
             <section id="tab-attendance" class="hidden space-y-3 pt-2">
                 <div class="flex items-center justify-between">
                     <div>
                         <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Attendance Register</h2>
                         <p class="text-[10px] text-slate-500" id="att-date-display"></p>
                     </div>
-                    <button id="btn-save-attendance" onclick="saveAttendance()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-xl shadow transition">
-                        <i class="fa-solid fa-floppy-disk mr-1"></i> Save
-                    </button>
+                    <div class="flex items-center space-x-1.5">
+                        <!-- Admin Holiday Action Button -->
+                        <button id="btn-mark-holiday" onclick="openHolidayModal()" class="text-xs bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100 font-bold px-2.5 py-1.5 rounded-xl shadow-sm transition">
+                            <i class="fa-solid fa-umbrella-beach mr-1"></i> Holiday
+                        </button>
+                        <button id="btn-save-attendance" onclick="saveAttendance()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-xl shadow transition">
+                            <i class="fa-solid fa-floppy-disk mr-1"></i> Save
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Monthly Attendance Analytics Card -->
+                <!-- Dynamic Attendance Analytics Card -->
                 <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
                     <div class="flex items-center justify-between">
                         <div>
                             <span class="text-[10px] uppercase font-bold text-slate-400">Monthly Attendance Rate</span>
                             <h3 id="att-summary-title" class="text-sm font-bold text-slate-800">November 2026</h3>
+                            <p class="text-[10px] text-slate-500 font-medium" id="att-working-days-info">Working Days: 0 | Holidays: 0</p>
                         </div>
                         <div class="text-right">
-                            <span id="att-percentage-badge" class="text-lg font-black text-emerald-600">92%</span>
-                            <p class="text-[9px] text-slate-400">Overall Present</p>
+                            <span id="att-percentage-badge" class="text-xl font-black text-emerald-600">100%</span>
+                            <p class="text-[9px] text-slate-400">Attendance Rate</p>
                         </div>
                     </div>
                     <!-- Visual Progress Bar -->
                     <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden flex">
-                        <div id="bar-present" class="bg-emerald-500 h-full" style="width: 85%" title="Present"></div>
-                        <div id="bar-leave" class="bg-amber-400 h-full" style="width: 7%" title="Leave"></div>
-                        <div id="bar-absent" class="bg-rose-500 h-full" style="width: 8%" title="Absent"></div>
+                        <div id="bar-present" class="bg-emerald-500 h-full transition-all duration-300" style="width: 100%" title="Present"></div>
+                        <div id="bar-leave" class="bg-amber-400 h-full transition-all duration-300" style="width: 0%" title="Leave"></div>
+                        <div id="bar-absent" class="bg-rose-500 h-full transition-all duration-300" style="width: 0%" title="Absent"></div>
                     </div>
-                    <div class="grid grid-cols-3 text-center text-[10px] font-semibold pt-1">
-                        <span class="text-emerald-600"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Present: <b id="stat-present-days">22 Days</b></span>
-                        <span class="text-amber-500"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Leave: <b id="stat-leave-days">2 Days</b></span>
-                        <span class="text-rose-500"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Absent: <b id="stat-absent-days">2 Days</b></span>
+                    <div class="grid grid-cols-4 text-center text-[10px] font-semibold pt-1 border-t border-slate-50">
+                        <span class="text-emerald-600"><i class="fa-solid fa-circle text-[7px] mr-1"></i>P: <b id="stat-present-days">0d</b></span>
+                        <span class="text-amber-500"><i class="fa-solid fa-circle text-[7px] mr-1"></i>L: <b id="stat-leave-days">0d</b></span>
+                        <span class="text-rose-500"><i class="fa-solid fa-circle text-[7px] mr-1"></i>A: <b id="stat-absent-days">0d</b></span>
+                        <span class="text-indigo-600"><i class="fa-solid fa-circle text-[7px] mr-1"></i>H: <b id="stat-holiday-days">0d</b></span>
                     </div>
                 </div>
 
-                <!-- Class Filter (Hidden for logged-in parents) -->
+                <!-- Class Filter (Hidden for logged-in students) -->
                 <div id="attendance-class-chips" class="flex space-x-1.5 overflow-x-auto pb-1 hide-scrollbar text-xs">
                     <button onclick="selectAttendanceClass('10th')" class="att-cls-chip px-3 py-1 rounded-full bg-slate-900 text-white font-semibold text-[11px]">10th</button>
                     <button onclick="selectAttendanceClass('9th')" class="att-cls-chip px-3 py-1 rounded-full bg-white text-slate-600 border border-slate-200 font-semibold text-[11px]">9th</button>
@@ -396,6 +404,28 @@
         </nav>
 
         <!-- ================= MODALS ================= -->
+
+        <!-- MODAL: DECLARE HOLIDAY (ADMIN ONLY) -->
+        <div id="modal-holiday" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+            <div class="bg-white w-full max-w-sm rounded-2xl p-5 shadow-2xl">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-sm font-bold text-slate-800"><i class="fa-solid fa-umbrella-beach text-rose-500 mr-1.5"></i> Declare Holiday</h3>
+                    <button onclick="closeModal('modal-holiday')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <form onsubmit="handleSaveHoliday(event)" class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Holiday Title / Occasion</label>
+                        <input type="text" id="inp-holiday-title" required placeholder="e.g. Sunday / National Holiday" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-rose-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Select Date</label>
+                        <input type="date" id="inp-holiday-date" required class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-rose-500">
+                    </div>
+                    <p class="text-[10px] text-slate-400 italic">Holidays will automatically be exempted from absent counts and will not lower students' attendance percentage.</p>
+                    <button type="submit" class="w-full py-2.5 bg-rose-600 text-white font-bold rounded-xl text-xs shadow mt-2">Declare Official Holiday</button>
+                </form>
+            </div>
+        </div>
 
         <!-- MODAL: SCAN QR TO PAY (UPI) -->
         <div id="modal-upi-qr" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
@@ -597,9 +627,9 @@
     <!-- ================= LOGIC & GOOGLE SHEETS CLOUD ENGINE ================= -->
     <script>
         // ================= CONFIGURATION =================
-        // अपना Google Apps Script Web App URL यहाँ कोट्स के बीच पेस्ट करें
+        // Paste your Google Apps Script Web App URL between the quotes
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxip1ha_ESMt3plLxHR8TWnt3RafngNlzoZQcl-ZgbjieapIUKy36MB3UMm-XB-gdDE/exec"; 
-        const COACHING_UPI_ID = "shikshajhs@ptyes"; // Coaching Institute UPI[cite: 2]
+        const COACHING_UPI_ID = "shikshajhs@ptyes";
 
         const STATE = {
             adminUser: JSON.parse(localStorage.getItem('shiksha_admin_user') || JSON.stringify({
@@ -613,6 +643,8 @@
             selectedBoard: 'All',
             selectedAttClass: '10th',
             students: JSON.parse(localStorage.getItem('shiksha_students') || '[]'),
+            holidays: JSON.parse(localStorage.getItem('shiksha_holidays') || '[]'),
+            attendanceLogs: JSON.parse(localStorage.getItem('shiksha_att_logs') || '{}'),
             notices: JSON.parse(localStorage.getItem('shiksha_notices') || JSON.stringify([
                 { id: 1, title: 'Session Registrations Open', desc: 'Classes 1st to 10th (CBSE / ICSE / UP Board) new batches starting soon.', date: 'Nov 2026', tag: 'Important' }
             ])),
@@ -700,7 +732,7 @@
             }
         }
 
-        // ================= FEATURE 1: DIRECT UPI PAYMENT & QR MODAL =================
+        // ================= DIRECT UPI PAYMENT & QR MODAL =================
         function initiateDirectUpiPay(studentName, amount) {
             const numAmount = parseFloat(amount) || 0;
             if (numAmount <= 0) {
@@ -721,7 +753,7 @@
             alert("UPI ID copied: " + COACHING_UPI_ID);
         }
 
-        // ================= FEATURE 2: WHATSAPP FEE RECEIPT SLIP =================
+        // ================= WHATSAPP FEE RECEIPT SLIP =================
         function sendWhatsAppFeeReceipt(studentId) {
             const student = STATE.students.find(s => s.id === studentId);
             if (!student) return;
@@ -747,7 +779,7 @@ _Please contact administration for confirmation._
             window.open(whatsappUrl, '_blank');
         }
 
-        // ================= FEATURE 3: TEST MARKS ENTRY ENGINE =================
+        // ================= TEST MARKS ENTRY ENGINE =================
         function openMarksEntryModal() {
             document.getElementById('modal-test-marks').classList.remove('hidden');
             loadStudentsForMarks(document.getElementById('inp-test-class').value);
@@ -812,16 +844,76 @@ _Please contact administration for confirmation._
             alert("Test marks recorded successfully!");
         }
 
-        // ================= FEATURE 4: ATTENDANCE (STUDENT ONLY SEES HIS OWN) =================
+        // ================= DYNAMIC ATTENDANCE & HOLIDAY MANAGEMENT =================
+        function openHolidayModal() {
+            if (STATE.currentRole !== 'admin') {
+                alert("Only Admin has authority to declare holidays.");
+                return;
+            }
+            document.getElementById('inp-holiday-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('modal-holiday').classList.remove('hidden');
+        }
+
+        function handleSaveHoliday(e) {
+            e.preventDefault();
+            const title = document.getElementById('inp-holiday-title').value.trim();
+            const dateStr = document.getElementById('inp-holiday-date').value;
+
+            if (!STATE.holidays.find(h => h.date === dateStr)) {
+                STATE.holidays.push({ date: dateStr, title: title });
+                localStorage.setItem('shiksha_holidays', JSON.stringify(STATE.holidays));
+            }
+
+            closeModal('modal-holiday');
+            renderAttendanceList();
+            alert(`Holiday declared for ${dateStr} (${title}) successfully!`);
+        }
+
+        function calculateDynamicAttendance(studentId) {
+            const today = new Date();
+            const currentDayNumber = today.getDate(); // Bound dynamically to current day
+            const currentYearMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+
+            // Count declared holidays that elapsed this month
+            const monthHolidays = STATE.holidays.filter(h => {
+                return h.date.startsWith(currentYearMonth) && parseInt(h.date.split('-')[2], 10) <= currentDayNumber;
+            }).length;
+
+            const workingDays = Math.max(1, currentDayNumber - monthHolidays);
+
+            // Dynamic student log fetch
+            const studentHistory = STATE.attendanceLogs[studentId] || { present: workingDays, leave: 0, absent: 0 };
+            
+            const present = Math.min(studentHistory.present, workingDays);
+            const leave = studentHistory.leave || 0;
+            const absent = Math.max(0, workingDays - present - leave);
+
+            const percentage = Math.round((present / workingDays) * 100);
+
+            return {
+                workingDays,
+                holidays: monthHolidays,
+                present,
+                leave,
+                absent,
+                percentage
+            };
+        }
+
         function markAtt(id, status, btn) {
             if (STATE.currentRole === 'parent') {
-                alert('Parents have view-only permissions.');
+                alert('Students have view-only access.');
                 return;
             }
             const parent = btn.parentElement;
             parent.querySelectorAll('.att-btn').forEach(b => b.className = "att-btn w-7 h-7 rounded-lg text-xs font-bold bg-slate-100 text-slate-500");
             
             const alertBtn = document.getElementById(`absent-alert-${id}`);
+
+            if (!STATE.attendanceLogs[id]) {
+                const stats = calculateDynamicAttendance(id);
+                STATE.attendanceLogs[id] = { present: stats.present, leave: stats.leave, absent: stats.absent };
+            }
 
             if (status === 'P') {
                 btn.className = "att-btn w-7 h-7 rounded-lg text-xs font-bold bg-emerald-600 text-white";
@@ -830,11 +922,22 @@ _Please contact administration for confirmation._
             if (status === 'A') {
                 btn.className = "att-btn w-7 h-7 rounded-lg text-xs font-bold bg-rose-600 text-white";
                 if (alertBtn) alertBtn.classList.remove('hidden');
+                if (STATE.attendanceLogs[id].present > 0) {
+                    STATE.attendanceLogs[id].present--;
+                    STATE.attendanceLogs[id].absent++;
+                }
             }
             if (status === 'L') {
                 btn.className = "att-btn w-7 h-7 rounded-lg text-xs font-bold bg-amber-500 text-white";
                 if (alertBtn) alertBtn.classList.add('hidden');
+                if (STATE.attendanceLogs[id].present > 0) {
+                    STATE.attendanceLogs[id].present--;
+                    STATE.attendanceLogs[id].leave++;
+                }
             }
+
+            localStorage.setItem('shiksha_att_logs', JSON.stringify(STATE.attendanceLogs));
+            updateAttendanceAnalyticsCard(id);
         }
 
         function triggerAbsentWhatsAppAlert(studentId) {
@@ -862,25 +965,39 @@ _Administration Office, SHIKSHA Coaching_`;
             const container = document.getElementById('attendance-list-container');
             const classChips = document.getElementById('attendance-class-chips');
             const summaryTitle = document.getElementById('att-summary-title');
+            const btnHoliday = document.getElementById('btn-mark-holiday');
             container.innerHTML = '';
 
-            let list = [];
+            if (btnHoliday) {
+                if (STATE.currentRole === 'admin') btnHoliday.classList.remove('hidden');
+                else btnHoliday.classList.add('hidden');
+            }
 
-            // STRICT FILTER: If logged in as Parent/Student, ONLY show their child
+            let list = [];
+            const now = new Date();
+            const monthName = now.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+
+            // Strict Filter: Student/Parent sees strictly their own profile
             if (STATE.currentRole === 'parent' && STATE.currentUserPhone) {
                 if (classChips) classChips.classList.add('hidden');
                 list = STATE.students.filter(s => cleanPhone(s.phone) === cleanPhone(STATE.currentUserPhone));
                 if (list[0]) {
-                    summaryTitle.innerText = `${list[0].name} (Class ${list[0].class})`;
+                    summaryTitle.innerText = `${list[0].name} (${monthName})`;
+                    updateAttendanceAnalyticsCard(list[0].id);
                 }
             } else {
                 if (classChips) classChips.classList.remove('hidden');
                 list = STATE.students.filter(s => s.class === STATE.selectedAttClass);
-                summaryTitle.innerText = `Class ${STATE.selectedAttClass} Attendance Overview`;
+                summaryTitle.innerText = `Class ${STATE.selectedAttClass} (${monthName})`;
+                if (list[0]) {
+                    updateAttendanceAnalyticsCard(list[0].id);
+                } else {
+                    resetAnalyticsCard();
+                }
             }
 
             if (list.length === 0) {
-                container.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">No registered attendance records found.</div>`;
+                container.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">No attendance records found.</div>`;
                 return;
             }
 
@@ -900,7 +1017,7 @@ _Administration Office, SHIKSHA Coaching_`;
                         </div>
                     ` : `
                         <div class="flex items-center space-x-1.5">
-                            <button onclick="markAtt('${s.id}', 'P', this)" class="att-btn w-7 h-7 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-700">P</button>
+                            <button onclick="markAtt('${s.id}', 'P', this)" class="att-btn w-7 h-7 rounded-lg text-xs font-bold bg-emerald-600 text-white">P</button>
                             <button onclick="markAtt('${s.id}', 'A', this)" class="att-btn w-7 h-7 rounded-lg text-xs font-bold bg-slate-100 text-slate-500">A</button>
                             <button onclick="markAtt('${s.id}', 'L', this)" class="att-btn w-7 h-7 rounded-lg text-xs font-bold bg-slate-100 text-slate-500">L</button>
                             <button id="absent-alert-${s.id}" onclick="triggerAbsentWhatsAppAlert('${s.id}')" title="Send WhatsApp Absent Notice" class="hidden text-xs w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 flex items-center justify-center border border-emerald-300">
@@ -911,6 +1028,37 @@ _Administration Office, SHIKSHA Coaching_`;
                 `;
                 container.appendChild(row);
             });
+        }
+
+        function updateAttendanceAnalyticsCard(studentId) {
+            const stats = calculateDynamicAttendance(studentId);
+
+            document.getElementById('att-percentage-badge').innerText = `${stats.percentage}%`;
+            document.getElementById('att-working-days-info').innerText = `Working Days: ${stats.workingDays} | Holidays: ${stats.holidays}`;
+            
+            document.getElementById('stat-present-days').innerText = `${stats.present}d`;
+            document.getElementById('stat-leave-days').innerText = `${stats.leave}d`;
+            document.getElementById('stat-absent-days').innerText = `${stats.absent}d`;
+            document.getElementById('stat-holiday-days').innerText = `${stats.holidays}d`;
+
+            const pRatio = Math.round((stats.present / stats.workingDays) * 100);
+            const lRatio = Math.round((stats.leave / stats.workingDays) * 100);
+            const aRatio = Math.max(0, 100 - pRatio - lRatio);
+
+            document.getElementById('bar-present').style.width = `${pRatio}%`;
+            document.getElementById('bar-leave').style.width = `${lRatio}%`;
+            document.getElementById('bar-absent').style.width = `${aRatio}%`;
+        }
+
+        function resetAnalyticsCard() {
+            document.getElementById('att-percentage-badge').innerText = "100%";
+            document.getElementById('stat-present-days').innerText = "0d";
+            document.getElementById('stat-leave-days').innerText = "0d";
+            document.getElementById('stat-absent-days').innerText = "0d";
+            document.getElementById('stat-holiday-days').innerText = "0d";
+            document.getElementById('bar-present').style.width = "100%";
+            document.getElementById('bar-leave').style.width = "0%";
+            document.getElementById('bar-absent').style.width = "0%";
         }
 
         // ================= AUTHENTICATION & PORTAL LOGIC =================
@@ -933,7 +1081,7 @@ _Administration Office, SHIKSHA Coaching_`;
                 document.getElementById('login-phone-label').innerText = "Registered Teacher Mobile";
             } else {
                 btnParent.className = "py-2 rounded-lg bg-indigo-600 text-white font-bold transition flex items-center justify-center gap-1.5 shadow";
-                document.getElementById('login-phone-label').innerText = "Registered Parent / Student Mobile";
+                document.getElementById('login-phone-label').innerText = "Registered Student / Parent Mobile";
             }
         }
 
@@ -1292,7 +1440,6 @@ _Administration Office, SHIKSHA Coaching_`;
             container.innerHTML = '';
 
             let list = STATE.students;
-            // Student isolation: Parent only sees their own child
             if (STATE.currentRole === 'parent' && STATE.currentUserPhone) {
                 list = list.filter(s => cleanPhone(s.phone) === cleanPhone(STATE.currentUserPhone));
             }
@@ -1406,7 +1553,6 @@ _Administration Office, SHIKSHA Coaching_`;
             container.innerHTML = '';
 
             let list = STATE.students;
-            // Isolation: Student sees only their fee
             if (STATE.currentRole === 'parent' && STATE.currentUserPhone) {
                 list = list.filter(s => cleanPhone(s.phone) === cleanPhone(STATE.currentUserPhone));
             }
