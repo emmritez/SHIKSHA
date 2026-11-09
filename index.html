@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f172a">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SHIKSHA Coaching Institute - Portal</title>
@@ -12,6 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -113,7 +113,7 @@
                         <i class="fa-solid fa-triangle-exclamation mr-1"></i> <span id="auth-error-msg"></span>
                     </div>
 
-                    <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2 mt-2">
+                    <button type="submit" id="btn-login-submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2 mt-2">
                         <i class="fa-solid fa-lock"></i> Secure Login
                     </button>
                 </form>
@@ -147,6 +147,11 @@
                 </div>
 
                 <div class="flex items-center space-x-2">
+                    <!-- Cloud Sync Indicator -->
+                    <span id="cloud-sync-status" class="text-[9px] font-semibold text-slate-400 flex items-center gap-1 bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700" title="Cloud Database Sync">
+                        <i class="fa-solid fa-cloud text-slate-400"></i> Local
+                    </span>
+
                     <!-- Active Role Badge -->
                     <span id="current-role-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 flex items-center gap-1">
                         <i class="fa-solid fa-shield-halved"></i> Admin
@@ -395,7 +400,7 @@
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Portal Login Password</label>
                         <input type="password" id="inp-teach-pwd" required placeholder="Set password" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
                     </div>
-                    <button type="submit" class="w-full py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-xs shadow mt-2">Authorize & Save Teacher</button>
+                    <button type="submit" id="btn-save-teacher-submit" class="w-full py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-xs shadow mt-2">Authorize & Save Teacher</button>
                 </form>
             </div>
         </div>
@@ -472,19 +477,22 @@
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Monthly Pending Fee (₹)</label>
                         <input type="number" id="inp-stu-fee" value="0" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
                     </div>
-                    <button type="submit" class="w-full py-2.5 bg-indigo-600 text-white font-bold rounded-xl text-xs shadow mt-2">Save & Register Student</button>
+                    <button type="submit" id="btn-save-student-submit" class="w-full py-2.5 bg-indigo-600 text-white font-bold rounded-xl text-xs shadow mt-2">Save & Register Student</button>
                 </form>
             </div>
         </div>
 
     </div>
 
-    <!-- ================= LOGIC & AUTHENTICATION ENGINE ================= -->
+    <!-- ================= LOGIC & GOOGLE SHEETS CLOUD ENGINE ================= -->
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxip1ha_ESMt3plLxHR8TWnt3RafngNlzoZQcl-ZgbjieapIUKy36MB3UMm-XB-gdDE/exec";
+        // ================= CONFIGURATION =================
+        // अपना Google Apps Script Web App URL यहाँ कोट्स के बीच पेस्ट करें
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxip1ha_ESMt3plLxHR8TWnt3RafngNlzoZQcl-ZgbjieapIUKy36MB3UMm-XB-gdDE/exec"; 
+
         const STATE = {
             adminUser: JSON.parse(localStorage.getItem('shiksha_admin_user') || JSON.stringify({
-                phone: '8423149429',
+                phone: '9876543210',
                 password: 'admin123'
             })),
             registeredTeachers: JSON.parse(localStorage.getItem('shiksha_teachers') || '[]'),
@@ -507,6 +515,9 @@
             loginRoleSelect: 'admin'
         };
 
+        // Helper: Strip spaces, +91, and non-digits to match standard 10-digit phone
+        const cleanPhone = (val) => String(val || '').replace(/\D/g, '').slice(-10);
+
         window.addEventListener('DOMContentLoaded', () => {
             const savedSession = sessionStorage.getItem('shiksha_auth_role');
             if (savedSession) {
@@ -523,8 +534,62 @@
             renderFees();
             renderMaterials();
             document.getElementById('att-date-display').innerText = new Date().toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
+            
+            // Sync from Google Sheets immediately
+            fetchCloudDatabase();
         });
 
+        // ================= CLOUD SYNC ENGINE =================
+        async function fetchCloudDatabase() {
+            if (!SCRIPT_URL) return;
+            const statusEl = document.getElementById('cloud-sync-status');
+            if (statusEl) {
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-indigo-400"></i> Syncing...';
+            }
+
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const data = await response.json();
+                if (data.status === 'success') {
+                    if (Array.isArray(data.students)) {
+                        STATE.students = data.students;
+                        localStorage.setItem('shiksha_students', JSON.stringify(STATE.students));
+                    }
+                    if (Array.isArray(data.teachers)) {
+                        STATE.registeredTeachers = data.teachers;
+                        localStorage.setItem('shiksha_teachers', JSON.stringify(STATE.registeredTeachers));
+                    }
+                    if (statusEl) {
+                        statusEl.className = "text-[9px] font-semibold text-emerald-400 flex items-center gap-1 bg-emerald-950 px-2 py-0.5 rounded-full border border-emerald-800";
+                        statusEl.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i> Synced';
+                    }
+                    renderStudents();
+                    renderTeachers();
+                    updateKpis();
+                }
+            } catch (err) {
+                console.warn("Cloud sync offline, using local cached data.", err);
+                if (statusEl) {
+                    statusEl.className = "text-[9px] font-semibold text-amber-400 flex items-center gap-1 bg-amber-950 px-2 py-0.5 rounded-full border border-amber-800";
+                    statusEl.innerHTML = '<i class="fa-solid fa-database text-amber-400"></i> Cached';
+                }
+            }
+        }
+
+        async function postToCloud(payload) {
+            if (!SCRIPT_URL) return;
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+            } catch (e) {
+                console.error("Cloud push failed:", e);
+            }
+        }
+
+        // ================= AUTHENTICATION LOGIC =================
         function setLoginRole(role) {
             STATE.loginRoleSelect = role;
             const btnAdmin = document.getElementById('role-btn-admin');
@@ -548,7 +613,7 @@
             }
         }
 
-        function handleSecureLogin(e) {
+        async function handleSecureLogin(e) {
             e.preventDefault();
             const phone = document.getElementById('login-mobile').value.trim();
             const password = document.getElementById('login-password').value.trim();
@@ -559,10 +624,19 @@
                 return;
             }
 
+            // Always ensure latest credentials from cloud if local cache empty
+            if (STATE.students.length === 0 && SCRIPT_URL) {
+                const btn = document.getElementById('btn-login-submit');
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Verifying...';
+                await fetchCloudDatabase();
+                btn.innerHTML = orig;
+            }
+
             const targetRole = STATE.loginRoleSelect;
 
             if (targetRole === 'admin') {
-                if (phone !== STATE.adminUser.phone) {
+                if (cleanPhone(phone) !== cleanPhone(STATE.adminUser.phone)) {
                     showAuthError("Invalid Mobile Number! This number is not registered as Admin.");
                     return;
                 }
@@ -575,12 +649,12 @@
             }
 
             if (targetRole === 'teacher') {
-                const teacher = STATE.registeredTeachers.find(t => t.phone === phone);
+                const teacher = STATE.registeredTeachers.find(t => cleanPhone(t.phone) === cleanPhone(phone));
                 if (!teacher) {
                     showAuthError("Invalid Mobile Number! No faculty account registered with this number.");
                     return;
                 }
-                if (teacher.password !== password) {
+                if (String(teacher.password).trim() !== password) {
                     showAuthError("Incorrect Password! Access denied.");
                     return;
                 }
@@ -589,12 +663,12 @@
             }
 
             if (targetRole === 'parent') {
-                const student = STATE.students.find(s => s.phone === phone);
+                const student = STATE.students.find(s => cleanPhone(s.phone) === cleanPhone(phone));
                 if (!student) {
                     showAuthError("Invalid Mobile Number! Not registered with any enrolled student.");
                     return;
                 }
-                if (password !== student.password) {
+                if (String(student.password).trim() !== password) {
                     showAuthError("Incorrect Password! Access denied.");
                     return;
                 }
@@ -694,6 +768,7 @@
             hideAuthError();
         }
 
+        // ================= TEACHER DIRECTORY =================
         function openAddTeacherModal() {
             if (STATE.currentRole !== 'admin') {
                 alert('Only Admin can register teachers.');
@@ -706,30 +781,40 @@
             document.getElementById('modal-teacher').classList.remove('hidden');
         }
 
-        function handleSaveTeacher(e) {
+        async function handleSaveTeacher(e) {
             e.preventDefault();
+            const btn = document.getElementById('btn-save-teacher-submit');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saving...';
+
             const name = document.getElementById('inp-teach-name').value.trim();
             const dept = document.getElementById('inp-teach-dept').value.trim();
-            const phone = document.getElementById('inp-teach-phone').value.trim();
+            const phone = cleanPhone(document.getElementById('inp-teach-phone').value.trim());
             const pwd = document.getElementById('inp-teach-pwd').value.trim();
 
             if (phone.length !== 10) {
                 alert('Please enter a valid 10-digit mobile number.');
+                btn.innerHTML = orig;
                 return;
             }
 
-            const existing = STATE.registeredTeachers.find(t => t.phone === phone);
+            const teacherObj = { name, dept, phone, password: pwd };
+            const existing = STATE.registeredTeachers.find(t => cleanPhone(t.phone) === phone);
             if (existing) {
                 existing.name = name;
                 existing.dept = dept;
                 existing.password = pwd;
             } else {
-                STATE.registeredTeachers.push({ name, dept, phone, password: pwd });
+                STATE.registeredTeachers.push(teacherObj);
             }
 
             localStorage.setItem('shiksha_teachers', JSON.stringify(STATE.registeredTeachers));
             closeModal('modal-teacher');
             renderTeachers();
+
+            // Push to Google Sheets
+            await postToCloud({ action: 'addTeacher', teacher: teacherObj });
+            btn.innerHTML = orig;
             alert(`Teacher "${name}" registered successfully!`);
         }
 
@@ -749,7 +834,7 @@
                 item.innerHTML = `
                     <div class="flex items-center space-x-2.5">
                         <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">
-                            ${t.name.charAt(0)}
+                            ${t.name ? t.name.charAt(0) : 'T'}
                         </div>
                         <div>
                             <h4 class="text-xs font-bold text-slate-800 leading-tight">${t.name}</h4>
@@ -769,12 +854,13 @@
         function deleteTeacher(phone) {
             if (STATE.currentRole !== 'admin') return;
             if (confirm(`Remove this faculty member from portal access?`)) {
-                STATE.registeredTeachers = STATE.registeredTeachers.filter(t => t.phone !== phone);
+                STATE.registeredTeachers = STATE.registeredTeachers.filter(t => cleanPhone(t.phone) !== cleanPhone(phone));
                 localStorage.setItem('shiksha_teachers', JSON.stringify(STATE.registeredTeachers));
                 renderTeachers();
             }
         }
 
+        // ================= GENERAL HELPERS =================
         function openChangePinModal() {
             document.getElementById('new-admin-phone').value = STATE.adminUser.phone;
             document.getElementById('new-admin-pwd').value = STATE.adminUser.password;
@@ -824,23 +910,28 @@
             document.getElementById('modal-student').classList.remove('hidden');
         }
 
-        function handleSaveStudent(e) {
+        async function handleSaveStudent(e) {
             e.preventDefault();
+            const btn = document.getElementById('btn-save-student-submit');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saving...';
+
             const id = document.getElementById('edit-stu-id').value || 'STU-' + Date.now().toString().slice(-4);
             const name = document.getElementById('inp-stu-name').value.trim();
             const cls = document.getElementById('inp-stu-class').value;
             const board = document.getElementById('inp-stu-board').value;
-            const phone = document.getElementById('inp-stu-phone').value.trim();
+            const phone = cleanPhone(document.getElementById('inp-stu-phone').value.trim());
             const pwd = document.getElementById('inp-stu-pwd').value.trim();
             const fee = parseFloat(document.getElementById('inp-stu-fee').value) || 0;
 
             if (phone.length !== 10) {
                 alert('Please enter a valid 10-digit mobile number.');
+                btn.innerHTML = orig;
                 return;
             }
 
-            const existingIdx = STATE.students.findIndex(s => s.id === id);
             const studentObj = { id, name, class: cls, board, phone, password: pwd, feePending: fee };
+            const existingIdx = STATE.students.findIndex(s => s.id === id);
 
             if (existingIdx > -1) {
                 STATE.students[existingIdx] = studentObj;
@@ -853,6 +944,10 @@
             renderStudents();
             renderAttendanceList();
             updateKpis();
+
+            // Push to Google Sheets
+            await postToCloud({ action: 'addStudent', student: studentObj });
+            btn.innerHTML = orig;
             alert(`Student "${name}" registered successfully!`);
         }
 
@@ -871,12 +966,12 @@
 
             let list = STATE.students;
             if (STATE.currentRole === 'parent' && STATE.currentUserPhone) {
-                list = list.filter(s => s.phone === STATE.currentUserPhone);
+                list = list.filter(s => cleanPhone(s.phone) === cleanPhone(STATE.currentUserPhone));
             }
 
             const filtered = list.filter(s => {
                 const matchBoard = (STATE.selectedBoard === 'All' || s.board === STATE.selectedBoard);
-                const matchSearch = s.name.toLowerCase().includes(search) || s.phone.includes(search) || s.id.toLowerCase().includes(search);
+                const matchSearch = String(s.name).toLowerCase().includes(search) || cleanPhone(s.phone).includes(search) || String(s.id).toLowerCase().includes(search);
                 return matchBoard && matchSearch;
             });
 
@@ -891,7 +986,7 @@
                 card.innerHTML = `
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center font-bold text-indigo-700 text-sm">
-                            ${s.name.charAt(0)}
+                            ${s.name ? s.name.charAt(0) : 'S'}
                         </div>
                         <div>
                             <div class="flex items-center gap-1.5">
@@ -902,8 +997,8 @@
                         </div>
                     </div>
                     <div class="text-right">
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${s.feePending > 0 ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-emerald-50 text-emerald-600 border border-emerald-200'}">
-                            ${s.feePending > 0 ? '₹' + s.feePending + ' Due' : 'Paid'}
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${Number(s.feePending) > 0 ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-emerald-50 text-emerald-600 border border-emerald-200'}">
+                            ${Number(s.feePending) > 0 ? '₹' + s.feePending + ' Due' : 'Paid'}
                         </span>
                         ${STATE.currentRole === 'admin' ? `
                             <div class="mt-1 flex items-center justify-end space-x-2">
@@ -981,7 +1076,7 @@
 
         function updateKpis() {
             document.getElementById('kpi-total-students').innerText = STATE.students.length;
-            const totalDue = STATE.students.reduce((acc, s) => acc + (s.feePending || 0), 0);
+            const totalDue = STATE.students.reduce((acc, s) => acc + (parseFloat(s.feePending) || 0), 0);
             document.getElementById('kpi-due-fees').innerText = '₹' + totalDue;
             document.getElementById('kpi-present-count').innerText = STATE.students.length > 0 ? Math.floor(STATE.students.length * 0.85) : 0;
         }
@@ -1038,13 +1133,15 @@
                 </div>
             `).join('');
         }
+
+        // ================= SERVICE WORKER REGISTRATION =================
         if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('Service Worker registered:', reg.scope))
-            .catch(err => console.error('Service Worker registration failed:', err));
-    });
-}
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registered:', reg.scope))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
     </script>
 </body>
 </html>
