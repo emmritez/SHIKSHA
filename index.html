@@ -221,6 +221,19 @@
                     <div id="teachers-list-container" class="space-y-2.5"></div>
                 </div>
 
+                <!-- Notice Board (Teacher & Admin Postable) -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center">
+                            <i class="fa-solid fa-clipboard-list text-indigo-600 mr-2"></i> Notice Board
+                        </h2>
+                        <button id="btn-add-notice-home" onclick="openAddNoticeModal()" class="hidden text-xs bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-lg font-semibold hover:bg-indigo-100 transition flex items-center gap-1">
+                            <i class="fa-solid fa-plus"></i> Post Notice
+                        </button>
+                    </div>
+                    <div id="notice-list-container" class="space-y-2.5"></div>
+                </div>
+
                 <!-- Tests & Results -->
                 <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
                     <div class="flex items-center justify-between mb-3">
@@ -233,16 +246,6 @@
                     </div>
                     <div id="result-list-container" class="space-y-2.5"></div>
                 </div>
-
-                <!-- Notice Board -->
-                <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-                    <div class="flex items-center justify-between mb-3">
-                        <h2 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center">
-                            <i class="fa-solid fa-clipboard-list text-indigo-600 mr-2"></i> Notice Board
-                        </h2>
-                    </div>
-                    <div id="notice-list-container" class="space-y-2.5"></div>
-                </div>
             </section>
 
             <!-- TAB 2: STUDENTS DIRECTORY (WITH ACTIVE/INACTIVE FILTER) -->
@@ -250,7 +253,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Student Directory</h2>
-                        <span class="text-[10px] text-slate-400">Sequence IDs, Exit Status & Record Tracking</span>
+                        <span class="text-[10px] text-slate-400">Sequence IDs, Subject Choice & Status</span>
                     </div>
                     <button id="btn-add-student-top" onclick="openAddStudentModal()" class="text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-xl shadow-sm transition">
                         <i class="fa-solid fa-user-plus mr-1"></i> Add Student
@@ -280,7 +283,7 @@
                 <div id="students-list-container" class="space-y-2.5 pt-1"></div>
             </section>
 
-            <!-- TAB 3: ATTENDANCE -->
+            <!-- TAB 3: ATTENDANCE (CLASSES 1st TO 10th) -->
             <section id="tab-attendance" class="hidden space-y-3 pt-2">
                 <div class="flex items-center justify-between">
                     <div>
@@ -322,13 +325,8 @@
                     </div>
                 </div>
 
-                <div id="attendance-class-chips" class="flex space-x-1.5 overflow-x-auto pb-1 hide-scrollbar text-xs">
-                    <button onclick="selectAttendanceClass('10th')" class="att-cls-chip px-3 py-1 rounded-full bg-slate-900 text-white font-semibold text-[11px]">10th</button>
-                    <button onclick="selectAttendanceClass('9th')" class="att-cls-chip px-3 py-1 rounded-full bg-white text-slate-600 border border-slate-200 font-semibold text-[11px]">9th</button>
-                    <button onclick="selectAttendanceClass('8th')" class="att-cls-chip px-3 py-1 rounded-full bg-white text-slate-600 border border-slate-200 font-semibold text-[11px]">8th</button>
-                    <button onclick="selectAttendanceClass('7th')" class="att-cls-chip px-3 py-1 rounded-full bg-white text-slate-600 border border-slate-200 font-semibold text-[11px]">7th</button>
-                    <button onclick="selectAttendanceClass('6th')" class="att-cls-chip px-3 py-1 rounded-full bg-white text-slate-600 border border-slate-200 font-semibold text-[11px]">6th</button>
-                </div>
+                <!-- Classes 1st to 10th selection chips -->
+                <div id="attendance-class-chips" class="flex space-x-1.5 overflow-x-auto pb-1 hide-scrollbar text-xs"></div>
 
                 <div id="attendance-list-container" class="space-y-2"></div>
             </section>
@@ -351,10 +349,13 @@
                 <div id="fees-list-container" class="space-y-2.5"></div>
             </section>
 
-            <!-- TAB 5: STUDY NOTES -->
+            <!-- TAB 5: STUDY NOTES (TEACHER & ADMIN UPLOADABLE) -->
             <section id="tab-notes" class="hidden space-y-3 pt-2">
                 <div class="flex items-center justify-between">
                     <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Study Notes</h2>
+                    <button id="btn-upload-notes" onclick="openAddNoteModal()" class="hidden text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-xl shadow transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-upload"></i> Upload Notes
+                    </button>
                 </div>
                 <div id="notes-list-container" class="space-y-2.5"></div>
             </section>
@@ -453,14 +454,43 @@
                         <input type="text" id="inp-teach-name" required placeholder="e.g. Science Faculty Sir" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500">
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Subject *</label>
-                            <input type="text" id="inp-teach-dept" required placeholder="e.g. Science" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Salary (₹)</label>
-                            <input type="number" id="inp-teach-salary" placeholder="e.g. 15000" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-emerald-600">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1"><i class="fa-solid fa-graduation-cap text-indigo-600 mr-1"></i> Educational Qualifications *</label>
+                        <input type="text" id="inp-teach-qual" required placeholder="e.g. M.Sc. Physics, B.Ed / B.Tech" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
+                    </div>
+
+                    <!-- Subjects to Teach with Multiple Checkboxes -->
+                    <div class="bg-indigo-50/40 p-2.5 rounded-xl border border-indigo-100">
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5"><i class="fa-solid fa-book-open text-indigo-600 mr-1"></i> Subjects to Teach (Select multiple) *</label>
+                        <div class="grid grid-cols-2 gap-1.5 text-xs text-slate-700" id="faculty-subjects-checkboxes">
+                            <label class="flex items-center gap-1.5 cursor-pointer p-1.5 bg-white rounded-lg border border-slate-200">
+                                <input type="checkbox" name="teach-subj" value="Hindi & Sanskrit" class="rounded text-indigo-600">
+                                <span class="text-[11px]">Hindi & Sanskrit</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer p-1.5 bg-white rounded-lg border border-slate-200">
+                                <input type="checkbox" name="teach-subj" value="English" class="rounded text-indigo-600">
+                                <span class="text-[11px]">English</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer p-1.5 bg-white rounded-lg border border-slate-200">
+                                <input type="checkbox" name="teach-subj" value="Maths" class="rounded text-indigo-600">
+                                <span class="text-[11px]">Maths</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer p-1.5 bg-white rounded-lg border border-slate-200">
+                                <input type="checkbox" name="teach-subj" value="Science" class="rounded text-indigo-600">
+                                <span class="text-[11px]">Science</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer p-1.5 bg-white rounded-lg border border-slate-200">
+                                <input type="checkbox" name="teach-subj" value="Social Science" class="rounded text-indigo-600">
+                                <span class="text-[11px]">Social Science</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer p-1.5 bg-white rounded-lg border border-slate-200">
+                                <input type="checkbox" name="teach-subj" value="Computer" class="rounded text-indigo-600">
+                                <span class="text-[11px]">Computer</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer p-1.5 bg-white rounded-lg border border-slate-200 col-span-2">
+                                <input type="checkbox" id="teach-subj-all" name="teach-subj" value="All Subjects" onchange="toggleAllSubjectsFaculty(this)" class="rounded text-indigo-600">
+                                <span class="text-[11px] font-bold text-indigo-600">All Subjects (Classes 1st-8th)</span>
+                            </label>
                         </div>
                     </div>
 
@@ -475,13 +505,20 @@
                         </div>
                     </div>
 
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Aadhaar No.</label>
+                            <input type="text" id="inp-teach-aadhaar" maxlength="12" placeholder="12-digit number" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Salary (₹)</label>
+                            <input type="number" id="inp-teach-salary" placeholder="Monthly Salary" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-emerald-600">
+                        </div>
+                    </div>
+
                     <div class="bg-indigo-50/50 border border-indigo-100 p-2.5 rounded-xl space-y-2">
                         <span class="text-[10px] uppercase font-bold text-indigo-700 block tracking-wider"><i class="fa-solid fa-id-card"></i> Optional Identification Details</span>
                         <div class="grid grid-cols-3 gap-1.5">
-                            <div>
-                                <label class="block text-[9px] font-semibold text-slate-600">Aadhaar No.</label>
-                                <input type="text" id="inp-teach-aadhaar" maxlength="12" placeholder="12-digit" class="w-full border border-slate-300 rounded-lg px-1.5 py-1 text-xs bg-white">
-                            </div>
                             <div>
                                 <label class="block text-[9px] font-semibold text-slate-600">PAN Card</label>
                                 <input type="text" id="inp-teach-pan" maxlength="10" placeholder="10-digit" class="w-full border border-slate-300 rounded-lg px-1.5 py-1 text-xs bg-white uppercase">
@@ -490,12 +527,12 @@
                                 <label class="block text-[9px] font-semibold text-slate-600">Driving Lic.</label>
                                 <input type="text" id="inp-teach-dl" placeholder="DL Number" class="w-full border border-slate-300 rounded-lg px-1.5 py-1 text-xs bg-white uppercase">
                             </div>
+                            <div>
+                                <label class="block text-[9px] font-semibold text-slate-600">Docs</label>
+                                <input type="file" id="inp-teach-doc" accept="image/*,.pdf" class="w-full text-xs text-slate-500 file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[9px] file:bg-white file:text-indigo-700 border border-slate-200 rounded-lg bg-white p-1">
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-[9px] font-semibold text-slate-600">Upload Faculty Documents (Aadhaar / Degree)</label>
-                            <input type="file" id="inp-teach-doc" accept="image/*,.pdf" class="w-full text-xs text-slate-500 file:mr-2 file:py-0.5 file:px-2 file:rounded-lg file:border-0 file:text-[9px] file:font-semibold file:bg-white file:text-indigo-700 border border-slate-200 rounded-lg bg-white p-1">
-                            <div id="teach-doc-link-box" class="pt-1"></div>
-                        </div>
+                        <div id="teach-doc-link-box" class="pt-1"></div>
                     </div>
 
                     <div class="flex gap-2">
@@ -506,7 +543,7 @@
             </div>
         </div>
 
-        <!-- ================= MASTER STUDENT MODAL (AUTO SCI-xxxx ID & FULL DETAILS) ================= -->
+        <!-- ================= MASTER STUDENT MODAL ================= -->
         <div id="modal-student" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
             <div class="bg-white w-full max-w-sm rounded-2xl p-5 shadow-2xl max-h-[90vh] overflow-y-auto">
                 <div class="flex justify-between items-center mb-3 border-b border-slate-100 pb-2">
@@ -519,7 +556,6 @@
                 <form onsubmit="handleSaveStudent(event)" class="space-y-3">
                     <input type="hidden" id="edit-stu-id">
 
-                    <!-- Photo Preview & Change -->
                     <div class="flex items-center space-x-3 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
                         <img id="stu-preview-img" src="https://images.unsplash.com/photo-1544717305-2782549b5136?w=200&auto=format&fit=crop&q=60" class="w-12 h-12 rounded-xl object-cover border border-slate-300">
                         <div class="flex-1">
@@ -533,7 +569,6 @@
                         <input type="text" id="inp-stu-name" required placeholder="e.g. Abhimanyu Srivastava" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
                     </div>
 
-                    <!-- PARENTS DETAILS -->
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Father's Name</label>
@@ -548,7 +583,7 @@
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Class *</label>
-                            <select id="inp-stu-class" class="w-full border border-slate-300 rounded-xl px-2 py-2 text-xs bg-white">
+                            <select id="inp-stu-class" onchange="handleStudentClassChange(this.value)" class="w-full border border-slate-300 rounded-xl px-2 py-2 text-xs bg-white">
                                 <option value="10th">Class 10th</option>
                                 <option value="9th">Class 9th</option>
                                 <option value="8th">Class 8th</option>
@@ -571,6 +606,43 @@
                         </div>
                     </div>
 
+                    <!-- 9th & 10th Subject Selection Box -->
+                    <div id="stu-subjects-container" class="bg-amber-50/60 p-2.5 rounded-xl border border-amber-200">
+                        <span class="text-[10px] font-bold text-amber-900 block mb-1">
+                            <i class="fa-solid fa-list-check mr-1 text-amber-700"></i> Selected Subjects (Class 9th / 10th)
+                        </span>
+                        <div class="grid grid-cols-2 gap-1.5 text-xs text-slate-700" id="student-subjects-checkboxes">
+                            <label class="flex items-center gap-1.5 cursor-pointer p-1.5 bg-white rounded-lg border border-amber-200">
+                                <input type="checkbox" name="stu-subj" value="Hindi & Sanskrit" class="rounded text-indigo-600">
+                                <span class="text-[10px]">Hindi & Sanskrit</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer p-1.5 bg-white rounded-lg border border-amber-200">
+                                <input type="checkbox" name="stu-subj" value="English" class="rounded text-indigo-600">
+                                <span class="text-[10px]">English</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer p-1.5 bg-white rounded-lg border border-amber-200">
+                                <input type="checkbox" name="stu-subj" value="Maths" class="rounded text-indigo-600">
+                                <span class="text-[10px]">Maths</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer p-1.5 bg-white rounded-lg border border-amber-200">
+                                <input type="checkbox" name="stu-subj" value="Science" class="rounded text-indigo-600">
+                                <span class="text-[10px]">Science</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer p-1.5 bg-white rounded-lg border border-amber-200">
+                                <input type="checkbox" name="stu-subj" value="Social Science" class="rounded text-indigo-600">
+                                <span class="text-[10px]">Social Science</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer p-1.5 bg-white rounded-lg border border-amber-200">
+                                <input type="checkbox" name="stu-subj" value="Computer" class="rounded text-indigo-600">
+                                <span class="text-[10px]">Computer</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer p-1.5 bg-white rounded-lg border border-amber-200 col-span-2">
+                                <input type="checkbox" name="stu-subj" value="All Subjects" onchange="toggleAllSubjectsStudent(this)" class="rounded text-indigo-600">
+                                <span class="text-[10px] font-bold text-amber-900">All Subjects Batch</span>
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Mobile (Login ID) *</label>
@@ -582,7 +654,6 @@
                         </div>
                     </div>
 
-                    <!-- EMAIL & ADDRESS -->
                     <div class="grid grid-cols-1 gap-2">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Email ID</label>
@@ -594,7 +665,6 @@
                         </div>
                     </div>
 
-                    <!-- ADMISSION DATE & DATE OF LEAVING -->
                     <div class="grid grid-cols-2 gap-2 bg-slate-50 p-2 rounded-xl border border-slate-200">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-700 mb-1"><i class="fa-solid fa-calendar-plus text-indigo-600 mr-1"></i> Admission Date</label>
@@ -603,21 +673,6 @@
                         <div>
                             <label class="block text-[10px] font-bold text-slate-700 mb-1"><i class="fa-solid fa-calendar-xmark text-rose-500 mr-1"></i> Leaving Date (Exit)</label>
                             <input type="date" id="inp-stu-leave-date" class="w-full border border-slate-300 rounded-lg px-2 py-1 text-xs bg-white">
-                        </div>
-                    </div>
-
-                    <!-- VERIFICATION DOCUMENTS -->
-                    <div class="bg-indigo-50/50 border border-indigo-100 p-2.5 rounded-xl space-y-2">
-                        <span class="text-[10px] uppercase font-bold text-indigo-700 block tracking-wider"><i class="fa-solid fa-file-circle-check"></i> Verification Documents (Optional)</span>
-                        <div>
-                            <label class="block text-[9px] font-semibold text-slate-600">Aadhaar Card (Photo / PDF)</label>
-                            <input type="file" id="inp-stu-doc-aadhaar" accept="image/*,.pdf" class="w-full text-xs text-slate-500 file:mr-2 file:py-0.5 file:px-2 file:rounded-lg file:border-0 file:text-[9px] file:font-semibold file:bg-white file:text-indigo-700 border border-slate-200 rounded-lg bg-white p-1">
-                            <div id="stu-doc-aadhaar-box" class="pt-1"></div>
-                        </div>
-                        <div>
-                            <label class="block text-[9px] font-semibold text-slate-600">Previous Class Marksheet</label>
-                            <input type="file" id="inp-stu-doc-marksheet" accept="image/*,.pdf" class="w-full text-xs text-slate-500 file:mr-2 file:py-0.5 file:px-2 file:rounded-lg file:border-0 file:text-[9px] file:font-semibold file:bg-white file:text-indigo-700 border border-slate-200 rounded-lg bg-white p-1">
-                            <div id="stu-doc-marksheet-box" class="pt-1"></div>
                         </div>
                     </div>
 
@@ -630,6 +685,90 @@
                         <button type="submit" id="btn-save-student-submit" class="flex-1 py-2.5 bg-indigo-600 text-white font-bold rounded-xl text-xs shadow mt-2">Save & Register Student</button>
                         <button type="button" id="btn-delete-student-modal" class="hidden px-4 py-2.5 bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100 font-bold rounded-xl text-xs transition mt-2">Delete</button>
                     </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= MODAL: POST / UPDATE NOTICE ================= -->
+        <div id="modal-add-notice" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+            <div class="bg-white w-full max-w-sm rounded-2xl p-5 shadow-2xl text-slate-800">
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
+                    <h4 id="modal-notice-title" class="text-sm font-bold text-slate-800"><i class="fa-solid fa-bullhorn text-indigo-600 mr-1.5"></i> Post Official Notice</h4>
+                    <button onclick="closeModal('modal-add-notice')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <form onsubmit="handleSaveNotice(event)" class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Notice Title *</label>
+                        <input type="text" id="inp-notice-title" required placeholder="e.g. Unit Test Schedule Announced" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Notice Tag *</label>
+                        <select id="inp-notice-tag" class="w-full border border-slate-300 rounded-xl px-2 py-2 text-xs bg-white">
+                            <option value="Important">Important</option>
+                            <option value="Exam">Exam & Test</option>
+                            <option value="Holiday">Holiday</option>
+                            <option value="Fees">Fee Notice</option>
+                            <option value="General">General</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Notice Details *</label>
+                        <textarea id="inp-notice-desc" rows="3" required placeholder="Enter announcement details here..." class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs"></textarea>
+                    </div>
+                    <button type="submit" id="btn-save-notice-submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs shadow transition">Publish Notice</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= MODAL: UPLOAD NOTES & STUDY MATERIALS ================= -->
+        <div id="modal-add-note" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+            <div class="bg-white w-full max-w-sm rounded-2xl p-5 shadow-2xl text-slate-800">
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
+                    <h4 class="text-sm font-bold text-slate-800"><i class="fa-solid fa-book-bookmark text-indigo-600 mr-1.5"></i> Upload Notes / Study Material</h4>
+                    <button onclick="closeModal('modal-add-note')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <form onsubmit="handleSaveNote(event)" class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Material / Chapter Title *</label>
+                        <input type="text" id="inp-note-title" required placeholder="e.g. Chapter 3 - Electricity Notes" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Class *</label>
+                            <select id="inp-note-class" class="w-full border border-slate-300 rounded-xl px-2 py-2 text-xs bg-white">
+                                <option value="10th">Class 10th</option>
+                                <option value="9th">Class 9th</option>
+                                <option value="8th">Class 8th</option>
+                                <option value="7th">Class 7th</option>
+                                <option value="6th">Class 6th</option>
+                                <option value="5th">Class 5th</option>
+                                <option value="4th">Class 4th</option>
+                                <option value="3rd">Class 3rd</option>
+                                <option value="2nd">Class 2nd</option>
+                                <option value="1st">Class 1st</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Subject *</label>
+                            <select id="inp-note-subject" class="w-full border border-slate-300 rounded-xl px-2 py-2 text-xs bg-white">
+                                <option value="Science">Science</option>
+                                <option value="Maths">Maths</option>
+                                <option value="Social Science">Social Science</option>
+                                <option value="English">English</option>
+                                <option value="Hindi & Sanskrit">Hindi & Sanskrit</option>
+                                <option value="Computer">Computer</option>
+                                <option value="All Subjects">All Subjects</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-2">
+                        <label class="block text-xs font-bold text-slate-700"><i class="fa-solid fa-file-pdf text-red-500 mr-1"></i> Attach Document or Paste Link</label>
+                        <input type="file" id="inp-note-file" accept=".pdf,.doc,.docx,image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-xl file:border-0 file:text-[10px] file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                        <input type="url" id="inp-note-url" placeholder="Or paste Google Drive link" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs bg-white">
+                    </div>
+
+                    <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs shadow transition">Publish Material</button>
                 </form>
             </div>
         </div>
@@ -693,11 +832,22 @@
         </div>
 
     </div>
-
     <!-- ================= LOGIC & GOOGLE SHEETS CLOUD ENGINE ================= -->
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxip1ha_ESMt3plLxHR8TWnt3RafngNlzoZQcl-ZgbjieapIUKy36MB3UMm-XB-gdDE/exec"; 
         const COACHING_UPI_ID = "shikshajhs@ptyes";
+
+        const ALL_COACHING_SUBJECTS = [
+            "Hindi & Sanskrit",
+            "English",
+            "Maths",
+            "Science",
+            "Social Science",
+            "Computer",
+            "All Subjects"
+        ];
+
+        const ALL_CLASSES = ["10th", "9th", "8th", "7th", "6th", "5th", "4th", "3rd", "2nd", "1st"];
 
         const STATE = {
             adminUser: JSON.parse(localStorage.getItem('shiksha_admin_user') || JSON.stringify({
@@ -711,35 +861,33 @@
             activeTab: 'home',
             selectedBoard: 'All',
             selectedAttClass: '10th',
-            studentStatusFilter: 'active', // active, inactive, all
+            studentStatusFilter: 'active',
             students: JSON.parse(localStorage.getItem('shiksha_students') || '[]'),
             holidays: JSON.parse(localStorage.getItem('shiksha_holidays') || '[]'),
             attendanceLogs: JSON.parse(localStorage.getItem('shiksha_att_logs') || '{}'),
             notices: JSON.parse(localStorage.getItem('shiksha_notices') || JSON.stringify([
-                { id: 1, title: 'Session Registrations Open', desc: 'Classes 1st to 10th (CBSE / ICSE / UP Board) new batches starting soon.', date: 'Nov 2026', tag: 'Important' }
+                { id: 1, title: 'Admissions Open for Session 2026-27', tag: 'Important', desc: 'Classes 1st to 10th admissions open with conceptual smart learning.', date: 'Recent', author: 'Admin' }
             ])),
             results: JSON.parse(localStorage.getItem('shiksha_results') || JSON.stringify([
                 { id: 1, title: 'Weekly Assessment', class: '10th', subject: 'Science', maxMarks: 50, date: 'Recent', topStudent: 'Marks Published' }
             ])),
             materials: JSON.parse(localStorage.getItem('shiksha_materials') || JSON.stringify([
-                { id: 1, title: 'Class 10th - Science Formula Sheet', class: '10th', subject: 'Science', link: 'https://drive.google.com' }
+                { id: 1, title: 'Science Formula Sheet', class: '10th', subject: 'Science', link: 'https://drive.google.com', author: 'Faculty (Admin)' }
             ])),
             loginRoleSelect: 'admin'
         };
 
+        let currentEditingNoticeId = null;
+
         const cleanPhone = (val) => String(val || '').replace(/\D/g, '').slice(-10);
 
-        // ================= DATE FORMATTER (FIXES BLANK ADMISSION / LEAVING DATE) =================
         function formatDateForInput(dateVal) {
             if (!dateVal) return '';
             try {
                 const str = String(dateVal).trim();
                 if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
-                
                 const d = new Date(str);
-                if (isNaN(d.getTime())) {
-                    return str.split('T')[0];
-                }
+                if (isNaN(d.getTime())) return str.split('T')[0];
                 const year = d.getFullYear();
                 const month = String(d.getMonth() + 1).padStart(2, '0');
                 const day = String(d.getDate()).padStart(2, '0');
@@ -749,19 +897,15 @@
             }
         }
 
-        // ================= AUTO SEQUENCE ID GENERATOR (SCI-0001, SCI-0002...) =================
         function generateNextStudentId() {
             let maxNumber = 0;
             STATE.students.forEach(s => {
                 if (s.id && String(s.id).startsWith("SCI-")) {
                     const numPart = parseInt(s.id.replace("SCI-", ""), 10);
-                    if (!isNaN(numPart) && numPart > maxNumber) {
-                        maxNumber = numPart;
-                    }
+                    if (!isNaN(numPart) && numPart > maxNumber) maxNumber = numPart;
                 }
             });
-            const nextNum = maxNumber + 1;
-            return "SCI-" + String(nextNum).padStart(4, '0');
+            return "SCI-" + String(maxNumber + 1).padStart(4, '0');
         }
 
         function compressImage(file, maxWidth = 600, quality = 0.7) {
@@ -802,26 +946,28 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const tFileInput = document.getElementById('inp-teach-file');
-            if (tFileInput) {
-                tFileInput.addEventListener('change', async (e) => {
-                    if (e.target.files && e.target.files[0]) {
-                        const compressed = await compressImage(e.target.files[0]);
-                        document.getElementById('teach-preview-img').src = compressed;
-                    }
-                });
+        function toggleAllSubjectsFaculty(cb) {
+            const boxes = document.querySelectorAll('#faculty-subjects-checkboxes input[name="teach-subj"]');
+            boxes.forEach(b => {
+                if (b !== cb && cb.checked) b.checked = false;
+            });
+        }
+
+        function toggleAllSubjectsStudent(cb) {
+            const boxes = document.querySelectorAll('#student-subjects-checkboxes input[name="stu-subj"]');
+            boxes.forEach(b => {
+                if (b !== cb && cb.checked) b.checked = false;
+            });
+        }
+
+        function handleStudentClassChange(cls) {
+            const container = document.getElementById('stu-subjects-container');
+            if (cls === '9th' || cls === '10th') {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
             }
-            const sFileInput = document.getElementById('inp-stu-photo-file');
-            if (sFileInput) {
-                sFileInput.addEventListener('change', async (e) => {
-                    if (e.target.files && e.target.files[0]) {
-                        const compressed = await compressImage(e.target.files[0]);
-                        document.getElementById('stu-preview-img').src = compressed;
-                    }
-                });
-            }
-        });
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedSession = sessionStorage.getItem('shiksha_auth_role');
@@ -837,6 +983,7 @@
             renderNotices();
             renderResults();
             renderStudents();
+            renderAttendanceClassChips();
             renderAttendanceList();
             renderFees();
             renderMaterials();
@@ -867,6 +1014,7 @@
                             return {
                                 ...localS,
                                 ...cloudS,
+                                subjects: cloudS.subjects || localS.subjects || '',
                                 photo: cloudS.photo || localS.photo || '',
                                 docAadhaar: cloudS.docAadhaar || localS.docAadhaar || '',
                                 docMarksheet: cloudS.docMarksheet || localS.docMarksheet || '',
@@ -887,6 +1035,8 @@
                             return {
                                 ...localT,
                                 ...cloudT,
+                                qualifications: cloudT.qualifications || localT.qualifications || '',
+                                subjects: cloudT.subjects || cloudT.dept || localT.subjects || '',
                                 salary: cloudT.salary || localT.salary || '',
                                 aadhaar: cloudT.aadhaar || localT.aadhaar || '',
                                 pan: cloudT.pan || localT.pan || '',
@@ -898,6 +1048,16 @@
                         localStorage.setItem('shiksha_teachers', JSON.stringify(STATE.registeredTeachers));
                     }
 
+                    if (Array.isArray(data.notices) && data.notices.length > 0) {
+                        STATE.notices = data.notices;
+                        localStorage.setItem('shiksha_notices', JSON.stringify(STATE.notices));
+                    }
+
+                    if (Array.isArray(data.materials) && data.materials.length > 0) {
+                        STATE.materials = data.materials;
+                        localStorage.setItem('shiksha_materials', JSON.stringify(STATE.materials));
+                    }
+
                     if (statusEl) {
                         statusEl.className = "text-[9px] font-semibold text-emerald-400 flex items-center gap-1 bg-emerald-950 px-2 py-0.5 rounded-full border border-emerald-800";
                         statusEl.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i> Synced';
@@ -906,6 +1066,8 @@
                     renderTeachers();
                     renderFees();
                     renderAttendanceList();
+                    renderNotices();
+                    renderMaterials();
                     updateKpis();
                 }
             } catch (err) {
@@ -968,14 +1130,193 @@ _Fee Notification & Receipt Slip_
 *Date:* ${dateStr}
 *Student Name:* ${student.name}
 ${student.fatherName ? `*Father's Name:* ${student.fatherName}\n` : ''}*Class & Board:* ${student.class} (${student.board})
+*Enrolled Subjects:* ${student.subjects || 'All Subjects'}
 *Pending Balance:* ₹${pendingAmount}
 --------------------------------
 *Pay via UPI:* ${COACHING_UPI_ID}
 _Please contact administration for confirmation._
 *Location:* Panchwati, Jhansi (U.P.)`;
 
-            const whatsappUrl = `https://wa.me/91${cleanNumber}?text=${encodeURIComponent(textMessage)}`;
-            window.open(whatsappUrl, '_blank');
+            window.open(`https://wa.me/91${cleanNumber}?text=${encodeURIComponent(textMessage)}`, '_blank');
+        }
+
+        // ================= NOTICE BOARD (TEACHER & ADMIN POSTABLE & EDITABLE) =================
+        function openAddNoticeModal() {
+            currentEditingNoticeId = null;
+            document.getElementById('modal-notice-title').innerHTML = '<i class="fa-solid fa-bullhorn text-indigo-600 mr-1.5"></i> Post Official Notice';
+            document.getElementById('btn-save-notice-submit').innerText = "Publish Notice";
+            document.getElementById('inp-notice-title').value = '';
+            document.getElementById('inp-notice-desc').value = '';
+            document.getElementById('inp-notice-tag').value = 'Important';
+            document.getElementById('modal-add-notice').classList.remove('hidden');
+        }
+
+        function editNoticeModal(id) {
+            const notice = STATE.notices.find(n => n.id === id);
+            if (!notice) return;
+            currentEditingNoticeId = id;
+            document.getElementById('modal-notice-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-indigo-600 mr-1.5"></i> Update Notice';
+            document.getElementById('btn-save-notice-submit').innerText = "Update Notice";
+            document.getElementById('inp-notice-title').value = notice.title || '';
+            document.getElementById('inp-notice-desc').value = notice.desc || '';
+            document.getElementById('inp-notice-tag').value = notice.tag || 'Important';
+            document.getElementById('modal-add-notice').classList.remove('hidden');
+        }
+
+        async function handleSaveNotice(e) {
+            e.preventDefault();
+            const title = document.getElementById('inp-notice-title').value.trim();
+            const tag = document.getElementById('inp-notice-tag').value;
+            const desc = document.getElementById('inp-notice-desc').value.trim();
+            
+            let authorTag = 'Admin';
+            if (STATE.currentRole === 'teacher') {
+                const t = STATE.registeredTeachers.find(item => cleanPhone(item.phone) === cleanPhone(STATE.currentUserPhone));
+                authorTag = t ? `Faculty (${t.name})` : 'Faculty';
+            }
+
+            let noticePayload = null;
+
+            if (currentEditingNoticeId) {
+                const existingIdx = STATE.notices.findIndex(n => n.id === currentEditingNoticeId);
+                if (existingIdx > -1) {
+                    STATE.notices[existingIdx].title = title;
+                    STATE.notices[existingIdx].tag = tag;
+                    STATE.notices[existingIdx].desc = desc;
+                    STATE.notices[existingIdx].date = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                    noticePayload = STATE.notices[existingIdx];
+                }
+            } else {
+                const newNotice = {
+                    id: Date.now(),
+                    title,
+                    tag,
+                    desc,
+                    date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+                    author: authorTag
+                };
+                STATE.notices.unshift(newNotice);
+                noticePayload = newNotice;
+            }
+
+            localStorage.setItem('shiksha_notices', JSON.stringify(STATE.notices));
+            renderNotices();
+            closeModal('modal-add-notice');
+
+            if (noticePayload) {
+                await postToCloud({ action: 'addNotice', notice: noticePayload });
+            }
+            alert(currentEditingNoticeId ? "Notice updated successfully!" : `Notice published by ${authorTag}!`);
+        }
+
+        function renderNotices() {
+            const container = document.getElementById('notice-list-container');
+            if (!container) return;
+            const canEdit = (STATE.currentRole === 'admin' || STATE.currentRole === 'teacher');
+
+            container.innerHTML = STATE.notices.map(n => `
+                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">${n.tag || 'General'}</span>
+                        <span class="text-[10px] text-slate-400">${n.date}</span>
+                    </div>
+                    <h4 class="text-xs font-bold text-slate-800">${n.title}</h4>
+                    <p class="text-[11px] text-slate-600 mt-0.5 leading-relaxed">${n.desc}</p>
+                    <div class="mt-2 pt-1.5 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-[9px] font-semibold text-indigo-600">By: ${n.author || 'Admin'}</span>
+                        ${canEdit ? `
+                            <button onclick="editNoticeModal(${n.id})" class="text-[10px] text-indigo-600 font-bold hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ================= STUDY NOTES (TEACHER & ADMIN UPLOADABLE) =================
+        function openAddNoteModal() {
+            document.getElementById('inp-note-title').value = '';
+            document.getElementById('inp-note-file').value = '';
+            document.getElementById('inp-note-url').value = '';
+            document.getElementById('modal-add-note').classList.remove('hidden');
+        }
+
+        async function handleSaveNote(e) {
+            e.preventDefault();
+            const title = document.getElementById('inp-note-title').value.trim();
+            const cls = document.getElementById('inp-note-class').value;
+            const subject = document.getElementById('inp-note-subject').value;
+            const file = document.getElementById('inp-note-file').files[0];
+            const urlLink = document.getElementById('inp-note-url').value.trim();
+
+            let finalLink = urlLink;
+            if (file) {
+                finalLink = await readFileAsBase64(file);
+            }
+
+            if (!finalLink) {
+                alert("Please attach a document file or enter a valid web link.");
+                return;
+            }
+
+            let authorTag = 'Admin';
+            if (STATE.currentRole === 'teacher') {
+                const t = STATE.registeredTeachers.find(item => cleanPhone(item.phone) === cleanPhone(STATE.currentUserPhone));
+                authorTag = t ? `Faculty (${t.name})` : 'Faculty';
+            }
+
+            const newNote = {
+                id: Date.now(),
+                title,
+                class: cls,
+                subject,
+                link: finalLink,
+                author: authorTag,
+                date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })
+            };
+
+            STATE.materials.unshift(newNote);
+            localStorage.setItem('shiksha_materials', JSON.stringify(STATE.materials));
+            renderMaterials();
+            closeModal('modal-add-note');
+
+            await postToCloud({ action: 'addNote', note: newNote });
+            alert("Study note uploaded successfully!");
+        }
+
+        function renderMaterials() {
+            const container = document.getElementById('notes-list-container');
+            if (!container) return;
+
+            let list = STATE.materials;
+            if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
+                const stu = STATE.students.find(s => s.id === STATE.currentStudentId);
+                if (stu) list = list.filter(m => m.class === stu.class);
+            }
+
+            if (list.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 py-3 text-center">No study materials available.</p>`;
+                return;
+            }
+
+            container.innerHTML = list.map(m => `
+                <div class="p-3 bg-white rounded-xl border border-slate-200 flex items-center justify-between">
+                    <div class="flex items-center space-x-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center text-sm font-bold">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-800">${m.title}</h4>
+                            <p class="text-[10px] text-slate-500">Class ${m.class} &bull; ${m.subject}</p>
+                            <span class="text-[9px] text-slate-400">By: ${m.author || 'Educator'}</span>
+                        </div>
+                    </div>
+                    <a href="${m.link}" download="${m.title}" target="_blank" class="text-xs px-2.5 py-1 bg-indigo-50 text-indigo-600 font-semibold rounded-lg hover:bg-indigo-100 flex items-center gap-1">
+                        <i class="fa-solid fa-download"></i>
+                    </a>
+                </div>
+            `).join('');
         }
 
         // ================= TEST MARKS ENTRY ENGINE =================
@@ -1090,6 +1431,27 @@ _Please contact administration for confirmation._
             return { workingDays, holidays: monthHolidays, present, leave, absent, percentage };
         }
 
+        function renderAttendanceClassChips() {
+            const container = document.getElementById('attendance-class-chips');
+            if (!container) return;
+            container.innerHTML = '';
+            ALL_CLASSES.forEach(cls => {
+                const btn = document.createElement('button');
+                btn.className = (cls === STATE.selectedAttClass)
+                    ? "att-cls-chip px-3 py-1 rounded-full bg-slate-900 text-white font-semibold text-[11px] whitespace-nowrap"
+                    : "att-cls-chip px-3 py-1 rounded-full bg-white text-slate-600 border border-slate-200 font-semibold text-[11px] whitespace-nowrap";
+                btn.innerText = `Class ${cls}`;
+                btn.onclick = () => selectAttendanceClass(cls);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectAttendanceClass(cls) {
+            STATE.selectedAttClass = cls;
+            renderAttendanceClassChips();
+            renderAttendanceList();
+        }
+
         function markAtt(id, status, btn) {
             if (STATE.currentRole === 'parent') {
                 alert('Students have view-only access.');
@@ -1177,7 +1539,6 @@ _Administration Office, SHIKSHA Coaching_`;
                 }
             } else {
                 if (classChips) classChips.classList.remove('hidden');
-                // Active students only in attendance register
                 list = STATE.students.filter(s => s.class === STATE.selectedAttClass && (!s.leavingDate || s.leavingDate > todayStr));
                 summaryTitle.innerText = `Class ${STATE.selectedAttClass} (${monthName})`;
                 if (list[0]) {
@@ -1188,7 +1549,7 @@ _Administration Office, SHIKSHA Coaching_`;
             }
 
             if (list.length === 0) {
-                container.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">No active students found in this class.</div>`;
+                container.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">No active students found in Class ${STATE.selectedAttClass}.</div>`;
                 return;
             }
 
@@ -1427,6 +1788,8 @@ _Administration Office, SHIKSHA Coaching_`;
             const btnAddTeacher = document.getElementById('btn-add-teacher-top');
             const adminKpis = document.getElementById('admin-kpis');
             const filterControls = document.getElementById('student-filter-controls');
+            const btnAddNoticeHome = document.getElementById('btn-add-notice-home');
+            const btnUploadNotes = document.getElementById('btn-upload-notes');
 
             if (role === 'admin') {
                 badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 flex items-center gap-1";
@@ -1438,6 +1801,8 @@ _Administration Office, SHIKSHA Coaching_`;
                 btnAddTeacher.classList.remove('hidden');
                 adminKpis.classList.remove('hidden');
                 if (filterControls) filterControls.classList.remove('hidden');
+                if (btnAddNoticeHome) btnAddNoticeHome.classList.remove('hidden');
+                if (btnUploadNotes) btnUploadNotes.classList.remove('hidden');
             } else if (role === 'teacher') {
                 badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-800 flex items-center gap-1";
                 badge.innerHTML = '<i class="fa-solid fa-chalkboard-user"></i> Teacher';
@@ -1448,6 +1813,8 @@ _Administration Office, SHIKSHA Coaching_`;
                 btnAddTeacher.classList.add('hidden');
                 adminKpis.classList.remove('hidden');
                 if (filterControls) filterControls.classList.remove('hidden');
+                if (btnAddNoticeHome) btnAddNoticeHome.classList.remove('hidden');
+                if (btnUploadNotes) btnUploadNotes.classList.remove('hidden');
             } else {
                 let sName = 'Student';
                 if (STATE.currentStudentId) {
@@ -1463,11 +1830,16 @@ _Administration Office, SHIKSHA Coaching_`;
                 btnAddTeacher.classList.add('hidden');
                 adminKpis.classList.add('hidden');
                 if (filterControls) filterControls.classList.add('hidden');
+                if (btnAddNoticeHome) btnAddNoticeHome.classList.add('hidden');
+                if (btnUploadNotes) btnUploadNotes.classList.add('hidden');
             }
 
             renderStudents();
+            renderAttendanceClassChips();
             renderAttendanceList();
             renderTeachers();
+            renderNotices();
+            renderMaterials();
             renderFees();
         }
 
@@ -1488,7 +1860,7 @@ _Administration Office, SHIKSHA Coaching_`;
             document.getElementById('modal-teacher-title').innerHTML = '<i class="fa-solid fa-chalkboard-user mr-1.5 text-indigo-600"></i> Add New Faculty';
             document.getElementById('teach-preview-img').src = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=60";
             document.getElementById('inp-teach-name').value = '';
-            document.getElementById('inp-teach-dept').value = '';
+            document.getElementById('inp-teach-qual').value = '';
             document.getElementById('inp-teach-salary').value = '';
             document.getElementById('inp-teach-photo').value = '';
             document.getElementById('inp-teach-phone').value = '';
@@ -1500,7 +1872,9 @@ _Administration Office, SHIKSHA Coaching_`;
             document.getElementById('inp-teach-file').value = '';
             document.getElementById('inp-teach-doc').value = '';
             document.getElementById('teach-doc-link-box').innerHTML = '';
-            
+
+            document.querySelectorAll('#faculty-subjects-checkboxes input[name="teach-subj"]').forEach(cb => cb.checked = false);
+
             document.getElementById('btn-save-teacher-submit').innerText = "Save Faculty Record";
             document.getElementById('btn-save-teacher-submit').classList.remove('hidden');
             document.getElementById('btn-delete-teacher-modal').classList.add('hidden');
@@ -1528,7 +1902,7 @@ _Administration Office, SHIKSHA Coaching_`;
 
             document.getElementById('teach-preview-img').src = t.photo || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=60";
             document.getElementById('inp-teach-name').value = t.name || '';
-            document.getElementById('inp-teach-dept').value = t.dept || '';
+            document.getElementById('inp-teach-qual').value = t.qualifications || '';
             document.getElementById('inp-teach-salary').value = t.salary !== undefined ? t.salary : '';
             document.getElementById('inp-teach-photo').value = (t.photo && !t.photo.startsWith('data:')) ? t.photo : '';
             document.getElementById('inp-teach-phone').value = t.phone || '';
@@ -1539,6 +1913,11 @@ _Administration Office, SHIKSHA Coaching_`;
             document.getElementById('inp-teach-dl').value = t.dl || '';
             document.getElementById('inp-teach-file').value = '';
             document.getElementById('inp-teach-doc').value = '';
+
+            const subjsArray = (t.subjects || t.dept || '').split(',').map(s => s.trim());
+            document.querySelectorAll('#faculty-subjects-checkboxes input[name="teach-subj"]').forEach(cb => {
+                cb.checked = subjsArray.includes(cb.value);
+            });
 
             const docBox = document.getElementById('teach-doc-link-box');
             docBox.innerHTML = t.document 
@@ -1568,14 +1947,16 @@ _Administration Office, SHIKSHA Coaching_`;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saving...';
 
             const name = document.getElementById('inp-teach-name').value.trim();
-            const dept = document.getElementById('inp-teach-dept').value.trim();
+            const qualifications = document.getElementById('inp-teach-qual').value.trim();
             const salary = document.getElementById('inp-teach-salary').value || '0';
             const phone = cleanPhone(document.getElementById('inp-teach-phone').value.trim());
             const pwd = document.getElementById('inp-teach-pwd').value.trim();
-
             const aadhaar = document.getElementById('inp-teach-aadhaar').value.trim();
             const pan = document.getElementById('inp-teach-pan').value.trim();
             const dl = document.getElementById('inp-teach-dl').value.trim();
+
+            const checkedSubjs = Array.from(document.querySelectorAll('#faculty-subjects-checkboxes input[name="teach-subj"]:checked')).map(c => c.value);
+            const subjectsStr = checkedSubjs.length > 0 ? checkedSubjs.join(', ') : 'All Subjects';
 
             const fileImg = document.getElementById('inp-teach-file').files[0];
             const fileDoc = document.getElementById('inp-teach-doc').files[0];
@@ -1590,19 +1971,20 @@ _Administration Office, SHIKSHA Coaching_`;
             const existing = STATE.registeredTeachers.find(t => cleanPhone(t.phone) === phone);
 
             let photoData = fallbackUrl || (existing ? existing.photo : '');
-            if (fileImg) {
-                photoData = await compressImage(fileImg);
-            }
+            if (fileImg) photoData = await compressImage(fileImg);
 
             let docData = existing ? (existing.document || '') : '';
-            if (fileDoc) {
-                docData = await readFileAsBase64(fileDoc);
-            }
+            if (fileDoc) docData = await readFileAsBase64(fileDoc);
 
             const teacherObj = {
-                name, dept, salary,
+                name,
+                qualifications,
+                dept: subjectsStr,
+                subjects: subjectsStr,
+                salary,
                 photo: photoData,
-                phone, password: pwd,
+                phone,
+                password: pwd,
                 aadhaar: aadhaar || '',
                 pan: pan || '',
                 dl: dl || '',
@@ -1653,8 +2035,8 @@ _Administration Office, SHIKSHA Coaching_`;
                         }
                         <div>
                             <h4 class="text-xs font-bold text-slate-800 leading-tight">${t.name}</h4>
-                            <p class="text-[10px] text-slate-500">${t.dept} &bull; <i class="fa-solid fa-phone text-[8px]"></i> ${t.phone}</p>
-                            ${t.pan || t.dl ? `<p class="text-[9px] text-slate-400">PAN: ${t.pan || '-'} | DL: ${t.dl || '-'}</p>` : ''}
+                            <p class="text-[10px] text-amber-700 font-semibold">${t.qualifications || 'Educator'}</p>
+                            <p class="text-[10px] text-slate-500">${t.subjects || t.dept || 'Subjects'} &bull; ${t.phone}</p>
                         </div>
                     </div>
                     <div class="flex items-center space-x-1.5" onclick="event.stopPropagation()">
@@ -1683,7 +2065,7 @@ _Administration Office, SHIKSHA Coaching_`;
             }
         }
 
-        // ================= SAVE STUDENT (AUTO SCI-xxxx ID ASSIGNMENT) =================
+        // ================= SAVE STUDENT =================
         function openAddStudentModal() {
             const nextId = generateNextStudentId();
             document.getElementById('modal-student-title').innerText = "Add New Student";
@@ -1704,10 +2086,9 @@ _Administration Office, SHIKSHA Coaching_`;
             document.getElementById('inp-stu-pwd').value = "";
             document.getElementById('inp-stu-fee').value = "0";
             document.getElementById('inp-stu-photo-file').value = "";
-            document.getElementById('inp-stu-doc-aadhaar').value = "";
-            document.getElementById('inp-stu-doc-marksheet').value = "";
-            document.getElementById('stu-doc-aadhaar-box').innerHTML = "";
-            document.getElementById('stu-doc-marksheet-box').innerHTML = "";
+
+            handleStudentClassChange("10th");
+            document.querySelectorAll('#student-subjects-checkboxes input[name="stu-subj"]').forEach(cb => cb.checked = false);
 
             document.getElementById('btn-save-student-submit').innerText = "Save & Register Student";
             document.getElementById('btn-save-student-submit').classList.remove('hidden');
@@ -1736,7 +2117,6 @@ _Administration Office, SHIKSHA Coaching_`;
             document.getElementById('inp-stu-email').value = s.email || '';
             document.getElementById('inp-stu-address').value = s.address || '';
             
-            // Format dates properly to prevent blank values in date picker
             document.getElementById('inp-stu-adm-date').value = formatDateForInput(s.admissionDate);
             document.getElementById('inp-stu-leave-date').value = formatDateForInput(s.leavingDate);
 
@@ -1747,18 +2127,12 @@ _Administration Office, SHIKSHA Coaching_`;
             document.getElementById('inp-stu-pwd').value = s.password || '';
             document.getElementById('inp-stu-fee').value = s.feePending !== undefined ? s.feePending : 0;
             document.getElementById('inp-stu-photo-file').value = '';
-            document.getElementById('inp-stu-doc-aadhaar').value = '';
-            document.getElementById('inp-stu-doc-marksheet').value = '';
 
-            const aadharBox = document.getElementById('stu-doc-aadhaar-box');
-            aadharBox.innerHTML = s.docAadhaar 
-                ? `<a href="${s.docAadhaar}" download="Aadhaar_Document" class="text-indigo-600 font-bold hover:underline text-[10px] block mt-1"><i class="fa-solid fa-file-pdf"></i> Download Aadhaar Document</a>`
-                : '';
-
-            const marksheetBox = document.getElementById('stu-doc-marksheet-box');
-            marksheetBox.innerHTML = s.docMarksheet 
-                ? `<a href="${s.docMarksheet}" download="Marksheet_Document" class="text-indigo-600 font-bold hover:underline text-[10px] block mt-1"><i class="fa-solid fa-file-lines"></i> Download Marksheet Document</a>`
-                : '';
+            handleStudentClassChange(s.class || '10th');
+            const subjsArray = (s.subjects || '').split(',').map(sub => sub.trim());
+            document.querySelectorAll('#student-subjects-checkboxes input[name="stu-subj"]').forEach(cb => {
+                cb.checked = subjsArray.includes(cb.value);
+            });
 
             const saveBtn = document.getElementById('btn-save-student-submit');
             const delBtn = document.getElementById('btn-delete-student-modal');
@@ -1797,35 +2171,27 @@ _Administration Office, SHIKSHA Coaching_`;
             const admissionDate = document.getElementById('inp-stu-adm-date').value;
             const leavingDate = document.getElementById('inp-stu-leave-date').value;
 
-            const photoFile = document.getElementById('inp-stu-photo-file').files[0];
-            const aadhaarFile = document.getElementById('inp-stu-doc-aadhaar').files[0];
-            const marksheetFile = document.getElementById('inp-stu-doc-marksheet').files[0];
-
-            if (phone.length !== 10) {
-                alert('Please enter a valid 10-digit mobile number.');
-                btn.innerHTML = orig;
-                return;
+            let subjectsStr = 'All Subjects';
+            if (cls === '9th' || cls === '10th') {
+                const checked = Array.from(document.querySelectorAll('#student-subjects-checkboxes input[name="stu-subj"]:checked')).map(c => c.value);
+                if (checked.length > 0) subjectsStr = checked.join(', ');
             }
 
+            const photoFile = document.getElementById('inp-stu-photo-file').files[0];
             const existing = STATE.students.find(s => s.id === id);
 
             let photoData = existing ? (existing.photo || '') : '';
             if (photoFile) photoData = await compressImage(photoFile);
-
-            let aadhaarDoc = existing ? (existing.docAadhaar || '') : '';
-            if (aadhaarFile) aadhaarDoc = await readFileAsBase64(aadhaarFile);
-
-            let marksheetDoc = existing ? (existing.docMarksheet || '') : '';
-            if (marksheetFile) marksheetDoc = await readFileAsBase64(marksheetFile);
 
             const studentObj = {
                 id, name, class: cls, board, phone,
                 password: pwd, feePending: fee,
                 fatherName, motherName, email, address,
                 admissionDate, leavingDate,
+                subjects: subjectsStr,
                 photo: photoData,
-                docAadhaar: aadhaarDoc,
-                docMarksheet: marksheetDoc
+                docAadhaar: existing ? (existing.docAadhaar || '') : '',
+                docMarksheet: existing ? (existing.docMarksheet || '') : ''
             };
 
             const existingIdx = STATE.students.findIndex(s => s.id === id);
@@ -1904,6 +2270,9 @@ _Administration Office, SHIKSHA Coaching_`;
                 card.onclick = () => openMasterStudentForm(s.id);
 
                 const isInactive = s.leavingDate && s.leavingDate <= today;
+                const subjInfo = (s.class === '9th' || s.class === '10th') && s.subjects
+                    ? `<p class="text-[9px] text-indigo-600 font-semibold mt-0.5"><i class="fa-solid fa-book-bookmark mr-1"></i>${s.subjects}</p>`
+                    : '';
 
                 card.innerHTML = `
                     <div class="flex items-center space-x-3">
@@ -1918,8 +2287,8 @@ _Administration Office, SHIKSHA Coaching_`;
                                 ${isInactive ? `<span class="text-[8px] font-bold px-1.5 py-0.2 rounded bg-rose-100 text-rose-700 border border-rose-200">Inactive</span>` : `<span class="text-[8px] font-bold px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-700 border border-emerald-200">Active</span>`}
                             </div>
                             <p class="text-[11px] text-slate-500 mt-0.5">Class ${s.class} (${s.board}) &bull; ${s.phone}</p>
+                            ${subjInfo}
                             ${s.fatherName ? `<p class="text-[9px] text-slate-500">Father: ${s.fatherName}</p>` : ''}
-                            ${s.admissionDate ? `<span class="text-[9px] text-indigo-600 font-semibold block">Joined: ${s.admissionDate.split('T')[0]}</span>` : ''}
                         </div>
                     </div>
                     <div class="text-right" onclick="event.stopPropagation()">
@@ -1951,14 +2320,6 @@ _Administration Office, SHIKSHA Coaching_`;
             }
         }
 
-        function selectAttendanceClass(cls) {
-            STATE.selectedAttClass = cls;
-            document.querySelectorAll('.att-cls-chip').forEach(c => {
-                c.className = c.innerText.includes(cls) ? 'att-cls-chip px-3 py-1 rounded-full bg-slate-900 text-white font-semibold text-[11px]' : 'att-cls-chip px-3 py-1 rounded-full bg-white text-slate-600 border border-slate-200 font-semibold text-[11px]';
-            });
-            renderAttendanceList();
-        }
-
         async function saveAttendance() {
             if (STATE.currentRole === 'parent') return;
             await postToCloud({ action: 'saveAttendance', logs: STATE.attendanceLogs });
@@ -1973,20 +2334,6 @@ _Administration Office, SHIKSHA Coaching_`;
             const largeDue = document.getElementById('fee-total-due-large');
             if (largeDue) largeDue.innerText = '₹' + totalDue;
             document.getElementById('kpi-present-count').innerText = activeStudents.length > 0 ? Math.floor(activeStudents.length * 0.85) : 0;
-        }
-
-        function renderNotices() {
-            const container = document.getElementById('notice-list-container');
-            container.innerHTML = STATE.notices.map(n => `
-                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                    <div class="flex justify-between items-center">
-                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">${n.tag}</span>
-                        <span class="text-[10px] text-slate-400">${n.date}</span>
-                    </div>
-                    <h4 class="text-xs font-bold text-slate-800 mt-1">${n.title}</h4>
-                    <p class="text-[11px] text-slate-600 mt-0.5 leading-relaxed">${n.desc}</p>
-                </div>
-            `).join('');
         }
 
         function renderResults() {
@@ -2042,26 +2389,6 @@ _Administration Office, SHIKSHA Coaching_`;
                 `;
                 container.appendChild(card);
             });
-        }
-
-        function renderMaterials() {
-            const container = document.getElementById('notes-list-container');
-            container.innerHTML = STATE.materials.map(m => `
-                <div class="p-3 bg-white rounded-xl border border-slate-200 flex items-center justify-between">
-                    <div class="flex items-center space-x-2.5">
-                        <div class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center text-sm font-bold">
-                            <i class="fa-solid fa-file-pdf"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-xs font-bold text-slate-800">${m.title}</h4>
-                            <p class="text-[10px] text-slate-500">Class ${m.class} &bull; ${m.subject}</p>
-                        </div>
-                    </div>
-                    <a href="${m.link}" target="_blank" class="text-xs px-2.5 py-1 bg-indigo-50 text-indigo-600 font-semibold rounded-lg hover:bg-indigo-100">
-                        <i class="fa-solid fa-download"></i>
-                    </a>
-                </div>
-            `).join('');
         }
 
         function openChangePinModal() {
