@@ -1,4 +1,4 @@
-const CACHE_NAME = 'shiksha-unified-erp-v3.0';
+const CACHE_NAME = 'shiksha-unified-erp-v5.0';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -22,7 +22,13 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const reqUrl = new URL(event.request.url);
-  if (event.request.method !== 'GET' || reqUrl.hostname.includes('script.google.com') || reqUrl.hostname.includes('script.googleusercontent.com')) {
+  if (
+    event.request.method !== 'GET' ||
+    reqUrl.hostname.includes('script.google.com') ||
+    reqUrl.hostname.includes('script.googleusercontent.com') ||
+    reqUrl.hostname.includes('api.ocr.space') ||
+    reqUrl.hostname.includes('generativelanguage.googleapis.com')
+  ) {
     return;
   }
   if (reqUrl.origin === self.location.origin) {
