@@ -753,18 +753,18 @@
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                         <input type="text" id="ai-topic-prompt" placeholder="Chapter / Topic Name" class="w-full border border-indigo-300 rounded-xl px-3 py-1.5 text-xs font-semibold bg-white">
                         <select id="ai-num-questions" class="w-full border border-indigo-300 rounded-xl px-2.5 py-1.5 text-xs font-bold bg-white">
-                            <option value="5">Generate 5 MCQs</option>
-                            <option value="10" selected>Generate 10 MCQs</option>
-                            <option value="20">Generate 20 MCQs</option>
-                            <option value="30">Generate 30 MCQs</option>
-                            <option value="50">Generate 50 MCQs (Max)</option>
+                            <option value="5">Topic: 5 MCQs</option>
+                            <option value="10" selected>Topic: 10 MCQs</option>
+                            <option value="20">Topic: 20 MCQs</option>
+                            <option value="30">Topic: 30 MCQs</option>
+                            <option value="50">Topic: 50 MCQs (Max)</option>
                         </select>
                         <input type="password" id="gemini-api-key-inp" placeholder="Optional: Gemini API Key" class="w-full border border-indigo-300 rounded-xl px-3 py-1.5 text-xs font-semibold bg-white">
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2 items-center">
-                        <input type="file" id="ai-book-photo" accept="image/*,.pdf,application/pdf" class="flex-1 text-xs font-semibold w-full">
+                        <input type="file" id="ai-book-photo" accept="image/*,.pdf,application/pdf" onchange="if(this.files[0]) scanBookPhotoWithAi();" class="flex-1 text-xs font-semibold w-full">
                         <button type="button" onclick="scanBookPhotoWithAi()" class="w-full sm:w-auto px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs shadow flex items-center justify-center gap-1.5 shrink-0">
-                            <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Generate Questions
+                            <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Extract / Generate All
                         </button>
                     </div>
                 </div>
@@ -1134,7 +1134,7 @@
             </div>
         </div>
     </div>
-    <!-- ================= COMPLETE UNIFIED APPLICATION ENGINE SCRIPT (PART 2A) ================= -->
+    <!-- ================= COMPLETE UNIFIED APPLICATION ENGINE SCRIPT (PART 2 OF 3) ================= -->
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxip1ha_ESMt3plLxHR8TWnt3RafngNlzoZQcl-ZgbjieapIUKy36MB3UMm-XB-gdDE/exec"; 
         const COACHING_UPI_ID = "shikshajhs@ptyes";
@@ -1179,6 +1179,7 @@
         let testCountdownInterval = null;
         let deferredInstallPrompt = null;
         let isEditingAttendance = false;
+        let isEditingBehavior = false;
 
         // ================= CHROME PWA INSTALL PROMPT HANDLER =================
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -1227,6 +1228,26 @@
                 if (isNaN(d.getTime())) return str.split('T')[0];
                 return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
             } catch (e) { return ''; }
+        }
+
+        function isDateHolidayOrSunday(dateStr) {
+            if (!dateStr) return null;
+            const d = new Date(dateStr + 'T00:00:00');
+            if (!isNaN(d.getTime()) && d.getDay() === 0) {
+                return 'Sunday (Weekly Off)';
+            }
+            const found = STATE.holidays.find(h => formatDateForInput(h.date) === dateStr);
+            return found ? (found.title || 'Institute Holiday') : null;
+        }
+
+        function getUniqueHolidaysForMonth(monthKey) {
+            const seenDates = new Set();
+            return STATE.holidays.filter(h => {
+                const dKey = formatDateForInput(h.date);
+                if (!dKey || !dKey.startsWith(monthKey) || seenDates.has(dKey)) return false;
+                seenDates.add(dKey);
+                return true;
+            });
         }
 
         function generateNextStudentId() {
@@ -1427,7 +1448,9 @@
         function renderAllViews() {
             renderPublicOverview();
             renderPublicTeachers();
-            renderStudents();
+            if (!isEditingBehavior) {
+                renderStudents();
+            }
             renderTeachers();
             renderAttendanceClassChips();
             if (!isEditingAttendance) {
@@ -1626,7 +1649,13 @@
                     }
 
                     if (Array.isArray(data.holidays)) {
-                        STATE.holidays = data.holidays;
+                        const seen = new Set();
+                        STATE.holidays = data.holidays.filter(h => {
+                            const dk = formatDateForInput(h.date);
+                            if (!dk || seen.has(dk)) return false;
+                            seen.add(dk);
+                            return true;
+                        });
                         localStorage.setItem('shiksha_holidays', JSON.stringify(STATE.holidays));
                     }
 
@@ -1698,7 +1727,7 @@
             } catch (e) { console.error("Cloud push failed:", e); }
         }
 
-        // ================= 3-COLUMN COLOR-CODED ATTENDANCE =================
+        // ================= 3-COLUMN COLOR-CODED ATTENDANCE (HOLIDAY & SUNDAY LOCKED) =================
         function calculateDynamicAttendance(studentId) {
             const currentMonth = getCurrentMonthKey();
             const studentLog = STATE.attendanceLogs[studentId] || { daily: {} };
@@ -1706,14 +1735,14 @@
 
             let present = 0, leave = 0, absent = 0;
             Object.entries(daily).forEach(([dateKey, status]) => {
-                if (dateKey.startsWith(currentMonth)) {
+                if (dateKey.startsWith(currentMonth) && !isDateHolidayOrSunday(dateKey)) {
                     if (status === 'P') present++;
                     else if (status === 'L') leave++;
                     else if (status === 'A') absent++;
                 }
             });
 
-            const monthHolidays = STATE.holidays.filter(h => h.date && h.date.startsWith(currentMonth)).length;
+            const monthHolidays = getUniqueHolidaysForMonth(currentMonth).length;
             const totalRecordedDays = present + leave + absent;
             const percentage = totalRecordedDays > 0 ? Math.round((present / totalRecordedDays) * 100) : 0;
 
@@ -1727,7 +1756,7 @@
             studentList.forEach(s => {
                 const daily = (STATE.attendanceLogs[s.id] && STATE.attendanceLogs[s.id].daily) ? STATE.attendanceLogs[s.id].daily : {};
                 Object.entries(daily).forEach(([dateKey, status]) => {
-                    if (dateKey.startsWith(currentMonth)) {
+                    if (dateKey.startsWith(currentMonth) && !isDateHolidayOrSunday(dateKey)) {
                         if (status === 'P') totalPresent++;
                         else if (status === 'L') totalLeave++;
                         else if (status === 'A') totalAbsent++;
@@ -1735,7 +1764,7 @@
                 });
             });
 
-            const monthHolidays = STATE.holidays.filter(h => h.date && h.date.startsWith(currentMonth)).length;
+            const monthHolidays = getUniqueHolidaysForMonth(currentMonth).length;
             const totalMarked = totalPresent + totalLeave + totalAbsent;
             const percentage = totalMarked > 0 ? Math.round((totalPresent / totalMarked) * 100) : 0;
 
@@ -1766,10 +1795,16 @@
 
         function selectAttendanceRadio(studentId, status) {
             if (STATE.currentRole === 'parent') return;
+            const todayKey = getTodayDateKey();
+            const holidayReason = isDateHolidayOrSunday(todayKey);
+            if (holidayReason) {
+                alert(`Attendance cannot be marked today (${holidayReason}).`);
+                return;
+            }
+
             enforceMonthlyAttendanceReset();
             isEditingAttendance = true;
 
-            const todayKey = getTodayDateKey();
             if (!STATE.attendanceLogs[studentId]) STATE.attendanceLogs[studentId] = { daily: {} };
             if (!STATE.attendanceLogs[studentId].daily) STATE.attendanceLogs[studentId].daily = {};
 
@@ -1778,8 +1813,7 @@
 
             ['P', 'A', 'L'].forEach(opt => {
                 const dot = document.getElementById(`att-dot-${studentId}-${opt}`);
-                const ring = document.getElementById(`att-ring-${studentId}-${opt}`);
-                if (dot && ring) {
+                if (dot) {
                     if (opt === status) {
                         dot.classList.remove('scale-0');
                         dot.classList.add('scale-100');
@@ -1797,6 +1831,13 @@
 
         async function submitAndSaveAttendance() {
             if (STATE.currentRole === 'parent') return;
+            const todayKey = getTodayDateKey();
+            const holidayReason = isDateHolidayOrSunday(todayKey);
+            if (holidayReason) {
+                alert(`Today is ${holidayReason}. Attendance is disabled.`);
+                return;
+            }
+
             const btn = document.getElementById('btn-save-attendance');
             const origHtml = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Saving...</span>';
@@ -1807,7 +1848,6 @@
             isEditingAttendance = false;
             btn.innerHTML = origHtml;
 
-            const todayKey = getTodayDateKey();
             const classStudents = STATE.students.filter(s => s.class === STATE.selectedAttClass && (!s.leavingDate || s.leavingDate > todayKey));
             const absentStudents = classStudents.filter(s => {
                 const log = STATE.attendanceLogs[s.id];
@@ -1846,12 +1886,18 @@
             const container = document.getElementById('attendance-list-container');
             const classChips = document.getElementById('att-class-chips');
             const summaryTitle = document.getElementById('att-summary-title');
+            const saveBtn = document.getElementById('btn-save-attendance');
             if (!container) return;
             container.innerHTML = '';
 
             const todayKey = getTodayDateKey();
+            const holidayReason = isDateHolidayOrSunday(todayKey);
             const monthName = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
             let list = [];
+
+            if (saveBtn && STATE.currentRole !== 'parent') {
+                saveBtn.classList.toggle('hidden', !!holidayReason);
+            }
 
             if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
                 if (classChips) classChips.classList.add('hidden');
@@ -1865,6 +1911,21 @@
                 list = STATE.students.filter(s => s.class === STATE.selectedAttClass && (!s.leavingDate || s.leavingDate > todayKey));
                 summaryTitle.innerText = `Class ${STATE.selectedAttClass} (${monthName})`;
                 updateAttendanceAnalyticsCard(null, list);
+            }
+
+            if (holidayReason) {
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="p-6 text-center bg-rose-50 text-rose-950">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-200 text-rose-950 text-xs font-black mb-1">
+                                <i class="fa-solid fa-calendar-xmark"></i> HOLIDAY / WEEKLY OFF
+                            </div>
+                            <p class="text-sm font-black">${holidayReason}</p>
+                            <p class="text-xs font-semibold text-rose-800 mt-0.5">Attendance marking is disabled for today.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
             }
 
             if (list.length === 0) {
@@ -1930,9 +1991,10 @@
             document.getElementById('bar-absent').style.width = `${aRatio}%`;
         }
 
-        // ================= STUDENT BEHAVIOR TRACKING =================
+        // ================= STUDENT BEHAVIOR TRACKING (PERSISTENT CHECKBOXES) =================
         function openBehaviorModal(studentId, studentName, flagType) {
             if (STATE.currentRole !== 'teacher' && STATE.currentRole !== 'admin') return;
+            isEditingBehavior = true;
 
             document.getElementById('beh-student-id').value = studentId;
             document.getElementById('beh-student-name').value = studentName;
@@ -1958,10 +2020,13 @@
                 chipsBox.innerHTML = redReasons.map(r => `<button type="button" onclick="document.getElementById('beh-remark-text').value='${r}'" class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-rose-50 text-rose-900 border border-rose-300 hover:bg-rose-100">${r}</button>`).join('');
             }
 
-            document.getElementById('modal-behavior-remark').classList.remove('hidden');
+            const modal = document.getElementById('modal-behavior-remark');
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
         }
 
         function closeBehaviorModal() {
+            isEditingBehavior = false;
             closeModal('modal-behavior-remark');
             renderStudents();
         }
@@ -1980,6 +2045,9 @@
                 teacherName = t ? t.name : 'Faculty';
             }
 
+            const todayKey = getTodayDateKey();
+            STATE.behaviorLogs = STATE.behaviorLogs.filter(b => !(String(b.studentId) === String(studentId) && b.dateKey === todayKey && b.flag === flag));
+
             const entry = {
                 id: Date.now(),
                 studentId,
@@ -1988,15 +2056,15 @@
                 reason,
                 teacherName,
                 date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
-                dateKey: getTodayDateKey()
+                dateKey: todayKey
             };
 
             STATE.behaviorLogs.unshift(entry);
             localStorage.setItem('shiksha_behavior_logs', JSON.stringify(STATE.behaviorLogs));
+            isEditingBehavior = false;
             closeModal('modal-behavior-remark');
             renderStudents();
             await postToCloud({ action: 'addBehaviorLog', log: entry });
-            alert(`${flag === 'green' ? 'Green' : 'Red'} behavior mark recorded for ${studentName}!`);
         }
         // ================= TEACHER-STUDENT ONLY CHAT + RED BADGE =================
         function getMyChatMessages() {
@@ -2449,7 +2517,7 @@
             tipsList.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
         }
 
-        // ================= AI QUESTION PAPER GENERATOR (PDF + PHOTO + TOPIC, MAX 50 MCQs, TIMER) =================
+        // ================= PRECISE FULL-DOCUMENT PDF & IMAGE MCQ EXTRACTOR =================
         function openCreateAiTestModal(prefillData = null) {
             document.getElementById('ai-test-title').value = prefillData?.title ? `${prefillData.title} - Online Test` : '';
             document.getElementById('ai-topic-prompt').value = prefillData?.title || '';
@@ -2494,35 +2562,90 @@
             cbs.forEach(c => c.checked = !allChecked);
         }
 
-        function buildSmartQuestionsFromText(rawText, cls, subj, maxCount) {
-            const sentences = rawText
+        function parseExactMcqsFromRawText(rawText, subj, maxLimit = 50) {
+            const normalized = rawText
                 .replace(/\r/g, '\n')
-                .split(/[\n\.\?\!]+/)
-                .map(s => s.trim())
-                .filter(s => s.length >= 14 && s.length <= 220);
+                .replace(/\s+(?=(?:Q\.?\s*\d+|\d+[\.\)])\s+[A-Za-z\u0900-\u097F])/g, '\n')
+                .replace(/\s+(?=\(?[a-dA-D][\)\.]\s+)/g, ' ');
 
-            const generated = [];
-            for (let i = 0; i < Math.min(maxCount, sentences.length); i++) {
-                const line = sentences[i];
-                const words = line.split(/\s+/).filter(w => w.length > 4);
-                const keyword = words[words.length - 1] || 'Concept';
-                const blanked = line.replace(keyword, '________');
-                generated.push({
-                    q: line.endsWith('?') ? line : `Fill in the blank (${subj}): "${blanked}"`,
-                    A: keyword.replace(/[^a-zA-Z0-9\u0900-\u097F\s-]/g, ''),
-                    B: 'None of these',
-                    C: 'Both A and B',
-                    D: 'Not applicable',
-                    ans: 'A'
-                });
+            const lines = normalized.split('\n').map(l => l.trim()).filter(Boolean);
+            const extracted = [];
+            let currentQ = null;
+
+            const qStartRegex = /^(?:Q\.?\s*\d+|\d+)[\.\)\:\-]\s*(.+)/i;
+            const optInlineRegex = /\(?([a-dA-D])[\)\.]\s*([^\(\n]+?)(?=\s*\(?[b-dB-D][\)\.]|\s*(?:Ans|Answer)[\:\.\-]|$)/gi;
+            const singleOptRegex = /^\(?([a-dA-D])[\)\.]\s*(.+)/i;
+            const ansRegex = /(?:Ans|Answer|Correct)[\s\:\.\-]*\(?([a-dA-D])\)?/i;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+
+                const ansMatch = line.match(ansRegex);
+                if (ansMatch && currentQ) {
+                    currentQ.ans = ansMatch[1].toUpperCase();
+                }
+
+                const qMatch = line.match(qStartRegex);
+                if (qMatch && !/^\(?[a-dA-D][\)\.]/.test(line)) {
+                    if (currentQ && currentQ.q) {
+                        extracted.push(currentQ);
+                        if (extracted.length >= maxLimit) break;
+                    }
+                    let qBody = qMatch[1].trim();
+                    currentQ = { q: qBody, A: '', B: '', C: '', D: '', ans: 'A' };
+
+                    let m;
+                    optInlineRegex.lastIndex = 0;
+                    while ((m = optInlineRegex.exec(qBody)) !== null) {
+                        const key = m[1].toUpperCase();
+                        currentQ[key] = m[2].trim();
+                    }
+                    if (currentQ.A) {
+                        currentQ.q = qBody.split(/\(?[aA][\)\.]\s*/)[0].trim();
+                    }
+                    continue;
+                }
+
+                if (currentQ) {
+                    const sOpt = line.match(singleOptRegex);
+                    if (sOpt) {
+                        const key = sOpt[1].toUpperCase();
+                        currentQ[key] = sOpt[2].replace(ansRegex, '').trim();
+                        continue;
+                    }
+
+                    let foundAnyOpt = false;
+                    let m;
+                    optInlineRegex.lastIndex = 0;
+                    while ((m = optInlineRegex.exec(line)) !== null) {
+                        foundAnyOpt = true;
+                        const key = m[1].toUpperCase();
+                        currentQ[key] = m[2].trim();
+                    }
+                    if (!foundAnyOpt && !ansMatch && !currentQ.A) {
+                        currentQ.q += ' ' + line;
+                    }
+                }
             }
-            return generated;
+
+            if (currentQ && currentQ.q && extracted.length < maxLimit) {
+                extracted.push(currentQ);
+            }
+
+            return extracted.slice(0, maxLimit).map(item => ({
+                q: item.q,
+                A: item.A || 'Option A',
+                B: item.B || 'Option B',
+                C: item.C || 'Option C',
+                D: item.D || 'Option D',
+                ans: ['A', 'B', 'C', 'D'].includes(item.ans) ? item.ans : 'A'
+            }));
         }
 
         async function extractTextFromPdfArrayBuffer(arrayBuffer) {
             const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
             let fullText = '';
-            const maxPages = Math.min(pdf.numPages, 15);
+            const maxPages = Math.min(pdf.numPages, 25);
             for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
                 const page = await pdf.getPage(pageNum);
                 const textContent = await page.getTextContent();
@@ -2535,7 +2658,6 @@
         async function scanBookPhotoWithAi(noteLinkUrl = null) {
             const file = document.getElementById('ai-book-photo').files[0];
             const topic = (document.getElementById('ai-topic-prompt')?.value || '').trim();
-            const requestedCount = Math.min(50, Math.max(1, parseInt(document.getElementById('ai-num-questions')?.value || '10', 10)));
             const cls = document.getElementById('ai-test-class').value;
             const subj = document.getElementById('ai-test-subject').value;
             const statusEl = document.getElementById('ai-ocr-status');
@@ -2548,14 +2670,14 @@
             const apiKey = (document.getElementById('gemini-api-key-inp')?.value || '').trim();
             if (apiKey) localStorage.setItem('shiksha_gemini_api_key', apiKey);
 
-            // CASE 1: PDF FILE UPLOADED
+            // CASE 1: PDF UPLOADED
             if (file && (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))) {
                 if (apiKey) {
-                    statusEl.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> Gemini AI Reading PDF (${requestedCount} MCQs)...`;
+                    statusEl.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> AI Extracting ALL Questions & Options from PDF...`;
                     try {
                         const pdfDataUrl = await readFileAsBase64(file);
                         const base64Pdf = pdfDataUrl.split(',')[1];
-                        const promptText = `Read this uploaded PDF document for Class ${cls} ${subj} and generate ${requestedCount} multiple choice questions (MCQs) (strictly maximum 50). Return ONLY a valid JSON array of objects with exact keys: "q", "A", "B", "C", "D", "ans" ("A", "B", "C", or "D"). No markdown.`;
+                        const promptText = `Carefully read the entire uploaded PDF document for Class ${cls} ${subj}. Extract EVERY SINGLE multiple choice question (all questions present in the PDF, up to 50) along with their exact 4 options and correct answer key. Do NOT stop at 10 if there are more questions in the PDF. Return ONLY a valid JSON array of objects with exact keys: "q", "A", "B", "C", "D", "ans" ("A", "B", "C", or "D"). No markdown.`;
 
                         const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
                             method: 'POST',
@@ -2571,46 +2693,40 @@
                         if (Array.isArray(generatedQs) && generatedQs.length > 0) {
                             document.getElementById('ai-questions-container').innerHTML = '';
                             generatedQs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans || 'A'));
-                            statusEl.innerHTML = `<span class="text-emerald-700">AI Generated ${generatedQs.length} MCQs from PDF!</span>`;
+                            statusEl.innerHTML = `<span class="text-emerald-700">Extracted All ${generatedQs.length} Questions & Options from PDF!</span>`;
                             return;
                         }
-                    } catch (err) {
-                        console.warn("Gemini PDF fallback to local PDF.js:", err);
-                    }
+                    } catch (err) { console.warn("Gemini PDF fallback:", err); }
                 }
 
-                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Extracting PDF Text...';
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Parsing All Questions & Options from PDF...';
                 try {
                     const arrayBuffer = await file.arrayBuffer();
                     const pdfText = await extractTextFromPdfArrayBuffer(arrayBuffer);
-                    if (pdfText && pdfText.trim().length > 20) {
-                        const qs = buildSmartQuestionsFromText(pdfText, cls, subj, requestedCount);
-                        if (qs.length > 0) {
-                            document.getElementById('ai-questions-container').innerHTML = '';
-                            qs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans));
-                            statusEl.innerHTML = `<span class="text-emerald-700">Generated ${qs.length} Questions from PDF!</span>`;
-                            return;
-                        }
+                    const exactQs = parseExactMcqsFromRawText(pdfText, subj, 50);
+                    if (exactQs.length > 0) {
+                        document.getElementById('ai-questions-container').innerHTML = '';
+                        exactQs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans));
+                        statusEl.innerHTML = `<span class="text-emerald-700">Extracted ${exactQs.length} Questions & Options from PDF!</span>`;
+                        return;
                     }
                 } catch (err) {
-                    statusEl.innerText = 'Scanned PDF requires Gemini API Key. Using topic fallback...';
+                    statusEl.innerText = 'Scanned PDF: Please enter Gemini API Key above for full OCR.';
+                    return;
                 }
             }
 
-            // CASE 2: IMAGE FILE UPLOADED
+            // CASE 2: JPEG / IMAGE UPLOADED
             if (file && file.type.startsWith('image/')) {
-                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Compressing Photo...';
-                const compressedDataUrl = await compressImage(file, 950, 0.8);
-                if (!compressedDataUrl) {
-                    statusEl.innerText = 'Could not read image.';
-                    return;
-                }
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Reading Image High-Res...';
+                const compressedDataUrl = await compressImage(file, 1400, 0.9);
+                if (!compressedDataUrl) { statusEl.innerText = 'Could not read image.'; return; }
 
                 if (apiKey) {
-                    statusEl.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> Generating up to ${requestedCount} MCQs...`;
+                    statusEl.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> AI Extracting ALL Questions & Options from Image...`;
                     try {
                         const base64Data = compressedDataUrl.split(',')[1];
-                        const promptText = `Read this textbook/notebook image for Class ${cls} ${subj} and generate ${requestedCount} multiple choice questions (MCQs) (strictly maximum 50). Return ONLY a valid JSON array of objects with exact keys: "q", "A", "B", "C", "D", "ans" ("A", "B", "C", or "D"). No markdown.`;
+                        const promptText = `Carefully read the entire image for Class ${cls} ${subj}. Extract EVERY SINGLE question visible in the image (do NOT limit to 10; include all questions up to 50) with their exact 4 options and correct answer. Return ONLY a valid JSON array of objects with exact keys: "q", "A", "B", "C", "D", "ans" ("A", "B", "C", or "D"). No markdown.`;
                         const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -2625,13 +2741,13 @@
                         if (Array.isArray(generatedQs) && generatedQs.length > 0) {
                             document.getElementById('ai-questions-container').innerHTML = '';
                             generatedQs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans || 'A'));
-                            statusEl.innerHTML = `<span class="text-emerald-700">AI Generated ${generatedQs.length} MCQs!</span>`;
+                            statusEl.innerHTML = `<span class="text-emerald-700">Extracted All ${generatedQs.length} Questions & Options!</span>`;
                             return;
                         }
-                    } catch (err) { console.warn("Gemini Vision fallback to Cloud OCR:", err); }
+                    } catch (err) { console.warn("Gemini Vision fallback:", err); }
                 }
 
-                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cloud Vision Extracting Text...';
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cloud Vision Extracting All Questions...';
                 try {
                     const formData = new FormData();
                     formData.append("base64Image", compressedDataUrl);
@@ -2648,18 +2764,19 @@
                     const extractedText = ocrData?.ParsedResults?.[0]?.ParsedText || '';
 
                     if (extractedText && extractedText.trim().length > 10) {
-                        const qs = buildSmartQuestionsFromText(extractedText, cls, subj, requestedCount);
-                        if (qs.length > 0) {
+                        const exactQs = parseExactMcqsFromRawText(extractedText, subj, 50);
+                        if (exactQs.length > 0) {
                             document.getElementById('ai-questions-container').innerHTML = '';
-                            qs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans));
-                            statusEl.innerHTML = `<span class="text-emerald-700">Generated ${qs.length} Questions!</span>`;
+                            exactQs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans));
+                            statusEl.innerHTML = `<span class="text-emerald-700">Extracted ${exactQs.length} Questions & Options!</span>`;
                             return;
                         }
                     }
                 } catch (err) { console.warn("Cloud OCR fallback:", err); }
             }
 
-            // CASE 3: TOPIC PROMPT / SAVED STUDY NOTE TITLE
+            // CASE 3: TOPIC PROMPT ONLY
+            const requestedCount = Math.min(50, Math.max(1, parseInt(document.getElementById('ai-num-questions')?.value || '10', 10)));
             const effectiveTopic = topic || `${subj} Chapter Assessment`;
             if (apiKey) {
                 statusEl.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> Generating ${requestedCount} MCQs...`;
@@ -2683,19 +2800,8 @@
                 } catch (e) {}
             }
 
-            document.getElementById('ai-questions-container').innerHTML = '';
-            const countToBuild = Math.min(5, requestedCount);
-            for (let i = 1; i <= countToBuild; i++) {
-                addQuestionBlock(
-                    `Q${i}. Key concept question on ${effectiveTopic} (Class ${cls} ${subj}):`,
-                    'Correct Concept Option',
-                    'Alternative Option B',
-                    'Alternative Option C',
-                    'None of these',
-                    'A'
-                );
-            }
-            statusEl.innerHTML = `<span class="text-emerald-700">Generated ${countToBuild} Question Templates!</span>`;
+            alert("Could not auto-detect structured questions. If uploading a scanned/handwritten file, please enter your free Gemini API Key in the box above.");
+            statusEl.innerText = 'Ready';
         }
 
         function addQuestionBlock(qText = '', optA = '', optB = '', optC = '', optD = '', ans = 'A') {
@@ -2944,7 +3050,7 @@
             doc.text(`Father's Name: ${student.fatherName || 'N/A'}`, 120, 51);
 
             const stuLog = STATE.attendanceLogs[student.id] || { daily: {} };
-            const dailyEntries = Object.entries(stuLog.daily || {}).filter(([dt]) => dt >= fromDate && dt <= toDate).sort((a, b) => a[0].localeCompare(b[0]));
+            const dailyEntries = Object.entries(stuLog.daily || {}).filter(([dt]) => dt >= fromDate && dt <= toDate && !isDateHolidayOrSunday(dt)).sort((a, b) => a[0].localeCompare(b[0]));
             let pCount = 0, aCount = 0, lCount = 0;
             dailyEntries.forEach(([, st]) => { if (st === 'P') pCount++; else if (st === 'A') aCount++; else if (st === 'L') lCount++; });
 
@@ -2993,7 +3099,7 @@
             closeModal('modal-pdf-report');
         }
 
-        // ================= PASSWORD, FEES, STRICT ROLE-BASED PROFILES, NOTICES & AUTH =================
+        // ================= PASSWORD, FEES, PHOTO+GENDER PROFILES, NOTICES & AUTH =================
         function openChangePasswordModal() {
             if (!STATE.currentRole) return;
             const titleEl = document.getElementById('modal-pwd-title');
@@ -3197,6 +3303,8 @@
                 const sBeh = STATE.behaviorLogs.filter(b => String(b.studentId) === String(s.id));
                 const gCnt = sBeh.filter(b => b.flag === 'green').length;
                 const rCnt = sBeh.filter(b => b.flag === 'red').length;
+                const todayRed = sBeh.some(b => b.dateKey === today && b.flag === 'red');
+                const todayGreen = sBeh.some(b => b.dateKey === today && b.flag === 'green');
 
                 return `
                     <div class="bg-white p-4 rounded-2xl border border-slate-300 flex flex-col justify-between gap-2.5 shadow-sm hover:border-indigo-500 transition">
@@ -3217,11 +3325,11 @@
                             ${isStaff ? `
                                 <div class="flex items-center gap-3">
                                     <label class="flex items-center gap-1 cursor-pointer font-extrabold text-rose-700 bg-rose-50 px-2 py-1 rounded-lg border border-rose-300">
-                                        <input type="checkbox" onchange="if(this.checked){ openBehaviorModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', 'red'); }" class="accent-rose-600 w-3.5 h-3.5">
+                                        <input type="checkbox" ${todayRed ? 'checked' : ''} onchange="openBehaviorModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', 'red')" class="accent-rose-600 w-3.5 h-3.5">
                                         <span>Red</span>
                                     </label>
                                     <label class="flex items-center gap-1 cursor-pointer font-extrabold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-300">
-                                        <input type="checkbox" onchange="if(this.checked){ openBehaviorModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', 'green'); }" class="accent-emerald-600 w-3.5 h-3.5">
+                                        <input type="checkbox" ${todayGreen ? 'checked' : ''} onchange="openBehaviorModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', 'green')" class="accent-emerald-600 w-3.5 h-3.5">
                                         <span>Green</span>
                                     </label>
                                 </div>
@@ -3514,10 +3622,24 @@
         function openHolidayModal() { document.getElementById('inp-holiday-date').value = getTodayDateKey(); document.getElementById('modal-holiday').classList.remove('hidden'); }
         async function handleSaveHoliday(e) {
             e.preventDefault();
-            const h = { date: document.getElementById('inp-holiday-date').value, title: document.getElementById('inp-holiday-title').value.trim() };
-            STATE.holidays.push(h);
+            const dateVal = formatDateForInput(document.getElementById('inp-holiday-date').value);
+            const titleVal = document.getElementById('inp-holiday-title').value.trim();
+            if (!dateVal || !titleVal) return;
+
+            const existingIdx = STATE.holidays.findIndex(h => formatDateForInput(h.date) === dateVal);
+            const h = { date: dateVal, title: titleVal };
+
+            if (existingIdx > -1) {
+                STATE.holidays[existingIdx] = h;
+                alert(`Holiday on ${dateVal} updated to "${titleVal}" (Total holidays count unchanged).`);
+            } else {
+                STATE.holidays.push(h);
+                alert(`Holiday "${titleVal}" declared for ${dateVal}. Attendance is disabled on this date.`);
+            }
+
             localStorage.setItem('shiksha_holidays', JSON.stringify(STATE.holidays));
-            closeModal('modal-holiday'); renderAttendanceList();
+            closeModal('modal-holiday');
+            renderAttendanceList();
             await postToCloud({ action: 'addHoliday', holiday: h });
         }
 
@@ -3658,10 +3780,12 @@
             document.getElementById('kpi-total-students').innerText = active.length;
 
             let presentToday = 0;
-            active.forEach(s => {
-                const log = STATE.attendanceLogs[s.id];
-                if (log && log.daily && log.daily[todayKey] === 'P') presentToday++;
-            });
+            if (!isDateHolidayOrSunday(todayKey)) {
+                active.forEach(s => {
+                    const log = STATE.attendanceLogs[s.id];
+                    if (log && log.daily && log.daily[todayKey] === 'P') presentToday++;
+                });
+            }
             document.getElementById('kpi-present-count').innerText = presentToday;
 
             if (STATE.currentRole === 'admin') {
