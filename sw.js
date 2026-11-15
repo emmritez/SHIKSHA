@@ -1,9 +1,9 @@
-const CACHE_NAME = 'shiksha-unified-erp-v5.0';
+const CACHE_NAME = 'shiksha-unified-erp-v6.0';
 const STATIC_ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './Fevicon%20(png).png'
+  './logo.png'
 ];
 
 self.addEventListener('install', (event) => {
