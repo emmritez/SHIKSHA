@@ -1224,6 +1224,7 @@
             </div>
         </div>
     </div>
+    <!-- ================= COMPLETE UNIFIED APPLICATION ENGINE SCRIPT (PART 2 OF 3) ================= -->
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxip1ha_ESMt3plLxHR8TWnt3RafngNlzoZQcl-ZgbjieapIUKy36MB3UMm-XB-gdDE/exec"; 
         const COACHING_UPI_ID = "shikshajhs@ptyes";
@@ -1440,39 +1441,36 @@
             }
         }
 
-window.addEventListener('DOMContentLoaded', () => {
-    enforceMonthlyAttendanceReset();
+        window.addEventListener('DOMContentLoaded', () => {
+            enforceMonthlyAttendanceReset();
+            const savedKey = localStorage.getItem('shiksha_gemini_api_key');
+            const keyInp = document.getElementById('gemini-api-key-inp');
+            if (savedKey && keyInp) keyInp.value = savedKey;
 
-    const savedKey = localStorage.getItem('shiksha_gemini_api_key');
-    const keyInp = document.getElementById('gemini-api-key-inp');
-    if (savedKey && keyInp) keyInp.value = savedKey;
+            const savedSession = localStorage.getItem('shiksha_auth_role');
+            const savedPhone = localStorage.getItem('shiksha_auth_phone');
+            const savedStudentId = localStorage.getItem('shiksha_auth_student_id');
+            
+            if (savedSession === 'admin') {
+                authorizeRole('admin');
+            } else if (savedSession === 'teacher' && savedPhone) {
+                authorizeRole('teacher', savedPhone);
+            } else if (savedSession === 'parent' && savedStudentId) {
+                authorizeRole('parent', savedPhone, savedStudentId);
+            } else {
+                localStorage.removeItem('shiksha_auth_role');
+                localStorage.removeItem('shiksha_auth_phone');
+                localStorage.removeItem('shiksha_auth_student_id');
+                setLoginRole('admin');
+                showPublicSection('home');
+            }
 
-    const savedSession = localStorage.getItem('shiksha_auth_role');
-    const savedPhone = localStorage.getItem('shiksha_auth_phone');
-    const savedStudentId = localStorage.getItem('shiksha_auth_student_id');
-    
-    // Validate session before auto-authorizing to prevent loops
-    if (savedSession === 'admin') {
-        authorizeRole('admin');
-    } else if (savedSession === 'teacher' && savedPhone) {
-        authorizeRole('teacher', savedPhone);
-    } else if (savedSession === 'parent' && savedStudentId) {
-        authorizeRole('parent', savedPhone, savedStudentId);
-    } else {
-        // Clear invalid partial state and fallback to login gateway
-        localStorage.removeItem('shiksha_auth_role');
-        localStorage.removeItem('shiksha_auth_phone');
-        localStorage.removeItem('shiksha_auth_student_id');
-        setLoginRole('admin');
-        showPublicSection('home');
-    }
+            renderAllViews();
+            fetchCloudDatabase();
 
-    renderAllViews();
-    fetchCloudDatabase();
-
-    const dateDisplay = document.getElementById('att-date-display');
-    if (dateDisplay) dateDisplay.innerText = new Date().toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
-});
+            const dateDisplay = document.getElementById('att-date-display');
+            if (dateDisplay) dateDisplay.innerText = new Date().toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+        });
 
         async function setupBiometricQuickLogin() {
             if (!window.PublicKeyCredential) {
@@ -1760,7 +1758,7 @@ window.addEventListener('DOMContentLoaded', () => {
             } catch (e) { console.error("Cloud push failed:", e); }
         }
 
-        // Attendance Calculations
+        // ================= ATTENDANCE ENGINE =================
         function calculateDynamicAttendance(studentId) {
             const currentMonth = getCurrentMonthKey();
             const studentLog = STATE.attendanceLogs[studentId] || { daily: {} };
@@ -1947,7 +1945,26 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Behavior & Remarks
+        function updateAttendanceAnalyticsCard(studentId = null, classList = null) {
+            const stats = studentId ? calculateDynamicAttendance(studentId) : calculateClassAggregateAttendance(classList || []);
+            document.getElementById('att-percentage-badge').innerText = `${stats.percentage}%`;
+            document.getElementById('att-working-days-info').innerText = `Recorded: ${stats.workingDays} | Holidays: ${stats.holidays}`;
+            document.getElementById('stat-present-days').innerText = `${stats.present}d`;
+            document.getElementById('stat-leave-days').innerText = `${stats.leave}d`;
+            document.getElementById('stat-absent-days').innerText = `${stats.absent}d`;
+            document.getElementById('stat-holiday-days').innerText = `${stats.holidays}d`;
+
+            const total = stats.workingDays;
+            const pRatio = total > 0 ? Math.round((stats.present / total) * 100) : 0;
+            const lRatio = total > 0 ? Math.round((stats.leave / total) * 100) : 0;
+            const aRatio = total > 0 ? Math.max(0, 100 - pRatio - lRatio) : 0;
+
+            document.getElementById('bar-present').style.width = `${pRatio}%`;
+            document.getElementById('bar-leave').style.width = `${lRatio}%`;
+            document.getElementById('bar-absent').style.width = `${aRatio}%`;
+        }
+
+        // ================= BEHAVIOR ENGINE =================
         function openBehaviorModal(studentId, studentName, flagType) {
             if (STATE.currentRole !== 'teacher' && STATE.currentRole !== 'admin') return;
             isEditingBehavior = true;
@@ -2011,7 +2028,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     </script>
     <script>
-        // Chat & Messaging
+        // ================= CHAT & MESSAGING ENGINE =================
         function getMyChatMessages() {
             if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
                 return STATE.chatMessages.filter(m => String(m.studentId).trim() === String(STATE.currentStudentId).trim());
@@ -2118,7 +2135,109 @@ window.addEventListener('DOMContentLoaded', () => {
             await postToCloud({ action: 'sendChatMessage', msg: msgObj });
         }
 
-        // Gallery & Progressive Report
+        // ================= HOMEWORK & LEAVE MODULE =================
+        function openAddHomeworkModal() {
+            document.getElementById('hw-title').value = '';
+            document.getElementById('hw-desc').value = '';
+            document.getElementById('hw-due').value = getTodayDateKey();
+            document.getElementById('modal-homework').classList.remove('hidden');
+        }
+
+        async function handleSaveHomework(e) {
+            e.preventDefault();
+            const hw = { id: Date.now(), title: document.getElementById('hw-title').value.trim(), class: document.getElementById('hw-class').value, subject: document.getElementById('hw-subject').value, dueDate: document.getElementById('hw-due').value, desc: document.getElementById('hw-desc').value.trim(), author: STATE.currentRole === 'teacher' ? 'Faculty' : 'Admin', completedBy: [] };
+            STATE.homeworkDiary.unshift(hw);
+            localStorage.setItem('shiksha_homework', JSON.stringify(STATE.homeworkDiary));
+            closeModal('modal-homework'); renderHomework();
+            await postToCloud({ action: 'addHomework', homework: hw });
+            alert("Homework published to students!");
+        }
+
+        function toggleHomeworkComplete(hwId) {
+            if (STATE.currentRole !== 'parent' || !STATE.currentStudentId) return;
+            const hw = STATE.homeworkDiary.find(h => String(h.id) === String(hwId));
+            if (!hw) return;
+            if (!hw.completedBy) hw.completedBy = [];
+            const idx = hw.completedBy.indexOf(STATE.currentStudentId);
+            if (idx > -1) hw.completedBy.splice(idx, 1);
+            else hw.completedBy.push(STATE.currentStudentId);
+            localStorage.setItem('shiksha_homework', JSON.stringify(STATE.homeworkDiary));
+            renderHomework();
+            postToCloud({ action: 'updateHomework', homework: hw });
+        }
+
+        function renderHomework() {
+            const container = document.getElementById('homework-list-container');
+            const addBtn = document.getElementById('btn-add-homework');
+            if (!container) return;
+            const isStaff = (STATE.currentRole === 'admin' || STATE.currentRole === 'teacher');
+            if (addBtn) addBtn.classList.toggle('hidden', !isStaff);
+            let list = STATE.homeworkDiary;
+            if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
+                const stu = STATE.students.find(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
+                if (stu) list = list.filter(h => h.class === stu.class);
+            }
+            container.innerHTML = list.map(h => {
+                const isCompleted = STATE.currentRole === 'parent' && (h.completedBy || []).includes(STATE.currentStudentId);
+                const completedCount = (h.completedBy || []).length;
+                return `<div class="bg-white p-4 rounded-2xl border border-slate-300 shadow-sm space-y-2.5"><div class="flex items-center justify-between"><span class="text-[10px] font-extrabold uppercase bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">Class ${h.class} &bull; ${h.subject}</span><span class="text-[11px] font-extrabold text-rose-700"><i class="fa-regular fa-clock mr-1"></i>Due: ${h.dueDate}</span></div><h4 class="text-sm font-black text-slate-950">${h.title}</h4><p class="text-xs text-slate-800 font-semibold whitespace-pre-line">${h.desc}</p><div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs font-bold"><span class="text-slate-600">By: ${h.author}</span>${STATE.currentRole === 'parent' ? `<button onclick="toggleHomeworkComplete('${h.id}')" class="px-3 py-1.5 rounded-xl font-extrabold transition ${isCompleted ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-900 border border-slate-300'}"><i class="fa-solid fa-check mr-1"></i> ${isCompleted ? 'Completed' : 'Mark Complete'}</button>` : `<span class="text-indigo-800">${completedCount} Students Completed</span>`}</div></div>`;
+            }).join('') || `<div class="col-span-full p-5 text-center text-slate-800 font-bold text-xs bg-white rounded-2xl border border-slate-300">No homework assigned yet.</div>`;
+        }
+
+        function openApplyLeaveModal() {
+            document.getElementById('leave-from').value = getTodayDateKey();
+            document.getElementById('leave-to').value = getTodayDateKey();
+            document.getElementById('leave-reason').value = '';
+            document.getElementById('modal-apply-leave').classList.remove('hidden');
+        }
+
+        async function handleApplyLeave(e) {
+            e.preventDefault();
+            const student = STATE.students.find(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
+            if (!student) return;
+            const req = { id: Date.now(), studentId: student.id, studentName: student.name, class: student.class, fromDate: document.getElementById('leave-from').value, toDate: document.getElementById('leave-to').value, reason: document.getElementById('leave-reason').value.trim(), status: 'Pending' };
+            STATE.leaveRequests.unshift(req);
+            localStorage.setItem('shiksha_leaves', JSON.stringify(STATE.leaveRequests));
+            closeModal('modal-apply-leave'); renderLeaveRequests();
+            await postToCloud({ action: 'addLeaveRequest', leave: req });
+            alert("Leave application sent to administration!");
+        }
+
+        async function updateLeaveStatus(leaveId, status) {
+            if (STATE.currentRole !== 'admin' && STATE.currentRole !== 'teacher') return;
+            const req = STATE.leaveRequests.find(l => String(l.id) === String(leaveId));
+            if (!req) return;
+            req.status = status;
+            if (status === 'Approved') {
+                if (!STATE.attendanceLogs[req.studentId]) STATE.attendanceLogs[req.studentId] = { daily: {} };
+                if (!STATE.attendanceLogs[req.studentId].daily) STATE.attendanceLogs[req.studentId].daily = {};
+                STATE.attendanceLogs[req.studentId].daily[req.fromDate] = 'L';
+                localStorage.setItem('shiksha_att_logs', JSON.stringify(STATE.attendanceLogs));
+                await postToCloud({ action: 'saveAttendance', logs: STATE.attendanceLogs });
+            }
+            localStorage.setItem('shiksha_leaves', JSON.stringify(STATE.leaveRequests));
+            renderLeaveRequests();
+            await postToCloud({ action: 'updateLeaveRequest', leave: req });
+            alert(`Leave request ${status}!`);
+        }
+
+        function renderLeaveRequests() {
+            const container = document.getElementById('leave-requests-container');
+            const applyBtn = document.getElementById('btn-apply-leave');
+            if (!container) return;
+            const isParent = (STATE.currentRole === 'parent');
+            if (applyBtn) applyBtn.classList.toggle('hidden', !isParent);
+            let list = STATE.leaveRequests;
+            if (isParent && STATE.currentStudentId) {
+                list = list.filter(l => String(l.studentId).trim() === String(STATE.currentStudentId).trim());
+            }
+            container.innerHTML = list.map(l => {
+                const statusColor = l.status === 'Approved' ? 'bg-emerald-100 text-emerald-900 border-emerald-300' : (l.status === 'Rejected' ? 'bg-rose-100 text-rose-900 border-rose-300' : 'bg-amber-100 text-amber-900 border-amber-300');
+                return `<div class="bg-white p-4 rounded-2xl border border-slate-300 shadow-sm space-y-2"><div class="flex items-center justify-between"><span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${l.studentId} &bull; Class ${l.class}</span><span class="text-xs font-black px-2.5 py-0.5 rounded-full border ${statusColor}">${l.status}</span></div><h4 class="text-sm font-extrabold text-slate-950">${l.studentName}</h4><p class="text-xs font-bold text-slate-700">From ${l.fromDate} to ${l.toDate}</p><p class="text-xs text-slate-800 font-semibold bg-slate-50 p-2.5 rounded-xl border border-slate-200">${l.reason}</p>${(!isParent && l.status === 'Pending') ? `<div class="flex gap-2 pt-2 border-t border-slate-200"><button onclick="updateLeaveStatus('${l.id}', 'Approved')" class="flex-1 py-1.5 bg-emerald-600 text-white font-bold rounded-xl text-xs shadow">Approve</button><button onclick="updateLeaveStatus('${l.id}', 'Rejected')" class="flex-1 py-1.5 bg-rose-600 text-white font-bold rounded-xl text-xs shadow">Reject</button></div>` : ''}</div>`;
+            }).join('') || `<div class="col-span-full p-5 text-center text-slate-800 font-bold text-xs bg-white rounded-2xl border border-slate-300">No leave applications found.</div>`;
+        }
+
+        // ================= GALLERY & PROGRESSIVE REPORT =================
         function openUploadGalleryModal() {
             if (STATE.currentRole !== 'admin') return;
             const folders = [...new Set(STATE.gallery.map(g => g.folder || 'General Campus'))];
@@ -2279,7 +2398,7 @@ window.addEventListener('DOMContentLoaded', () => {
             tipsList.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
         }
 
-        // AI & PDF Test Creator
+        // ================= AI & PDF TEST CREATOR =================
         function openCreateAiTestModal(prefillData = null) {
             document.getElementById('ai-test-title').value = prefillData?.title ? `${prefillData.title} - Online Test` : '';
             document.getElementById('ai-topic-prompt').value = prefillData?.title || '';
@@ -2676,63 +2795,386 @@ window.addEventListener('DOMContentLoaded', () => {
 
         function initiateDirectUpiPay(name, amount) { window.location.href = `upi://pay?pa=${COACHING_UPI_ID}&pn=SHIKSHA%20Coaching%20Institute&am=${amount}&cu=INR&tn=${encodeURIComponent('Fee - ' + name)}`; }
 
-        function authorizeRole(role, phone = null, studentId = null) {
-            STATE.currentRole = role; STATE.currentUserPhone = phone;
-            STATE.currentStudentId = studentId || localStorage.getItem('shiksha_auth_student_id');
-            localStorage.setItem('shiksha_auth_role', role);
-            if (phone) localStorage.setItem('shiksha_auth_phone', phone);
-            if (studentId) localStorage.setItem('shiksha_auth_student_id', studentId);
+        function previewProfileImage(input, previewId) {
+            const file = input.files && input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => { document.getElementById(previewId).src = e.target.result; };
+            reader.readAsDataURL(file);
+        }
 
-            document.getElementById('btn-header-login').classList.add('hidden');
-            const badge = document.getElementById('portal-user-badge');
-            badge.classList.remove('hidden'); badge.classList.add('flex');
+        function getValidUniqueTeachers() {
+            const seenPhones = new Set();
+            return STATE.registeredTeachers.filter(t => {
+                const nameStr = String(t.name || '').trim();
+                const phoneStr = cleanPhone(t.phone);
+                if (!nameStr || /^\d+$/.test(nameStr) || phoneStr.length !== 10) return false;
+                if (seenPhones.has(phoneStr)) return false;
+                seenPhones.add(phoneStr);
+                return true;
+            });
+        }
 
-            let roleLabel = role.toUpperCase();
-            if (role === 'parent' && STATE.currentStudentId) {
-                const s = STATE.students.find(item => String(item.id).trim() === String(STATE.currentStudentId).trim());
-                if (s) roleLabel = s.name.split(' ')[0].toUpperCase();
+        function renderPublicOverview() {
+            const active = STATE.students.filter(s => !s.leavingDate || s.leavingDate > getTodayDateKey());
+            document.getElementById('pub-stat-students').innerText = active.length;
+            document.getElementById('pub-stat-teachers').innerText = getValidUniqueTeachers().length;
+        }
+
+        function renderPublicTeachers() {
+            const container = document.getElementById('pub-teachers-grid');
+            if (!container) return;
+            container.innerHTML = getValidUniqueTeachers().map(t => `<div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl flex items-start space-x-3">${t.photo ? `<img src="${t.photo}" class="w-12 h-12 rounded-2xl object-cover border border-indigo-500/40 shrink-0">` : `<div class="w-12 h-12 rounded-2xl bg-indigo-950 text-indigo-400 flex items-center justify-center font-bold text-base shrink-0">${(t.name||'T').charAt(0)}</div>`}<div class="min-w-0"><h4 class="text-sm font-bold text-white truncate">${t.name}</h4><p class="text-xs text-amber-400 font-semibold">${t.qualifications || ''} ${t.gender ? '&bull; ' + t.gender : ''}</p><p class="text-xs text-indigo-400 mt-0.5 truncate">${t.subjects || t.dept || ''}</p></div></div>`).join('');
+        }
+
+        function setStudentStatusFilter(f) { STATE.studentStatusFilter = f; renderStudents(); }
+
+        function renderStudents() {
+            const container = document.getElementById('students-list-container');
+            if (!container) return;
+            let list = STATE.students;
+            const isStaff = (STATE.currentRole === 'admin' || STATE.currentRole === 'teacher');
+
+            if (STATE.currentRole === 'parent') {
+                const targetId = String(STATE.currentStudentId || localStorage.getItem('shiksha_auth_student_id') || '').trim().toLowerCase();
+                const targetPhone = cleanPhone(STATE.currentUserPhone || localStorage.getItem('shiksha_auth_phone') || '');
+                list = list.filter(s => String(s.id || '').trim().toLowerCase() === targetId || (targetId === '' && cleanPhone(s.phone) === targetPhone));
+
+                if (list.length === 0) {
+                    container.innerHTML = `<div class="col-span-full p-5 bg-white rounded-2xl border border-slate-300 text-xs font-bold text-slate-900">Student profile not synced yet. Tap the <b>Synced</b> badge to refresh.</div>`;
+                    return;
+                }
+                const s = list[0];
+                const sBeh = STATE.behaviorLogs.filter(b => String(b.studentId).trim().toLowerCase() === String(s.id).trim().toLowerCase());
+                const gCnt = sBeh.filter(b => b.flag === 'green').length;
+                const rCnt = sBeh.filter(b => b.flag === 'red').length;
+                const attStats = calculateDynamicAttendance(s.id);
+
+                container.innerHTML = `<div class="col-span-full bg-white p-5 rounded-3xl border border-slate-300 shadow-sm space-y-4"><div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200"><div class="flex items-center gap-3"><img src="${s.photo || './logo.png'}" class="w-16 h-16 rounded-2xl object-cover border-2 border-indigo-200 bg-slate-100 shrink-0"><div><span class="text-xs font-mono font-extrabold bg-indigo-100 text-indigo-900 px-2.5 py-0.5 rounded">${s.id}</span><h3 class="text-lg font-black text-slate-950 mt-1">${s.name}</h3><p class="text-xs font-bold text-slate-700">Class ${s.class} &bull; ${s.board} &bull; ${s.gender || 'Student'}</p></div></div><span class="text-xs font-black px-3 py-1 rounded-full ${Number(s.feePending) <= 0 ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">${Number(s.feePending) <= 0 ? 'Fees Paid' : 'Fee Due: ₹' + s.feePending}</span></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs"><div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Father's Name</span><b class="text-slate-950 text-sm">${s.fatherName || 'N/A'}</b></div><div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Mother's Name</span><b class="text-slate-950 text-sm">${s.motherName || 'N/A'}</b></div><div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Gender</span><b class="text-slate-950 text-sm">${s.gender || 'Not Specified'}</b></div><div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Registered Mobile</span><b class="text-slate-950 text-sm">${s.phone}</b></div><div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-200"><span class="text-emerald-800 font-bold block">Monthly Attendance</span><b class="text-emerald-950 text-sm">${attStats.percentage}% (${attStats.present}P / ${attStats.absent}A)</b></div><div class="p-3 bg-indigo-50 rounded-2xl border border-indigo-200"><span class="text-indigo-800 font-bold block">Behavior Score</span><b class="text-emerald-700 text-sm">${gCnt} Green</b> &bull; <b class="text-rose-700 text-sm">${rCnt} Red</b></div></div></div>`;
+                return;
             }
-            document.getElementById('header-role-pill').innerText = roleLabel;
-            document.getElementById('portal-role-pill-side').innerText = roleLabel;
 
-            const isAdmin = (role === 'admin'), isStaff = (role === 'admin' || role === 'teacher'), isStudent = (role === 'parent');
-            document.getElementById('kpi-total-students-card').classList.toggle('hidden', isStudent);
-            document.getElementById('kpi-present-label').innerText = isStudent ? 'My Attendance %' : 'Present Today';
-            document.getElementById('nav-btn-faculty-dir').classList.toggle('hidden', !isAdmin && !!role);
-            document.getElementById('side-students-label').innerText = isStudent ? 'My Profile' : 'Student Directory';
-            document.getElementById('m-students-label').innerText = isStudent ? 'Profile' : 'Students';
-            document.getElementById('students-tab-heading').innerText = isStudent ? 'My Student Profile' : 'Student Records';
+            const today = getTodayDateKey();
+            if (STATE.studentStatusFilter === 'active') list = list.filter(s => !s.leavingDate || s.leavingDate > today);
+            else if (STATE.studentStatusFilter === 'inactive') list = list.filter(s => s.leavingDate && s.leavingDate <= today);
 
-            document.getElementById('kpi-due-fees-card').classList.toggle('hidden', !isAdmin);
-            document.getElementById('admin-fee-summary-banner')?.classList.toggle('hidden', !isAdmin);
-            document.getElementById('btn-add-teacher-top').classList.toggle('hidden', !isAdmin);
-            document.getElementById('btn-add-student-top').classList.toggle('hidden', !isAdmin);
-            document.getElementById('btn-mark-holiday').classList.toggle('hidden', !isAdmin);
-            document.getElementById('btn-reset-attendance').classList.toggle('hidden', !isAdmin);
-            document.getElementById('student-status-filter-bar').classList.toggle('hidden', !isStaff);
-            document.getElementById('btn-portal-add-notice').classList.toggle('hidden', !isStaff);
-            document.getElementById('btn-upload-notes-portal').classList.toggle('hidden', !isStaff);
-            document.getElementById('btn-save-attendance').classList.toggle('hidden', !isStaff);
-            document.getElementById('btn-create-ai-test').classList.toggle('hidden', !isStaff);
-            document.getElementById('btn-manual-marks-entry').classList.toggle('hidden', !isStaff);
+            container.innerHTML = list.map(s => {
+                const sBeh = STATE.behaviorLogs.filter(b => String(b.studentId) === String(s.id));
+                const gCnt = sBeh.filter(b => b.flag === 'green').length;
+                const rCnt = sBeh.filter(b => b.flag === 'red').length;
+                const todayRed = sBeh.some(b => b.dateKey === today && b.flag === 'red');
+                const todayGreen = sBeh.some(b => b.dateKey === today && b.flag === 'green');
 
-            if (chatPollingInterval) clearInterval(chatPollingInterval);
-            chatPollingInterval = setInterval(() => { fetchCloudDatabase(false); }, 5000);
-
-            openPortalView();
-            switchPortalTab('home');
-            renderAllViews();
+                return `<div class="bg-white p-4 rounded-2xl border border-slate-300 flex flex-col justify-between gap-2.5 shadow-sm hover:border-indigo-500 transition"><div onclick="openMasterStudentForm('${s.id}')" class="flex items-center justify-between cursor-pointer gap-2"><div class="flex items-center gap-2.5 min-w-0"><img src="${s.photo || './logo.png'}" class="w-11 h-11 rounded-xl object-cover border border-slate-300 bg-slate-100 shrink-0"><div class="min-w-0"><span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${s.id}</span><h4 class="text-sm font-extrabold text-slate-950 mt-0.5 truncate">${s.name}</h4><p class="text-xs font-semibold text-slate-700 truncate">Class ${s.class} (${s.board}) &bull; ${s.gender || ''}</p></div></div><span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full shrink-0 ${Number(s.feePending) <= 0 ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">${Number(s.feePending) <= 0 ? 'Paid' : '₹' + s.feePending}</span></div><div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs"><span class="font-extrabold text-slate-800">Behavior: <b class="text-emerald-700">${gCnt}G</b> / <b class="text-rose-700">${rCnt}R</b></span>${isStaff ? `<div class="flex items-center gap-3"><label class="flex items-center gap-1 cursor-pointer font-extrabold text-rose-700 bg-rose-50 px-2 py-1 rounded-lg border border-rose-300"><input type="checkbox" ${todayRed ? 'checked' : ''} onchange="openBehaviorModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', 'red')" class="accent-rose-600 w-3.5 h-3.5"><span>Red</span></label><label class="flex items-center gap-1 cursor-pointer font-extrabold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-300"><input type="checkbox" ${todayGreen ? 'checked' : ''} onchange="openBehaviorModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', 'green')" class="accent-emerald-600 w-3.5 h-3.5"><span>Green</span></label></div>` : `<button onclick="switchPortalTab('home')" class="text-indigo-700 font-extrabold hover:underline">View Chart &rarr;</button>`}</div></div>`;
+            }).join('') || `<p class="text-xs font-bold text-slate-800">No students found.</p>`;
         }
 
-        function logout() {
-            if (chatPollingInterval) clearInterval(chatPollingInterval);
-            localStorage.removeItem('shiksha_auth_role'); localStorage.removeItem('shiksha_auth_phone'); localStorage.removeItem('shiksha_auth_student_id');
-            STATE.currentRole = null; STATE.currentUserPhone = null; STATE.currentStudentId = null;
-            document.getElementById('btn-header-login').classList.remove('hidden');
-            document.getElementById('portal-user-badge').classList.add('hidden');
-            document.getElementById('nav-btn-faculty-dir').classList.remove('hidden');
-            showPublicSection('home');
+        function renderTeachers() {
+            const card = document.getElementById('admin-teachers-card');
+            const heading = document.getElementById('faculty-card-heading');
+            const container = document.getElementById('teachers-list-container');
+            if (!container || !card) return;
+
+            if (STATE.currentRole === 'parent') { card.classList.add('hidden'); return; }
+            card.classList.remove('hidden');
+
+            let list = getValidUniqueTeachers();
+            if (STATE.currentRole === 'teacher') {
+                heading.innerHTML = `<i class="fa-solid fa-user-tie text-indigo-700"></i> My Faculty Profile`;
+                list = list.filter(t => cleanPhone(t.phone) === cleanPhone(STATE.currentUserPhone));
+            } else { heading.innerHTML = `<i class="fa-solid fa-chalkboard-user text-indigo-700"></i> Faculty Directory`; }
+
+            container.innerHTML = list.map(t => `<div onclick="openMasterTeacherForm('${t.phone}')" class="flex items-center justify-between p-3 bg-slate-100 border border-slate-300 rounded-2xl cursor-pointer hover:border-indigo-500 gap-2"><div class="flex items-center gap-2.5 min-w-0"><img src="${t.photo || './logo.png'}" class="w-10 h-10 rounded-xl object-cover border border-slate-300 bg-white shrink-0"><div class="min-w-0"><h4 class="text-sm font-extrabold text-slate-950 truncate">${t.name}</h4><p class="text-xs font-semibold text-slate-800 truncate">${t.subjects || t.dept} &bull; ${t.gender || ''} &bull; ${t.phone}</p></div></div><i class="fa-solid fa-pen-to-square text-sm text-indigo-700 shrink-0"></i></div>`).join('') || `<p class="text-xs font-bold text-slate-700">No faculty profile found.</p>`;
         }
+
+        function openAddTeacherModal() {
+            if (STATE.currentRole !== 'admin') return;
+            document.getElementById('inp-teach-name').value = '';
+            document.getElementById('inp-teach-gender').value = 'Male';
+            document.getElementById('inp-teach-qual').value = '';
+            document.getElementById('inp-teach-phone').value = '';
+            document.getElementById('inp-teach-pwd').value = '';
+            document.getElementById('inp-teach-aadhaar').value = '';
+            document.getElementById('inp-teach-salary').value = '';
+            document.getElementById('inp-teach-photo').value = '';
+            document.getElementById('preview-teach-photo').src = './logo.png';
+            document.getElementById('btn-delete-teacher-modal').classList.add('hidden');
+            document.getElementById('modal-teacher').classList.remove('hidden');
+        }
+
+        function openMasterTeacherForm(phone) {
+            if (STATE.currentRole === 'parent') return;
+            if (STATE.currentRole === 'teacher' && cleanPhone(phone) !== cleanPhone(STATE.currentUserPhone)) { alert("Access Denied."); return; }
+            const t = getValidUniqueTeachers().find(item => cleanPhone(item.phone) === cleanPhone(phone));
+            if (!t) return;
+            document.getElementById('inp-teach-name').value = t.name || '';
+            document.getElementById('inp-teach-gender').value = t.gender || 'Male';
+            document.getElementById('inp-teach-qual').value = t.qualifications || '';
+            document.getElementById('inp-teach-phone').value = t.phone || '';
+            document.getElementById('inp-teach-pwd').value = t.password || '';
+            document.getElementById('inp-teach-aadhaar').value = t.aadhaar || '';
+            document.getElementById('inp-teach-salary').value = t.salary || '';
+            document.getElementById('inp-teach-photo').value = '';
+            document.getElementById('preview-teach-photo').src = t.photo || './logo.png';
+
+            const saveBtn = document.getElementById('btn-save-teacher-submit');
+            const delBtn = document.getElementById('btn-delete-teacher-modal');
+            if (STATE.currentRole === 'admin') {
+                saveBtn.classList.remove('hidden'); delBtn.classList.remove('hidden');
+                delBtn.onclick = () => deleteTeacher(t.phone);
+            } else { saveBtn.classList.add('hidden'); delBtn.classList.add('hidden'); }
+            document.getElementById('modal-teacher').classList.remove('hidden');
+        }
+
+        async function handleSaveTeacher(e) {
+            e.preventDefault();
+            if (STATE.currentRole !== 'admin') return;
+            const phone = cleanPhone(document.getElementById('inp-teach-phone').value);
+            const checked = Array.from(document.querySelectorAll('#faculty-subjects-checkboxes input[name="teach-subj"]:checked')).map(c => c.value);
+            const subjs = checked.length > 0 ? checked.join(', ') : 'All Subjects';
+            const existing = STATE.registeredTeachers.find(t => cleanPhone(t.phone) === phone) || {};
+            const photoFile = document.getElementById('inp-teach-photo').files[0];
+            const photo = photoFile ? await compressImage(photoFile, 400, 0.75) : (existing.photo || '');
+
+            const obj = { ...existing, name: document.getElementById('inp-teach-name').value.trim(), gender: document.getElementById('inp-teach-gender').value, qualifications: document.getElementById('inp-teach-qual').value.trim(), dept: subjs, subjects: subjs, phone, password: document.getElementById('inp-teach-pwd').value.trim(), aadhaar: document.getElementById('inp-teach-aadhaar').value.trim(), salary: document.getElementById('inp-teach-salary').value || '0', photo };
+            const idx = STATE.registeredTeachers.findIndex(t => cleanPhone(t.phone) === phone);
+            if (idx > -1) STATE.registeredTeachers[idx] = obj; else STATE.registeredTeachers.push(obj);
+            localStorage.setItem('shiksha_teachers', JSON.stringify(STATE.registeredTeachers));
+            renderTeachers(); renderPublicTeachers(); renderPublicOverview(); closeModal('modal-teacher');
+            await postToCloud({ action: 'addTeacher', teacher: obj });
+        }
+
+        async function deleteTeacher(phone) {
+            if (STATE.currentRole !== 'admin') return;
+            if (confirm("Delete faculty member?")) {
+                STATE.registeredTeachers = STATE.registeredTeachers.filter(t => cleanPhone(t.phone) !== cleanPhone(phone));
+                localStorage.setItem('shiksha_teachers', JSON.stringify(STATE.registeredTeachers));
+                renderTeachers(); renderPublicTeachers(); closeModal('modal-teacher');
+                await postToCloud({ action: 'deleteTeacher', phone: cleanPhone(phone) });
+            }
+        }
+
+        function openAddStudentModal() {
+            if (STATE.currentRole !== 'admin') return;
+            document.getElementById('edit-stu-id').value = '';
+            document.getElementById('inp-stu-name').value = '';
+            document.getElementById('inp-stu-gender').value = 'Male';
+            document.getElementById('inp-stu-father').value = '';
+            document.getElementById('inp-stu-mother').value = '';
+            document.getElementById('inp-stu-phone').value = '';
+            document.getElementById('inp-stu-pwd').value = '';
+            document.getElementById('inp-stu-fee').value = '0';
+            document.getElementById('inp-stu-photo').value = '';
+            document.getElementById('preview-stu-photo').src = './logo.png';
+            document.getElementById('btn-delete-student-modal').classList.add('hidden');
+            document.getElementById('modal-student').classList.remove('hidden');
+        }
+
+        function openMasterStudentForm(id) {
+            if (STATE.currentRole === 'parent' && String(id).trim().toLowerCase() !== String(STATE.currentStudentId).trim().toLowerCase()) { alert("Access Denied."); return; }
+            const s = STATE.students.find(item => String(item.id).trim().toLowerCase() === String(id).trim().toLowerCase());
+            if (!s) return;
+            document.getElementById('edit-stu-id').value = s.id;
+            document.getElementById('inp-stu-name').value = s.name || '';
+            document.getElementById('inp-stu-gender').value = s.gender || 'Male';
+            document.getElementById('inp-stu-father').value = s.fatherName || '';
+            document.getElementById('inp-stu-mother').value = s.motherName || '';
+            document.getElementById('inp-stu-class').value = s.class || '10th';
+            document.getElementById('inp-stu-board').value = s.board || 'CBSE';
+            document.getElementById('inp-stu-phone').value = s.phone || '';
+            document.getElementById('inp-stu-pwd').value = STATE.currentRole === 'admin' ? (s.password || '') : '••••••••';
+            document.getElementById('inp-stu-adm-date').value = formatDateForInput(s.admissionDate);
+            document.getElementById('inp-stu-leave-date').value = formatDateForInput(s.leavingDate);
+            document.getElementById('inp-stu-fee').value = s.feePending || 0;
+            document.getElementById('inp-stu-photo').value = '';
+            document.getElementById('preview-stu-photo').src = s.photo || './logo.png';
+
+            const saveBtn = document.getElementById('btn-save-student-submit');
+            const delBtn = document.getElementById('btn-delete-student-modal');
+            if (STATE.currentRole === 'admin') {
+                saveBtn.classList.remove('hidden'); delBtn.classList.remove('hidden');
+                delBtn.onclick = () => deleteStudent(s.id);
+            } else { saveBtn.classList.add('hidden'); delBtn.classList.add('hidden'); }
+            document.getElementById('modal-student').classList.remove('hidden');
+        }
+
+        async function handleSaveStudent(e) {
+            e.preventDefault();
+            if (STATE.currentRole !== 'admin') return;
+            const id = document.getElementById('edit-stu-id').value || generateNextStudentId();
+            const existing = STATE.students.find(s => s.id === id) || {};
+            const photoFile = document.getElementById('inp-stu-photo').files[0];
+            const photo = photoFile ? await compressImage(photoFile, 400, 0.75) : (existing.photo || '');
+
+            const obj = { ...existing, id, name: document.getElementById('inp-stu-name').value.trim(), gender: document.getElementById('inp-stu-gender').value, fatherName: document.getElementById('inp-stu-father').value.trim(), motherName: document.getElementById('inp-stu-mother').value.trim(), class: document.getElementById('inp-stu-class').value, board: document.getElementById('inp-stu-board').value, phone: cleanPhone(document.getElementById('inp-stu-phone').value), password: document.getElementById('inp-stu-pwd').value.trim(), admissionDate: document.getElementById('inp-stu-adm-date').value, leavingDate: document.getElementById('inp-stu-leave-date').value, feePending: parseFloat(document.getElementById('inp-stu-fee').value) || 0, photo };
+            const idx = STATE.students.findIndex(s => s.id === id);
+            if (idx > -1) STATE.students[idx] = obj; else STATE.students.unshift(obj);
+            localStorage.setItem('shiksha_students', JSON.stringify(STATE.students));
+            renderStudents(); renderFees(); updateKpis(); renderPublicOverview(); closeModal('modal-student');
+            await postToCloud({ action: 'addStudent', student: obj });
+        }
+
+        async function deleteStudent(id) {
+            if (STATE.currentRole !== 'admin') return;
+            if (confirm("Delete student record?")) {
+                STATE.students = STATE.students.filter(s => s.id !== id);
+                localStorage.setItem('shiksha_students', JSON.stringify(STATE.students));
+                renderStudents(); renderFees(); updateKpis(); closeModal('modal-student');
+                await postToCloud({ action: 'deleteStudent', studentId: id });
+            }
+        }
+
+        function openAddNoticeModal() { currentEditingNoticeId = null; document.getElementById('inp-notice-title').value = ''; document.getElementById('inp-notice-desc').value = ''; document.getElementById('modal-add-notice').classList.remove('hidden'); }
+        function editNoticeModal(id) {
+            const n = STATE.notices.find(item => item.id == id);
+            if (!n) return;
+            currentEditingNoticeId = n.id;
+            document.getElementById('inp-notice-title').value = n.title;
+            document.getElementById('inp-notice-desc').value = n.desc;
+            document.getElementById('modal-add-notice').classList.remove('hidden');
+        }
+
+        async function handleSaveNotice(e) {
+            e.preventDefault();
+            const title = document.getElementById('inp-notice-title').value.trim();
+            const tag = document.getElementById('inp-notice-tag').value;
+            const desc = document.getElementById('inp-notice-desc').value.trim();
+            const payload = { id: currentEditingNoticeId || Date.now(), title, tag, desc, date: new Date().toLocaleDateString('en-IN'), author: STATE.currentRole === 'teacher' ? 'Faculty' : 'Admin' };
+            const idx = STATE.notices.findIndex(n => n.id == payload.id);
+            if (idx > -1) STATE.notices[idx] = payload; else STATE.notices.unshift(payload);
+            localStorage.setItem('shiksha_notices', JSON.stringify(STATE.notices));
+            renderNotices(); closeModal('modal-add-notice'); playNotificationChime();
+            await postToCloud({ action: 'addNotice', notice: payload });
+        }
+
+        function renderNotices() {
+            const canEdit = (STATE.currentRole === 'admin' || STATE.currentRole === 'teacher');
+            const pubHtml = STATE.notices.map(n => `<div class="p-3.5 bg-slate-900 border border-slate-800 rounded-2xl"><div class="flex justify-between items-center mb-1"><span class="text-xs font-bold px-2 py-0.5 rounded bg-indigo-950 text-indigo-300">${n.tag}</span><span class="text-xs text-slate-300">${n.date}</span></div><h4 class="text-sm font-bold text-white">${n.title}</h4><p class="text-xs text-slate-200 mt-1 whitespace-pre-line leading-relaxed">${n.desc}</p></div>`).join('');
+            const portalHtml = STATE.notices.map(n => `<div class="p-3.5 bg-slate-100 border border-slate-300 rounded-2xl"><div class="flex justify-between items-center mb-1"><span class="text-xs font-extrabold px-2 py-0.5 rounded bg-indigo-100 text-indigo-800">${n.tag}</span><span class="text-xs font-bold text-slate-700">${n.date}</span></div><h4 class="text-sm font-extrabold text-slate-950">${n.title}</h4><p class="text-xs font-semibold text-slate-900 mt-1 whitespace-pre-line leading-relaxed">${n.desc}</p><div class="mt-2 flex justify-between items-center"><span class="text-xs text-indigo-800 font-bold">By: ${n.author}</span>${canEdit ? `<button onclick="editNoticeModal('${n.id}')" class="text-xs text-indigo-700 font-extrabold hover:underline">Edit</button>` : ''}</div></div>`).join('');
+            if (document.getElementById('pub-notices-container')) document.getElementById('pub-notices-container').innerHTML = pubHtml;
+            if (document.getElementById('portal-notices-container')) document.getElementById('portal-notices-container').innerHTML = portalHtml || `<p class="text-xs font-bold text-slate-800">No notices yet.</p>`;
+        }
+
+        function openAddNoteModal() { document.getElementById('modal-add-note').classList.remove('hidden'); }
+        async function handleSaveNote(e) {
+            e.preventDefault();
+            const file = document.getElementById('inp-note-file').files[0];
+            let link = document.getElementById('inp-note-url').value.trim();
+            if (file) link = await readFileAsBase64(file);
+            const note = { id: Date.now(), title: document.getElementById('inp-note-title').value.trim(), class: document.getElementById('inp-note-class').value, subject: document.getElementById('inp-note-subject').value, link, author: STATE.currentRole === 'teacher' ? 'Faculty' : 'Admin', date: new Date().toLocaleDateString('en-IN') };
+            STATE.materials.unshift(note);
+            localStorage.setItem('shiksha_materials', JSON.stringify(STATE.materials));
+            renderNotes(); closeModal('modal-add-note');
+            await postToCloud({ action: 'addNote', note });
+        }
+
+        function renderNotes() {
+            const container = document.getElementById('portal-notes-grid');
+            if (!container) return;
+            let list = STATE.materials;
+            const isStaff = (STATE.currentRole === 'admin' || STATE.currentRole === 'teacher');
+            if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
+                const stu = STATE.students.find(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
+                if (stu) list = list.filter(m => m.class === stu.class);
+            }
+            container.innerHTML = list.map(m => `<div class="p-4 bg-white border border-slate-300 rounded-2xl flex items-center justify-between gap-2 shadow-sm"><div class="min-w-0"><span class="text-xs font-extrabold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">Class ${m.class} &bull; ${m.subject}</span><h4 class="text-sm font-extrabold text-slate-950 mt-1 truncate">${m.title}</h4></div><div class="flex items-center gap-1.5 shrink-0">${isStaff ? `<button onclick="createTestFromStudyNote('${m.id}')" title="Generate AI Test" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 font-extrabold px-2.5 py-2 rounded-xl"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>AI Test</button>` : ''}<a href="${m.link}" target="_blank" class="text-xs bg-indigo-600 text-white font-bold px-3 py-2 rounded-xl"><i class="fa-solid fa-download"></i></a></div></div>`).join('') || `<p class="text-xs font-bold text-slate-800">No notes available.</p>`;
+        }
+
+        function openHolidayModal() { document.getElementById('inp-holiday-date').value = getTodayDateKey(); document.getElementById('modal-holiday').classList.remove('hidden'); }
+        async function handleSaveHoliday(e) {
+            e.preventDefault();
+            const dateVal = formatDateForInput(document.getElementById('inp-holiday-date').value);
+            const titleVal = document.getElementById('inp-holiday-title').value.trim();
+            if (!dateVal || !titleVal) return;
+            const existingIdx = STATE.holidays.findIndex(h => formatDateForInput(h.date) === dateVal);
+            const h = { date: dateVal, title: titleVal };
+            if (existingIdx > -1) STATE.holidays[existingIdx] = h; else STATE.holidays.push(h);
+            localStorage.setItem('shiksha_holidays', JSON.stringify(STATE.holidays));
+            closeModal('modal-holiday'); renderAttendanceList();
+            await postToCloud({ action: 'addHoliday', holiday: h });
+        }
+
+        function openLoginGateway() {
+            const m = document.getElementById('modal-login-gateway');
+            if (m) { m.classList.remove('hidden'); m.style.display = 'flex'; }
+        }
+        function closeModal(id) {
+            const m = document.getElementById(id);
+            if (m) { m.classList.add('hidden'); m.style.display = 'none'; }
+        }
+        function setLoginRole(role) {
+            STATE.loginRoleSelect = role;
+            ['m-', 'd-'].forEach(prefix => {
+                ['admin', 'teacher', 'parent'].forEach(r => {
+                    const btn = document.getElementById(`${prefix}role-btn-${r}`);
+                    if (btn) btn.className = (r === role) ? "py-2 rounded-lg bg-indigo-600 text-white font-bold transition" : "py-2 rounded-lg text-slate-300 transition";
+                });
+            });
+        }
+
+        async function handleSecureLogin(e, mode) {
+            e.preventDefault();
+            const prefix = mode === 'mobile' ? 'm-' : 'd-';
+            const phone = document.getElementById(`${prefix}login-mobile`).value.trim();
+            const password = document.getElementById(`${prefix}login-password`).value.trim();
+            const errBox = document.getElementById(`${prefix}auth-error-box`);
+            const errMsg = document.getElementById(`${prefix}auth-error-msg`);
+            errBox.classList.add('hidden');
+            await fetchCloudDatabase();
+
+            if (STATE.loginRoleSelect === 'admin') {
+                if (cleanPhone(phone) !== cleanPhone(STATE.adminUser.phone) || password !== STATE.adminUser.password) {
+                    errMsg.innerText = "Invalid Admin Mobile or Password!"; errBox.classList.remove('hidden'); return;
+                }
+                closeModal('modal-login-gateway'); authorizeRole('admin');
+            } else if (STATE.loginRoleSelect === 'teacher') {
+                const t = getValidUniqueTeachers().find(item => cleanPhone(item.phone) === cleanPhone(phone));
+                if (!t || String(t.password).trim() !== password) {
+                    errMsg.innerText = "Invalid Teacher Credentials!"; errBox.classList.remove('hidden'); return;
+                }
+                closeModal('modal-login-gateway'); authorizeRole('teacher', phone);
+            } else {
+                const matches = STATE.students.filter(s => cleanPhone(s.phone) === cleanPhone(phone));
+                if (matches.length === 0) { errMsg.innerText = "No student found."; errBox.classList.remove('hidden'); return; }
+                const selInput = document.getElementById(`${prefix}selected-student-id`);
+                if (matches.length > 1 && !selInput.value) {
+                    document.getElementById(`${prefix}student-picker-list`).innerHTML = matches.map(stu => `<button type="button" onclick="document.getElementById('${prefix}selected-student-id').value='${stu.id}'; this.classList.add('border-indigo-500')" class="w-full p-2 rounded-xl bg-slate-900 border border-slate-800 text-left text-xs text-white font-bold">${stu.name} (${stu.id})</button>`).join('');
+                    document.getElementById(`${prefix}student-picker-box`).classList.remove('hidden');
+                    errMsg.innerText = "Select child above & sign in."; errBox.classList.remove('hidden'); return;
+                }
+                const target = matches.length === 1 ? matches[0] : matches.find(s => String(s.id).trim() === String(selInput.value).trim());
+                if (!target || String(target.password).trim() !== password) { errMsg.innerText = "Incorrect Password!"; errBox.classList.remove('hidden'); return; }
+                closeModal('modal-login-gateway');
+                authorizeRole('parent', phone, String(target.id).trim());
+            }
+        }
+
+        function updateKpis() {
+            const todayKey = getTodayDateKey();
+            if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
+                const stats = calculateDynamicAttendance(STATE.currentStudentId);
+                document.getElementById('kpi-present-count').innerText = `${stats.percentage}%`;
+                return;
+            }
+            const active = STATE.students.filter(s => !s.leavingDate || s.leavingDate > todayKey);
+            document.getElementById('kpi-total-students').innerText = active.length;
+            let presentToday = 0;
+            if (!isDateHolidayOrSunday(todayKey)) {
+                active.forEach(s => {
+                    const log = STATE.attendanceLogs[s.id];
+                    if (log && log.daily && log.daily[todayKey] === 'P') presentToday++;
+                });
+            }
+            document.getElementById('kpi-present-count').innerText = presentToday;
+            if (STATE.currentRole === 'admin') {
+                const due = active.reduce((acc, s) => acc + (parseFloat(s.feePending) || 0), 0);
+                document.getElementById('kpi-due-fees').innerText = '₹' + due;
+                document.getElementById('fee-total-due-large')?.innerText = '₹' + due;
+            }
+        }
+
+        function openUpiQrModal() { document.getElementById('modal-upi-qr').classList.remove('hidden'); }
+        function copyUpiId() { navigator.clipboard.writeText(COACHING_UPI_ID); alert("UPI ID Copied: " + COACHING_UPI_ID); }
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(() => {}); });
