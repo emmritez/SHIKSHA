@@ -292,12 +292,6 @@
                         <button onclick="switchPortalTab('fees')" id="side-portal-fees" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition">
                             <i class="fa-solid fa-indian-rupee-sign w-4"></i> <span>Fees & Slips</span>
                         </button>
-                        <button onclick="switchPortalTab('homework')" id="side-portal-homework" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition">
-                            <i class="fa-solid fa-book-open-reader w-4 text-emerald-400"></i> <span>Homework Diary</span>
-                        </button>
-                        <button onclick="switchPortalTab('leave')" id="side-portal-leave" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition">
-                            <i class="fa-solid fa-envelope-open-text w-4 text-amber-400"></i> <span>Leave Requests</span>
-                        </button>
                         <button onclick="switchPortalTab('notes')" id="side-portal-notes" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition">
                             <i class="fa-solid fa-book-bookmark w-4"></i> <span>Study Notes</span>
                         </button>
@@ -560,86 +554,18 @@
                         </div>
                     </section>
 
-                    <!-- TAB: HOMEWORK DIARY -->
-                    <section id="portal-tab-homework" class="hidden space-y-3.5 w-full">
-                        <div class="flex items-center justify-between pb-2 border-b border-slate-300">
-                            <div>
-                                <h3 class="text-sm font-black text-slate-950 uppercase flex items-center gap-1.5">
-                                    <i class="fa-solid fa-book-open-reader text-emerald-700"></i> Daily Homework Diary
-                                </h3>
-                                <p class="text-xs font-semibold text-slate-700">Classwork & Homework assignments</p>
-                            </div>
-                            <button id="btn-add-homework" onclick="openAddHomeworkModal()" class="hidden text-xs bg-indigo-600 text-white font-bold px-3.5 py-1.5 rounded-xl shadow">
-                                <i class="fa-solid fa-plus mr-1"></i> Post Homework
-                            </button>
-                        </div>
-                        <div id="homework-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-                    </section>
-
-                    <!-- TAB: LEAVE APPLICATIONS -->
-                    <section id="portal-tab-leave" class="hidden space-y-3.5 w-full">
-                        <div class="flex items-center justify-between pb-2 border-b border-slate-300">
-                            <div>
-                                <h3 class="text-sm font-black text-slate-950 uppercase flex items-center gap-1.5">
-                                    <i class="fa-solid fa-envelope-open-text text-amber-700"></i> Student Leave Requests
-                                </h3>
-                                <p class="text-xs font-semibold text-slate-700">Apply or approve student leaves</p>
-                            </div>
-                            <button id="btn-apply-leave" onclick="openApplyLeaveModal()" class="hidden text-xs bg-indigo-600 text-white font-bold px-3.5 py-1.5 rounded-xl shadow">
-                                <i class="fa-solid fa-paper-plane mr-1"></i> Apply Leave
-                            </button>
-                        </div>
-                        <div id="leave-requests-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-                    </section>
-
-                    <!-- TAB: FEES & ADVANCED REPORTING CHART -->
-                    <section id="portal-tab-fees" class="hidden space-y-4 w-full">
+                    <!-- TAB: FEES -->
+                    <section id="portal-tab-fees" class="hidden space-y-3.5 w-full">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-sm font-black text-slate-950 uppercase">Fee Records & Reports</h3>
+                            <h3 class="text-sm font-black text-slate-950 uppercase">Fee Records</h3>
                             <button onclick="openUpiQrModal()" class="text-xs bg-indigo-50 text-indigo-800 border border-indigo-300 font-bold px-3 py-1.5 rounded-xl">
                                 <i class="fa-solid fa-qrcode mr-1"></i> Scan QR
                             </button>
                         </div>
-
-                        <div class="bg-white p-4 rounded-2xl border border-slate-300 shadow-sm space-y-4">
-                            <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-200">
-                                <h4 class="text-xs font-black uppercase text-slate-900"><i class="fa-solid fa-chart-pie text-indigo-700 mr-1"></i> Financial Year Fee Range Report & Chart</h4>
-                                <button onclick="downloadFeeReportPdf()" class="text-xs bg-rose-600 hover:bg-rose-500 text-white font-bold px-3 py-1.5 rounded-xl shadow">
-                                    <i class="fa-solid fa-file-pdf mr-1"></i> Download Range PDF
-                                </button>
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-                                <div>
-                                    <label class="block font-extrabold mb-1">From Month *</label>
-                                    <select id="fee-rep-from" onchange="renderFeeReportAndChart()" class="w-full border border-slate-300 rounded-xl px-2.5 py-2 font-bold bg-white">
-                                        <option value="2026-04">April 2026</option><option value="2026-05">May 2026</option><option value="2026-06">June 2026</option><option value="2026-07">July 2026</option><option value="2026-08">August 2026</option><option value="2026-09">September 2026</option><option value="2026-10">October 2026</option><option value="2026-11" selected>November 2026</option><option value="2026-12">December 2026</option><option value="2027-01">January 2027</option><option value="2027-02">February 2027</option><option value="2027-03">March 2027</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block font-extrabold mb-1">To Month *</label>
-                                    <select id="fee-rep-to" onchange="renderFeeReportAndChart()" class="w-full border border-slate-300 rounded-xl px-2.5 py-2 font-bold bg-white">
-                                        <option value="2026-04">April 2026</option><option value="2026-05">May 2026</option><option value="2026-06">June 2026</option><option value="2026-07">July 2026</option><option value="2026-08">August 2026</option><option value="2026-09">September 2026</option><option value="2026-10">October 2026</option><option value="2026-11" selected>November 2026</option><option value="2026-12">December 2026</option><option value="2027-01">January 2027</option><option value="2027-02">February 2027</option><option value="2027-03">March 2027</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block font-extrabold mb-1">Filter Class (Admin/Faculty)</label>
-                                    <select id="fee-rep-class" onchange="renderFeeReportAndChart()" class="w-full border border-slate-300 rounded-xl px-2.5 py-2 font-bold bg-white">
-                                        <option value="All">All Classes</option><option value="10th">10th</option><option value="9th">9th</option><option value="8th">8th</option><option value="7th">7th</option><option value="6th">6th</option><option value="5th">5th</option><option value="4th">4th</option><option value="3rd">3rd</option><option value="2nd">2nd</option><option value="1st">1st</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center pt-2">
-                                <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
-                                    <canvas id="feeStatusPieChart" height="150"></canvas>
-                                </div>
-                                <div class="space-y-2 text-xs">
-                                    <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 font-extrabold text-emerald-950 flex justify-between"><span>Total Collected in Range:</span> <b id="rep-total-collected">₹0</b></div>
-                                    <div class="p-3 bg-rose-50 rounded-xl border border-rose-200 font-extrabold text-rose-950 flex justify-between"><span>Total Pending Due:</span> <b id="rep-total-due">₹0</b></div>
-                                    <div class="p-3 bg-indigo-50 rounded-xl border border-indigo-200 font-extrabold text-indigo-950 flex justify-between"><span>Students Paid Status:</span> <b id="rep-paid-count">0 / 0 Students</b></div>
-                                </div>
-                            </div>
+                        <div id="admin-fee-summary-banner" class="hidden bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-4 rounded-2xl">
+                            <span class="text-xs text-indigo-200 uppercase font-bold">Total Due Fees (Admin Only)</span>
+                            <h3 id="fee-total-due-large" class="text-2xl font-black mt-0.5">₹0</h3>
                         </div>
-
                         <div id="fees-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
                     </section>
 
@@ -696,7 +622,8 @@
         <span>CBSE &bull; ICSE &bull; UP Board &bull; Smart ERP Portal</span>
     </footer>
 
-    <!-- ================= ALL 18 MODALS ================= -->
+    <!-- ================= ALL 16 MODALS ================= -->
+    <!-- 1. TEACHER BEHAVIOR REMARKS MODAL -->
     <div id="modal-behavior-remark" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl text-slate-950">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
@@ -723,6 +650,7 @@
         </div>
     </div>
 
+    <!-- 2. POST-SUBMIT ABSENT WHATSAPP DISPATCH MODAL -->
     <div id="modal-absent-whatsapp" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl text-slate-950 max-h-[85vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
@@ -738,6 +666,7 @@
         </div>
     </div>
 
+    <!-- 3. GALLERY UPLOAD MODAL -->
     <div id="modal-upload-gallery" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl text-slate-950 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
@@ -783,6 +712,7 @@
         </div>
     </div>
 
+    <!-- 4. AI TEST CREATOR MODAL -->
     <div id="modal-create-ai-test" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-2xl rounded-3xl p-5 shadow-2xl text-slate-950 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
@@ -859,6 +789,7 @@
         </div>
     </div>
 
+    <!-- 5. ATTEMPT ONLINE TEST MODAL -->
     <div id="modal-attempt-test" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-xl rounded-3xl p-5 shadow-2xl text-slate-950 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-300 sticky top-0 bg-white z-10 py-1">
@@ -879,6 +810,7 @@
         </div>
     </div>
 
+    <!-- 6. PDF REPORT MODAL -->
     <div id="modal-pdf-report" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl text-slate-950">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
@@ -899,6 +831,7 @@
         </div>
     </div>
 
+    <!-- 7. OFFLINE EXAM MARKS MODAL -->
     <div id="modal-offline-marks" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl text-slate-950 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
@@ -930,6 +863,7 @@
         </div>
     </div>
 
+    <!-- 8. DESKTOP LOGIN MODAL -->
     <div id="modal-login-gateway" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
         <div class="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
             <button onclick="closeModal('modal-login-gateway')" class="absolute top-4 right-4 text-slate-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -966,6 +900,7 @@
         </div>
     </div>
 
+    <!-- 9. UNIVERSAL CHANGE PASSWORD MODAL -->
     <div id="modal-change-password" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl text-slate-950">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
@@ -990,6 +925,7 @@
         </div>
     </div>
 
+    <!-- 10. ADMIN FEE COLLECTION MODAL -->
     <div id="modal-collect-fee" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl text-slate-950">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
@@ -1030,7 +966,7 @@
         </div>
     </div>
 
-    <!-- FACULTY MODAL -->
+    <!-- 11. FACULTY MODAL (WITH PHOTO & GENDER) -->
     <div id="modal-teacher" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl max-h-[90vh] overflow-y-auto text-slate-950">
             <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
@@ -1083,7 +1019,7 @@
         </div>
     </div>
 
-    <!-- STUDENT MODAL -->
+    <!-- 12. STUDENT MODAL (WITH PHOTO & GENDER) -->
     <div id="modal-student" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl max-h-[90vh] overflow-y-auto text-slate-950">
             <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
@@ -1143,6 +1079,7 @@
         </div>
     </div>
 
+    <!-- 13. NOTICE MODAL -->
     <div id="modal-add-notice" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl text-slate-950">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200"><h4 class="text-sm font-black">Post Notice</h4><button onclick="closeModal('modal-add-notice')" class="text-slate-700"><i class="fa-solid fa-xmark"></i></button></div>
@@ -1155,6 +1092,7 @@
         </div>
     </div>
 
+    <!-- 14. UPLOAD NOTES MODAL -->
     <div id="modal-add-note" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl text-slate-950">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200"><h4 class="text-sm font-black">Upload Study Material</h4><button onclick="closeModal('modal-add-note')" class="text-slate-700"><i class="fa-solid fa-xmark"></i></button></div>
@@ -1170,6 +1108,7 @@
         </div>
     </div>
 
+    <!-- 15. HOLIDAY MODAL -->
     <div id="modal-holiday" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl text-slate-950">
             <div class="flex justify-between items-center mb-3"><h4 class="text-sm font-black">Declare Holiday</h4><button onclick="closeModal('modal-holiday')" class="text-slate-700"><i class="fa-solid fa-xmark"></i></button></div>
@@ -1181,36 +1120,7 @@
         </div>
     </div>
 
-    <div id="modal-homework" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl text-slate-950">
-            <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200"><h4 class="text-sm font-black">Post Homework</h4><button onclick="closeModal('modal-homework')" class="text-slate-700"><i class="fa-solid fa-xmark"></i></button></div>
-            <form onsubmit="handleSaveHomework(event)" class="space-y-3">
-                <div><label class="block text-xs font-extrabold mb-1">Title *</label><input type="text" id="hw-title" required placeholder="e.g. Chemical Equations Ex" class="w-full border border-slate-400 rounded-xl px-3 py-2 text-xs font-bold"></div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div><label class="block text-xs font-extrabold mb-1">Class *</label><select id="hw-class" class="w-full border border-slate-400 rounded-xl px-2 py-2 text-xs bg-white font-bold"><option value="10th">10th</option><option value="9th">9th</option><option value="8th">8th</option><option value="7th">7th</option><option value="6th">6th</option><option value="5th">5th</option><option value="4th">4th</option><option value="3rd">3rd</option><option value="2nd">2nd</option><option value="1st">1st</option></select></div>
-                    <div><label class="block text-xs font-extrabold mb-1">Subject *</label><select id="hw-subject" class="w-full border border-slate-400 rounded-xl px-2 py-2 text-xs bg-white font-bold"><option value="Science">Science</option><option value="Maths">Maths</option><option value="Social Science">Social Science</option><option value="English">English</option><option value="Hindi & Sanskrit">Hindi & Sanskrit</option><option value="Computer">Computer</option></select></div>
-                </div>
-                <div><label class="block text-xs font-extrabold mb-1">Due Date *</label><input type="date" id="hw-due" required class="w-full border border-slate-400 rounded-xl px-3 py-2 text-xs font-bold"></div>
-                <div><label class="block text-xs font-extrabold mb-1">Instructions *</label><textarea id="hw-desc" rows="3" required class="w-full border border-slate-400 rounded-xl px-3 py-2 text-xs font-semibold"></textarea></div>
-                <button type="submit" class="w-full py-2.5 bg-indigo-600 text-white font-bold rounded-xl text-xs">Publish Homework</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="modal-apply-leave" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl text-slate-950">
-            <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200"><h4 class="text-sm font-black">Apply for Student Leave</h4><button onclick="closeModal('modal-apply-leave')" class="text-slate-700"><i class="fa-solid fa-xmark"></i></button></div>
-            <form onsubmit="handleApplyLeave(event)" class="space-y-3">
-                <div class="grid grid-cols-2 gap-2">
-                    <div><label class="block text-xs font-extrabold mb-1">From Date *</label><input type="date" id="leave-from" required class="w-full border border-slate-400 rounded-xl px-2.5 py-2 text-xs font-bold"></div>
-                    <div><label class="block text-xs font-extrabold mb-1">To Date *</label><input type="date" id="leave-to" required class="w-full border border-slate-400 rounded-xl px-2.5 py-2 text-xs font-bold"></div>
-                </div>
-                <div><label class="block text-xs font-extrabold mb-1">Reason for Leave *</label><textarea id="leave-reason" rows="3" required placeholder="e.g. Suffering from viral fever..." class="w-full border border-slate-400 rounded-xl px-3 py-2 text-xs font-semibold"></textarea></div>
-                <button type="submit" class="w-full py-2.5 bg-indigo-600 text-white font-bold rounded-xl text-xs">Submit Leave Application</button>
-            </form>
-        </div>
-    </div>
-
+    <!-- 16. QR MODAL -->
     <div id="modal-upi-qr" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-xs rounded-3xl p-5 shadow-2xl text-center relative text-slate-950">
             <button onclick="closeModal('modal-upi-qr')" class="absolute top-4 right-4 text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -1246,8 +1156,6 @@
             holidays: JSON.parse(localStorage.getItem('shiksha_holidays') || '[]'),
             attendanceLogs: JSON.parse(localStorage.getItem('shiksha_att_logs') || '{}'),
             behaviorLogs: JSON.parse(localStorage.getItem('shiksha_behavior_logs') || '[]'),
-            homeworkDiary: JSON.parse(localStorage.getItem('shiksha_homework') || '[]'),
-            leaveRequests: JSON.parse(localStorage.getItem('shiksha_leaves') || '[]'),
             notices: JSON.parse(localStorage.getItem('shiksha_notices') || JSON.stringify([
                 { id: 1, title: 'Admissions Open for Session 2026-27', tag: 'Important', desc: 'Classes 1st to 10th admissions open with conceptual smart learning.', date: 'Recent', author: 'Admin' }
             ])),
@@ -1265,7 +1173,6 @@
         let currentEditingNoticeId = null;
         let growthChartInstance = null;
         let behaviorChartInstance = null;
-        let feePieChartInstance = null;
         let previousSectionBeforeGallery = 'home';
         let chatPollingInterval = null;
         let lastToastActionTab = 'home';
@@ -1274,6 +1181,7 @@
         let isEditingAttendance = false;
         let isEditingBehavior = false;
 
+        // ================= CHROME PWA INSTALL PROMPT HANDLER =================
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredInstallPrompt = e;
@@ -1391,6 +1299,7 @@
             });
         }
 
+        // ================= SOUND & POPUP NOTIFICATION ENGINE =================
         function playNotificationChime() {
             try {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -1429,6 +1338,7 @@
             }
         }
 
+        // ================= MONTHLY AUTO-RESET CHECK =================
         function enforceMonthlyAttendanceReset() {
             const currentMonth = getCurrentMonthKey();
             if (STATE.attendanceLogs._activeMonth && STATE.attendanceLogs._activeMonth !== currentMonth) {
@@ -1441,8 +1351,10 @@
             }
         }
 
+        // ================= ALWAYS LOGGED IN (PERSISTENT SESSION) =================
         window.addEventListener('DOMContentLoaded', () => {
             enforceMonthlyAttendanceReset();
+
             const savedKey = localStorage.getItem('shiksha_gemini_api_key');
             const keyInp = document.getElementById('gemini-api-key-inp');
             if (savedKey && keyInp) keyInp.value = savedKey;
@@ -1451,16 +1363,9 @@
             const savedPhone = localStorage.getItem('shiksha_auth_phone');
             const savedStudentId = localStorage.getItem('shiksha_auth_student_id');
             
-            if (savedSession === 'admin') {
-                authorizeRole('admin');
-            } else if (savedSession === 'teacher' && savedPhone) {
-                authorizeRole('teacher', savedPhone);
-            } else if (savedSession === 'parent' && savedStudentId) {
-                authorizeRole('parent', savedPhone, savedStudentId);
+            if (savedSession) {
+                authorizeRole(savedSession, savedPhone, savedStudentId);
             } else {
-                localStorage.removeItem('shiksha_auth_role');
-                localStorage.removeItem('shiksha_auth_phone');
-                localStorage.removeItem('shiksha_auth_student_id');
                 setLoginRole('admin');
                 showPublicSection('home');
             }
@@ -1472,12 +1377,14 @@
             if (dateDisplay) dateDisplay.innerText = new Date().toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
         });
 
+        // ================= FINGERPRINT / BIOMETRIC QUICK-LOGIN =================
         async function setupBiometricQuickLogin() {
             if (!window.PublicKeyCredential) {
                 alert("Your browser/device does not support Fingerprint login.");
                 return;
             }
             if (!STATE.currentRole) return;
+
             try {
                 const challenge = new Uint8Array(32);
                 window.crypto.getRandomValues(challenge);
@@ -1485,21 +1392,35 @@
                     publicKey: {
                         challenge,
                         rp: { name: "SHIKSHA Coaching Institute" },
-                        user: { id: new Uint8Array(16), name: STATE.currentUserPhone || STATE.adminUser.phone, displayName: "SHIKSHA User" },
+                        user: {
+                            id: new Uint8Array(16),
+                            name: STATE.currentUserPhone || STATE.adminUser.phone,
+                            displayName: "SHIKSHA User"
+                        },
                         pubKeyCredParams: [{ alg: -7, type: "public-key" }, { alg: -257, type: "public-key" }],
                         authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required" },
                         timeout: 60000
                     }
                 });
-                const bioProfile = { role: STATE.currentRole, phone: STATE.currentUserPhone || STATE.adminUser.phone, studentId: STATE.currentStudentId || '' };
+
+                const bioProfile = {
+                    role: STATE.currentRole,
+                    phone: STATE.currentUserPhone || STATE.adminUser.phone,
+                    studentId: STATE.currentStudentId || ''
+                };
                 localStorage.setItem('shiksha_biometric_profile', JSON.stringify(bioProfile));
-                alert("Fingerprint / Face Lock registered on this device!");
-            } catch (err) { alert("Biometric setup cancelled or not supported."); }
+                alert("Fingerprint / Face Lock registered on this device! Next time you can log in with a single touch.");
+            } catch (err) {
+                alert("Biometric setup cancelled or not supported on this browser.");
+            }
         }
 
         async function loginWithBiometric() {
             const savedBio = JSON.parse(localStorage.getItem('shiksha_biometric_profile') || 'null');
-            if (!savedBio) { alert("Please log in once with your password first."); return; }
+            if (!savedBio) {
+                alert("Please log in once with your password and tap the Fingerprint icon in the top header to activate.");
+                return;
+            }
             try {
                 const challenge = new Uint8Array(32);
                 window.crypto.getRandomValues(challenge);
@@ -1507,7 +1428,11 @@
                     publicKey: {
                         challenge,
                         rp: { name: "SHIKSHA Coaching Institute" },
-                        user: { id: new Uint8Array(16), name: savedBio.phone || "user", displayName: "SHIKSHA User" },
+                        user: {
+                            id: new Uint8Array(16),
+                            name: savedBio.phone || "user",
+                            displayName: "SHIKSHA User"
+                        },
                         pubKeyCredParams: [{ alg: -7, type: "public-key" }, { alg: -257, type: "public-key" }],
                         authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required" },
                         timeout: 60000
@@ -1515,36 +1440,43 @@
                 });
                 closeModal('modal-login-gateway');
                 authorizeRole(savedBio.role, savedBio.phone, savedBio.studentId);
-            } catch (err) { alert("Fingerprint verification failed."); }
+            } catch (err) {
+                alert("Fingerprint verification failed or cancelled.");
+            }
         }
 
         function renderAllViews() {
             renderPublicOverview();
             renderPublicTeachers();
-            if (!isEditingBehavior) { renderStudents(); }
+            if (!isEditingBehavior) {
+                renderStudents();
+            }
             renderTeachers();
             renderAttendanceClassChips();
-            if (!isEditingAttendance) { renderAttendanceList(); }
+            if (!isEditingAttendance) {
+                renderAttendanceList();
+            }
             renderNotices();
             renderNotes();
             renderFees();
-            renderHomework();
-            renderLeaveRequests();
             renderGallery();
             renderOnlineTests();
             renderTestSubmissions();
             renderChatInterface();
             updateUnreadChatBadges();
             updateKpis();
-            if (STATE.currentRole === 'parent') { renderParentGrowthAndRemarks(); }
-            if (STATE.activePortalTab === 'fees') { renderFeeReportAndChart(); }
+            if (STATE.currentRole === 'parent') {
+                renderParentGrowthAndRemarks();
+            }
         }
 
+        // ================= DESKTOP & MOBILE VIEW ROUTING =================
         function showPublicSection(section) {
             if (section === 'faculty' && STATE.currentRole && STATE.currentRole !== 'admin') {
-                alert("Faculty directory is restricted.");
+                alert("Faculty directory is restricted. You can view your own profile in the portal.");
                 return;
             }
+
             const mLogin = document.getElementById('mobile-login-screen');
             const pubView = document.getElementById('view-public');
             const facView = document.getElementById('view-public-faculty');
@@ -1556,22 +1488,34 @@
             else previousSectionBeforeGallery = 'home';
 
             if (mLogin) mLogin.classList.add('hidden');
-            pubView.classList.add('hidden'); pubView.classList.remove('md:flex');
-            facView.classList.add('hidden'); galView.classList.add('hidden'); portalView.classList.add('hidden');
+            pubView.classList.add('hidden');
+            pubView.classList.remove('md:flex');
+            facView.classList.add('hidden');
+            galView.classList.add('hidden');
+            portalView.classList.add('hidden');
             if (mBottomNav && !STATE.currentRole) mBottomNav.classList.add('hidden');
 
-            if (section === 'gallery') { galView.classList.remove('hidden'); renderGallery(); }
-            else if (section === 'faculty') { facView.classList.remove('hidden'); }
-            else {
-                if (!STATE.currentRole && mLogin) mLogin.classList.remove('hidden');
-                pubView.classList.remove('hidden'); pubView.classList.add('md:flex');
+            if (section === 'gallery') {
+                galView.classList.remove('hidden');
+                renderGallery();
+            } else if (section === 'faculty') {
+                facView.classList.remove('hidden');
+            } else {
+                if (!STATE.currentRole && mLogin) {
+                    mLogin.classList.remove('hidden');
+                }
+                pubView.classList.remove('hidden');
+                pubView.classList.add('md:flex');
             }
             window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
         function exitGalleryView() {
-            if (previousSectionBeforeGallery === 'portal' && STATE.currentRole) { openPortalView(); }
-            else { showPublicSection('home'); }
+            if (previousSectionBeforeGallery === 'portal' && STATE.currentRole) {
+                openPortalView();
+            } else {
+                showPublicSection('home');
+            }
         }
 
         function openPortalView() {
@@ -1585,46 +1529,63 @@
             const mBottomNav = document.getElementById('mobile-bottom-nav');
 
             if (mLogin) mLogin.classList.add('hidden');
-            pubView.classList.add('hidden'); pubView.classList.remove('md:flex');
-            facView.classList.add('hidden'); galView.classList.add('hidden'); portalView.classList.remove('hidden');
+            pubView.classList.add('hidden');
+            pubView.classList.remove('md:flex');
+            facView.classList.add('hidden');
+            galView.classList.add('hidden');
+            portalView.classList.remove('hidden');
             if (mBottomNav) mBottomNav.classList.remove('hidden');
+
             window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
         function switchPortalTab(tab) {
             if (tab === 'chat' && STATE.currentRole === 'admin') return;
+
             STATE.activePortalTab = tab;
-            ['home', 'students', 'attendance', 'tests', 'chat', 'fees', 'homework', 'leave', 'notes'].forEach(t => {
+            ['home', 'students', 'attendance', 'tests', 'chat', 'fees', 'notes'].forEach(t => {
                 const page = document.getElementById(`portal-tab-${t}`);
                 if (page) page.classList.add('hidden');
                 
                 const sideBtn = document.getElementById(`side-portal-${t}`);
                 if (sideBtn) {
                     if (t === 'chat') {
-                        if (STATE.currentRole === 'admin') sideBtn.classList.add('hidden');
-                        else sideBtn.className = (t === tab) ? "w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-indigo-600 text-white shadow-sm transition" : "w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition";
+                        if (STATE.currentRole === 'admin') {
+                            sideBtn.classList.add('hidden');
+                        } else {
+                            sideBtn.className = (t === tab)
+                                ? "w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-indigo-600 text-white shadow-sm transition"
+                                : "w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition";
+                        }
                     } else {
-                        sideBtn.className = (t === tab) ? "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-indigo-600 text-white shadow-sm transition" : "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition";
+                        sideBtn.className = (t === tab)
+                            ? "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-indigo-600 text-white shadow-sm transition"
+                            : "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition";
                     }
                 }
 
                 const mNavBtn = document.getElementById(`m-nav-${t}`);
                 if (mNavBtn) {
-                    if (t === 'chat' && STATE.currentRole === 'admin') mNavBtn.classList.add('hidden');
-                    else {
+                    if (t === 'chat' && STATE.currentRole === 'admin') {
+                        mNavBtn.classList.add('hidden');
+                    } else {
                         const relClass = (t === 'chat') ? 'relative ' : '';
-                        mNavBtn.className = (t === tab) ? `${relClass}flex flex-col items-center justify-center text-indigo-700 transition` : `${relClass}flex flex-col items-center justify-center text-slate-800 transition`;
+                        mNavBtn.className = (t === tab)
+                            ? `${relClass}flex flex-col items-center justify-center text-indigo-700 transition`
+                            : `${relClass}flex flex-col items-center justify-center text-slate-800 transition`;
                     }
                 }
             });
             const activePage = document.getElementById(`portal-tab-${tab}`);
             if (activePage) activePage.classList.remove('hidden');
 
-            if (tab === 'chat') renderChatInterface();
-            if (tab === 'fees') renderFeeReportAndChart();
+            if (tab === 'chat') {
+                renderChatInterface();
+            }
             window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
+        // ================= 100% REAL-TIME CLOUD SYNC =================
         async function fetchCloudDatabase(manualClick = false) {
             if (!SCRIPT_URL) return;
             const badge = document.getElementById('global-sync-badge');
@@ -1653,7 +1614,12 @@
                     }
 
                     if (Array.isArray(data.notices) && data.notices.length > 0) {
-                        STATE.notices = [...data.notices].reverse();
+                        const reversedNotices = [...data.notices].reverse();
+                        if (STATE.notices.length > 0 && reversedNotices.length > STATE.notices.length && STATE.currentRole) {
+                            const latest = reversedNotices[0];
+                            showLiveInAppToast('NEW NOTICE', latest.title, latest.desc, 'home', true);
+                        }
+                        STATE.notices = reversedNotices;
                         localStorage.setItem('shiksha_notices', JSON.stringify(STATE.notices));
                     }
 
@@ -1669,23 +1635,17 @@
 
                     if (!isEditingAttendance && data.attendanceLogs && typeof data.attendanceLogs === 'object') {
                         const currentMonth = getCurrentMonthKey();
-                        STATE.attendanceLogs = (data.attendanceLogs._activeMonth === currentMonth) ? data.attendanceLogs : { _activeMonth: currentMonth };
+                        if (data.attendanceLogs._activeMonth === currentMonth) {
+                            STATE.attendanceLogs = data.attendanceLogs;
+                        } else {
+                            STATE.attendanceLogs = { _activeMonth: currentMonth };
+                        }
                         localStorage.setItem('shiksha_att_logs', JSON.stringify(STATE.attendanceLogs));
                     }
 
                     if (Array.isArray(data.behaviorLogs)) {
                         STATE.behaviorLogs = [...data.behaviorLogs].reverse();
                         localStorage.setItem('shiksha_behavior_logs', JSON.stringify(STATE.behaviorLogs));
-                    }
-
-                    if (Array.isArray(data.homeworkDiary)) {
-                        STATE.homeworkDiary = [...data.homeworkDiary].reverse();
-                        localStorage.setItem('shiksha_homework', JSON.stringify(STATE.homeworkDiary));
-                    }
-
-                    if (Array.isArray(data.leaveRequests)) {
-                        STATE.leaveRequests = [...data.leaveRequests].reverse();
-                        localStorage.setItem('shiksha_leaves', JSON.stringify(STATE.leaveRequests));
                     }
 
                     if (Array.isArray(data.holidays)) {
@@ -1731,8 +1691,17 @@
                     }
 
                     if (Array.isArray(data.chatMessages)) {
+                        const prevMyCount = getMyChatMessages().length;
                         STATE.chatMessages = data.chatMessages;
                         localStorage.setItem('shiksha_chat_messages', JSON.stringify(STATE.chatMessages));
+                        const newMyMsgs = getMyChatMessages();
+
+                        if (newMyMsgs.length > prevMyCount && STATE.currentRole && STATE.currentRole !== 'admin') {
+                            const lastMsg = newMyMsgs[newMyMsgs.length - 1];
+                            if (lastMsg.senderRole !== STATE.currentRole) {
+                                showLiveInAppToast('NEW MESSAGE', lastMsg.senderName, lastMsg.text, 'chat', true);
+                            }
+                        }
                     }
 
                     if (badge) {
@@ -1758,11 +1727,12 @@
             } catch (e) { console.error("Cloud push failed:", e); }
         }
 
-        // ================= ATTENDANCE ENGINE =================
+        // ================= 3-COLUMN COLOR-CODED ATTENDANCE (HOLIDAY & SUNDAY LOCKED) =================
         function calculateDynamicAttendance(studentId) {
             const currentMonth = getCurrentMonthKey();
             const studentLog = STATE.attendanceLogs[studentId] || { daily: {} };
             const daily = studentLog.daily || {};
+
             let present = 0, leave = 0, absent = 0;
             Object.entries(daily).forEach(([dateKey, status]) => {
                 if (dateKey.startsWith(currentMonth) && !isDateHolidayOrSunday(dateKey)) {
@@ -1771,15 +1741,18 @@
                     else if (status === 'A') absent++;
                 }
             });
+
             const monthHolidays = getUniqueHolidaysForMonth(currentMonth).length;
             const totalRecordedDays = present + leave + absent;
             const percentage = totalRecordedDays > 0 ? Math.round((present / totalRecordedDays) * 100) : 0;
+
             return { workingDays: totalRecordedDays, holidays: monthHolidays, present, leave, absent, percentage };
         }
 
         function calculateClassAggregateAttendance(studentList) {
             const currentMonth = getCurrentMonthKey();
             let totalPresent = 0, totalLeave = 0, totalAbsent = 0;
+
             studentList.forEach(s => {
                 const daily = (STATE.attendanceLogs[s.id] && STATE.attendanceLogs[s.id].daily) ? STATE.attendanceLogs[s.id].daily : {};
                 Object.entries(daily).forEach(([dateKey, status]) => {
@@ -1790,9 +1763,11 @@
                     }
                 });
             });
+
             const monthHolidays = getUniqueHolidaysForMonth(currentMonth).length;
             const totalMarked = totalPresent + totalLeave + totalAbsent;
             const percentage = totalMarked > 0 ? Math.round((totalPresent / totalMarked) * 100) : 0;
+
             return { workingDays: totalMarked, holidays: monthHolidays, present: totalPresent, leave: totalLeave, absent: totalAbsent, percentage };
         }
 
@@ -1822,10 +1797,14 @@
             if (STATE.currentRole === 'parent') return;
             const todayKey = getTodayDateKey();
             const holidayReason = isDateHolidayOrSunday(todayKey);
-            if (holidayReason) { alert(`Attendance cannot be marked today (${holidayReason}).`); return; }
+            if (holidayReason) {
+                alert(`Attendance cannot be marked today (${holidayReason}).`);
+                return;
+            }
 
             enforceMonthlyAttendanceReset();
             isEditingAttendance = true;
+
             if (!STATE.attendanceLogs[studentId]) STATE.attendanceLogs[studentId] = { daily: {} };
             if (!STATE.attendanceLogs[studentId].daily) STATE.attendanceLogs[studentId].daily = {};
 
@@ -1835,8 +1814,13 @@
             ['P', 'A', 'L'].forEach(opt => {
                 const dot = document.getElementById(`att-dot-${studentId}-${opt}`);
                 if (dot) {
-                    if (opt === status) { dot.classList.remove('scale-0'); dot.classList.add('scale-100'); }
-                    else { dot.classList.remove('scale-100'); dot.classList.add('scale-0'); }
+                    if (opt === status) {
+                        dot.classList.remove('scale-0');
+                        dot.classList.add('scale-100');
+                    } else {
+                        dot.classList.remove('scale-100');
+                        dot.classList.add('scale-0');
+                    }
                 }
             });
 
@@ -1849,7 +1833,10 @@
             if (STATE.currentRole === 'parent') return;
             const todayKey = getTodayDateKey();
             const holidayReason = isDateHolidayOrSunday(todayKey);
-            if (holidayReason) { alert(`Today is ${holidayReason}. Attendance is disabled.`); return; }
+            if (holidayReason) {
+                alert(`Today is ${holidayReason}. Attendance is disabled.`);
+                return;
+            }
 
             const btn = document.getElementById('btn-save-attendance');
             const origHtml = btn.innerHTML;
@@ -1881,7 +1868,9 @@
                     </div>
                 `).join('');
                 document.getElementById('modal-absent-whatsapp').classList.remove('hidden');
-            } else { alert("Attendance submitted and synced to Cloud successfully!"); }
+            } else {
+                alert("Attendance submitted and synced to Cloud successfully!");
+            }
         }
 
         function triggerAbsentWhatsAppAlert(studentId) {
@@ -1906,12 +1895,17 @@
             const monthName = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
             let list = [];
 
-            if (saveBtn && STATE.currentRole !== 'parent') { saveBtn.classList.toggle('hidden', !!holidayReason); }
+            if (saveBtn && STATE.currentRole !== 'parent') {
+                saveBtn.classList.toggle('hidden', !!holidayReason);
+            }
 
             if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
                 if (classChips) classChips.classList.add('hidden');
                 list = STATE.students.filter(s => String(s.id).trim().toLowerCase() === String(STATE.currentStudentId).trim().toLowerCase());
-                if (list[0]) { summaryTitle.innerText = `${list[0].name} (${monthName})`; updateAttendanceAnalyticsCard(list[0].id, null); }
+                if (list[0]) {
+                    summaryTitle.innerText = `${list[0].name} (${monthName})`;
+                    updateAttendanceAnalyticsCard(list[0].id, null);
+                }
             } else {
                 if (classChips) classChips.classList.remove('hidden');
                 list = STATE.students.filter(s => s.class === STATE.selectedAttClass && (!s.leavingDate || s.leavingDate > todayKey));
@@ -1920,7 +1914,17 @@
             }
 
             if (holidayReason) {
-                container.innerHTML = `<tr><td colspan="4" class="p-6 text-center bg-rose-50 text-rose-950"><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-200 text-rose-950 text-xs font-black mb-1"><i class="fa-solid fa-calendar-xmark"></i> HOLIDAY / WEEKLY OFF</div><p class="text-sm font-black">${holidayReason}</p><p class="text-xs font-semibold text-rose-800 mt-0.5">Attendance marking is disabled for today.</p></td></tr>`;
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="p-6 text-center bg-rose-50 text-rose-950">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-200 text-rose-950 text-xs font-black mb-1">
+                                <i class="fa-solid fa-calendar-xmark"></i> HOLIDAY / WEEKLY OFF
+                            </div>
+                            <p class="text-sm font-black">${holidayReason}</p>
+                            <p class="text-xs font-semibold text-rose-800 mt-0.5">Attendance marking is disabled for today.</p>
+                        </td>
+                    </tr>
+                `;
                 return;
             }
 
@@ -1930,23 +1934,46 @@
             }
 
             const isReadOnly = (STATE.currentRole === 'parent');
+
             list.forEach(s => {
                 const stuLog = STATE.attendanceLogs[s.id] || {};
                 const todayStatus = (stuLog.daily && stuLog.daily[todayKey]) ? stuLog.daily[todayKey] : '';
+
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition";
                 tr.innerHTML = `
-                    <td class="p-3 bg-white"><div class="flex items-center gap-1.5"><span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded shrink-0">${s.id}</span><span class="text-sm font-extrabold text-slate-950 truncate">${s.name}</span></div><span class="text-[11px] font-semibold text-slate-700 block">Class ${s.class} &bull; ${s.phone}</span></td>
-                    <td class="p-3 text-center bg-emerald-50/90 border-l border-emerald-200"><button type="button" ${isReadOnly ? 'disabled' : `onclick="selectAttendanceRadio('${s.id}', 'P')"`} id="att-ring-${s.id}-P" class="w-7 h-7 mx-auto rounded-full border-2 border-emerald-600 bg-white flex items-center justify-center shadow-sm focus:outline-none"><span id="att-dot-${s.id}-P" class="w-3.5 h-3.5 rounded-full bg-emerald-600 transition-transform duration-150 ${todayStatus === 'P' ? 'scale-100' : 'scale-0'}"></span></button></td>
-                    <td class="p-3 text-center bg-rose-50/90 border-l border-rose-200"><button type="button" ${isReadOnly ? 'disabled' : `onclick="selectAttendanceRadio('${s.id}', 'A')"`} id="att-ring-${s.id}-A" class="w-7 h-7 mx-auto rounded-full border-2 border-rose-600 bg-white flex items-center justify-center shadow-sm focus:outline-none"><span id="att-dot-${s.id}-A" class="w-3.5 h-3.5 rounded-full bg-rose-600 transition-transform duration-150 ${todayStatus === 'A' ? 'scale-100' : 'scale-0'}"></span></button></td>
-                    <td class="p-3 text-center bg-amber-50/90 border-l border-amber-200"><button type="button" ${isReadOnly ? 'disabled' : `onclick="selectAttendanceRadio('${s.id}', 'L')"`} id="att-ring-${s.id}-L" class="w-7 h-7 mx-auto rounded-full border-2 border-amber-500 bg-white flex items-center justify-center shadow-sm focus:outline-none"><span id="att-dot-${s.id}-L" class="w-3.5 h-3.5 rounded-full bg-amber-500 transition-transform duration-150 ${todayStatus === 'L' ? 'scale-100' : 'scale-0'}"></span></button></td>
+                    <td class="p-3 bg-white">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded shrink-0">${s.id}</span>
+                            <span class="text-sm font-extrabold text-slate-950 truncate">${s.name}</span>
+                        </div>
+                        <span class="text-[11px] font-semibold text-slate-700 block">Class ${s.class} &bull; ${s.phone}</span>
+                    </td>
+                    <td class="p-3 text-center bg-emerald-50/90 border-l border-emerald-200">
+                        <button type="button" ${isReadOnly ? 'disabled' : `onclick="selectAttendanceRadio('${s.id}', 'P')"`} id="att-ring-${s.id}-P" class="w-7 h-7 mx-auto rounded-full border-2 border-emerald-600 bg-white flex items-center justify-center shadow-sm focus:outline-none">
+                            <span id="att-dot-${s.id}-P" class="w-3.5 h-3.5 rounded-full bg-emerald-600 transition-transform duration-150 ${todayStatus === 'P' ? 'scale-100' : 'scale-0'}"></span>
+                        </button>
+                    </td>
+                    <td class="p-3 text-center bg-rose-50/90 border-l border-rose-200">
+                        <button type="button" ${isReadOnly ? 'disabled' : `onclick="selectAttendanceRadio('${s.id}', 'A')"`} id="att-ring-${s.id}-A" class="w-7 h-7 mx-auto rounded-full border-2 border-rose-600 bg-white flex items-center justify-center shadow-sm focus:outline-none">
+                            <span id="att-dot-${s.id}-A" class="w-3.5 h-3.5 rounded-full bg-rose-600 transition-transform duration-150 ${todayStatus === 'A' ? 'scale-100' : 'scale-0'}"></span>
+                        </button>
+                    </td>
+                    <td class="p-3 text-center bg-amber-50/90 border-l border-amber-200">
+                        <button type="button" ${isReadOnly ? 'disabled' : `onclick="selectAttendanceRadio('${s.id}', 'L')"`} id="att-ring-${s.id}-L" class="w-7 h-7 mx-auto rounded-full border-2 border-amber-500 bg-white flex items-center justify-center shadow-sm focus:outline-none">
+                            <span id="att-dot-${s.id}-L" class="w-3.5 h-3.5 rounded-full bg-amber-500 transition-transform duration-150 ${todayStatus === 'L' ? 'scale-100' : 'scale-0'}"></span>
+                        </button>
+                    </td>
                 `;
                 container.appendChild(tr);
             });
         }
 
         function updateAttendanceAnalyticsCard(studentId = null, classList = null) {
-            const stats = studentId ? calculateDynamicAttendance(studentId) : calculateClassAggregateAttendance(classList || []);
+            const stats = studentId
+                ? calculateDynamicAttendance(studentId)
+                : calculateClassAggregateAttendance(classList || []);
+
             document.getElementById('att-percentage-badge').innerText = `${stats.percentage}%`;
             document.getElementById('att-working-days-info').innerText = `Recorded: ${stats.workingDays} | Holidays: ${stats.holidays}`;
             document.getElementById('stat-present-days').innerText = `${stats.present}d`;
@@ -1964,10 +1991,11 @@
             document.getElementById('bar-absent').style.width = `${aRatio}%`;
         }
 
-        // ================= BEHAVIOR ENGINE =================
+        // ================= STUDENT BEHAVIOR TRACKING (PERSISTENT CHECKBOXES) =================
         function openBehaviorModal(studentId, studentName, flagType) {
             if (STATE.currentRole !== 'teacher' && STATE.currentRole !== 'admin') return;
             isEditingBehavior = true;
+
             document.getElementById('beh-student-id').value = studentId;
             document.getElementById('beh-student-name').value = studentName;
             document.getElementById('beh-flag-type').value = flagType;
@@ -1991,8 +2019,10 @@
                 const redReasons = ["Incomplete Homework", "Late Arrival", "Talking / Distracted in Class", "Unprepared for Test", "Disruptive Behavior"];
                 chipsBox.innerHTML = redReasons.map(r => `<button type="button" onclick="document.getElementById('beh-remark-text').value='${r}'" class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-rose-50 text-rose-900 border border-rose-300 hover:bg-rose-100">${r}</button>`).join('');
             }
+
             const modal = document.getElementById('modal-behavior-remark');
-            modal.classList.remove('hidden'); modal.style.display = 'flex';
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
         }
 
         function closeBehaviorModal() {
@@ -2017,7 +2047,17 @@
 
             const todayKey = getTodayDateKey();
             STATE.behaviorLogs = STATE.behaviorLogs.filter(b => !(String(b.studentId) === String(studentId) && b.dateKey === todayKey && b.flag === flag));
-            const entry = { id: Date.now(), studentId, studentName, flag, reason, teacherName, date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }), dateKey: todayKey };
+
+            const entry = {
+                id: Date.now(),
+                studentId,
+                studentName,
+                flag,
+                reason,
+                teacherName,
+                date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+                dateKey: todayKey
+            };
 
             STATE.behaviorLogs.unshift(entry);
             localStorage.setItem('shiksha_behavior_logs', JSON.stringify(STATE.behaviorLogs));
@@ -2026,9 +2066,7 @@
             renderStudents();
             await postToCloud({ action: 'addBehaviorLog', log: entry });
         }
-    </script>
-    <script>
-        // ================= CHAT & MESSAGING ENGINE =================
+        // ================= TEACHER-STUDENT ONLY CHAT + RED BADGE =================
         function getMyChatMessages() {
             if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
                 return STATE.chatMessages.filter(m => String(m.studentId).trim() === String(STATE.currentStudentId).trim());
@@ -2046,24 +2084,38 @@
             const sideBtn = document.getElementById('side-portal-chat');
             const mBtn = document.getElementById('m-nav-chat');
             const mGrid = document.getElementById('mobile-nav-grid');
-            const isAdmin = (STATE.currentRole === 'admin');
 
-            if (sideBtn) sideBtn.classList.toggle('hidden', isAdmin);
-            if (mBtn) mBtn.classList.toggle('hidden', isAdmin);
+            const isAdmin = (STATE.currentRole === 'admin');
+            if (sideBtn) {
+                if (isAdmin) sideBtn.classList.add('hidden');
+                else sideBtn.classList.remove('hidden');
+            }
+            if (mBtn) {
+                if (isAdmin) mBtn.classList.add('hidden');
+                else mBtn.classList.remove('hidden');
+            }
             if (mGrid) mGrid.className = isAdmin ? "grid grid-cols-5 h-full items-center" : "grid grid-cols-6 h-full items-center";
             if (isAdmin) return;
 
             const key = `shiksha_seen_chats_${STATE.currentRole}_${STATE.currentStudentId || STATE.currentUserPhone}`;
             const seenCount = parseInt(localStorage.getItem(key) || '0', 10);
-            const unread = Math.max(0, getMyChatMessages().length - seenCount);
+            const myRelevantMsgs = getMyChatMessages();
+            const unread = Math.max(0, myRelevantMsgs.length - seenCount);
 
-            if (sideBadge) { sideBadge.innerText = unread; sideBadge.classList.toggle('hidden', unread === 0); }
-            if (mBadge) { mBadge.innerText = unread; mBadge.classList.toggle('hidden', unread === 0); }
+            if (sideBadge) {
+                sideBadge.innerText = unread;
+                sideBadge.classList.toggle('hidden', unread === 0);
+            }
+            if (mBadge) {
+                mBadge.innerText = unread;
+                mBadge.classList.toggle('hidden', unread === 0);
+            }
         }
 
         function markMyChatsAsRead() {
+            const myRelevantMsgs = getMyChatMessages();
             const key = `shiksha_seen_chats_${STATE.currentRole}_${STATE.currentStudentId || STATE.currentUserPhone}`;
-            localStorage.setItem(key, String(getMyChatMessages().length));
+            localStorage.setItem(key, String(myRelevantMsgs.length));
             updateUnreadChatBadges();
         }
 
@@ -2080,18 +2132,31 @@
                     const tPhone = cleanPhone(t.phone);
                     const threadKey = `${STATE.currentStudentId}_${tPhone}`;
                     const isActive = STATE.activeChatThread && STATE.activeChatThread.threadKey === threadKey;
-                    return `<button onclick="selectChatThread('${threadKey}', '${STATE.currentStudentId}', '${t.name}', '${tPhone}', '${t.name}')" class="w-full text-left p-2.5 rounded-xl border transition ${isActive ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-100 text-slate-950 border-slate-300'}"><p class="text-xs font-extrabold truncate">${t.name}</p><p class="text-[11px] font-semibold ${isActive ? 'text-indigo-100' : 'text-slate-700'} truncate">${t.subjects || 'Faculty'}</p></button>`;
+                    return `
+                        <button onclick="selectChatThread('${threadKey}', '${STATE.currentStudentId}', '${t.name}', '${tPhone}', '${t.name}')" class="w-full text-left p-2.5 rounded-xl border transition ${isActive ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-100 text-slate-950 border-slate-300'}">
+                            <p class="text-xs font-extrabold truncate">${t.name}</p>
+                            <p class="text-[11px] font-semibold ${isActive ? 'text-indigo-100' : 'text-slate-700'} truncate">${t.subjects || 'Faculty'}</p>
+                        </button>
+                    `;
                 }).join('') || `<p class="text-xs font-bold text-slate-700 p-2">No teachers available.</p>`;
             } else if (STATE.currentRole === 'teacher') {
                 heading.innerText = "Students";
                 const myPhone = cleanPhone(STATE.currentUserPhone);
-                const activeStudents = STATE.students.filter(s => !s.leavingDate || s.leavingDate > getTodayDateKey());
+                const today = getTodayDateKey();
+                const activeStudents = STATE.students.filter(s => !s.leavingDate || s.leavingDate > today);
+
                 threadsList.innerHTML = activeStudents.map(s => {
                     const threadKey = `${s.id}_${myPhone}`;
                     const isActive = STATE.activeChatThread && STATE.activeChatThread.threadKey === threadKey;
-                    return `<button onclick="selectChatThread('${threadKey}', '${s.id}', '${s.name}', '${myPhone}', '${s.name} (${s.class})')" class="w-full text-left p-2.5 rounded-xl border transition ${isActive ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-100 text-slate-950 border-slate-300'}"><p class="text-xs font-extrabold truncate">${s.name} (${s.id})</p><p class="text-[11px] font-semibold ${isActive ? 'text-indigo-100' : 'text-slate-700'}">Class ${s.class}</p></button>`;
+                    return `
+                        <button onclick="selectChatThread('${threadKey}', '${s.id}', '${s.name}', '${myPhone}', '${s.name} (${s.class})')" class="w-full text-left p-2.5 rounded-xl border transition ${isActive ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-100 text-slate-950 border-slate-300'}">
+                            <p class="text-xs font-extrabold truncate">${s.name} (${s.id})</p>
+                            <p class="text-[11px] font-semibold ${isActive ? 'text-indigo-100' : 'text-slate-700'}">Class ${s.class}</p>
+                        </button>
+                    `;
                 }).join('') || `<p class="text-xs font-bold text-slate-700 p-2">No active students.</p>`;
             }
+
             if (STATE.activeChatThread) renderActiveThreadMessages();
         }
 
@@ -2106,10 +2171,21 @@
             const box = document.getElementById('chat-messages-box');
             if (!box || !STATE.activeChatThread) return;
             const msgs = STATE.chatMessages.filter(m => String(m.threadKey) === String(STATE.activeChatThread.threadKey));
-            if (msgs.length === 0) { box.innerHTML = `<p class="text-center text-xs font-bold text-slate-700 mt-8">No messages yet. Say hello!</p>`; return; }
+            if (msgs.length === 0) {
+                box.innerHTML = `<p class="text-center text-xs font-bold text-slate-700 mt-8">No messages yet. Say hello!</p>`;
+                return;
+            }
             box.innerHTML = msgs.map(m => {
                 const isMine = (m.senderRole === STATE.currentRole);
-                return `<div class="flex flex-col ${isMine ? 'items-end' : 'items-start'}"><div class="max-w-[82%] px-3.5 py-2 rounded-2xl text-xs shadow-sm ${isMine ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-white border border-slate-300 text-slate-950 rounded-bl-none'}"><p class="text-[10px] font-extrabold mb-0.5 ${isMine ? 'text-indigo-200' : 'text-indigo-700'}">${m.senderName}</p><p class="leading-relaxed font-semibold break-words whitespace-pre-line">${m.text}</p></div><span class="text-[10px] font-bold text-slate-700 mt-0.5 px-1">${m.time || ''}</span></div>`;
+                return `
+                    <div class="flex flex-col ${isMine ? 'items-end' : 'items-start'}">
+                        <div class="max-w-[82%] px-3.5 py-2 rounded-2xl text-xs shadow-sm ${isMine ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-white border border-slate-300 text-slate-950 rounded-bl-none'}">
+                            <p class="text-[10px] font-extrabold mb-0.5 ${isMine ? 'text-indigo-200' : 'text-indigo-700'}">${m.senderName}</p>
+                            <p class="leading-relaxed font-semibold break-words whitespace-pre-line">${m.text}</p>
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-700 mt-0.5 px-1">${m.time || ''}</span>
+                    </div>
+                `;
             }).join('');
             box.scrollTop = box.scrollHeight;
         }
@@ -2120,6 +2196,7 @@
             const inp = document.getElementById('chat-message-input');
             const text = inp.value.trim();
             if (!text) return;
+
             let senderName = 'User';
             if (STATE.currentRole === 'teacher') {
                 const t = getValidUniqueTeachers().find(item => cleanPhone(item.phone) === cleanPhone(STATE.currentUserPhone));
@@ -2128,116 +2205,28 @@
                 const s = STATE.students.find(item => String(item.id).trim() === String(STATE.currentStudentId).trim());
                 senderName = s ? `${s.name} (Student)` : 'Student';
             }
-            const msgObj = { id: Date.now(), threadKey: STATE.activeChatThread.threadKey, studentId: STATE.activeChatThread.studentId, studentName: STATE.activeChatThread.studentName, teacherPhone: STATE.activeChatThread.teacherPhone, senderRole: STATE.currentRole, senderName, text, time: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) };
+
+            const msgObj = {
+                id: Date.now(),
+                threadKey: STATE.activeChatThread.threadKey,
+                studentId: STATE.activeChatThread.studentId,
+                studentName: STATE.activeChatThread.studentName,
+                teacherPhone: STATE.activeChatThread.teacherPhone,
+                senderRole: STATE.currentRole,
+                senderName,
+                text,
+                time: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
+            };
+
             STATE.chatMessages.push(msgObj);
             localStorage.setItem('shiksha_chat_messages', JSON.stringify(STATE.chatMessages));
-            markMyChatsAsRead(); inp.value = ''; renderActiveThreadMessages();
+            markMyChatsAsRead();
+            inp.value = '';
+            renderActiveThreadMessages();
             await postToCloud({ action: 'sendChatMessage', msg: msgObj });
         }
 
-        // ================= HOMEWORK & LEAVE MODULE =================
-        function openAddHomeworkModal() {
-            document.getElementById('hw-title').value = '';
-            document.getElementById('hw-desc').value = '';
-            document.getElementById('hw-due').value = getTodayDateKey();
-            document.getElementById('modal-homework').classList.remove('hidden');
-        }
-
-        async function handleSaveHomework(e) {
-            e.preventDefault();
-            const hw = { id: Date.now(), title: document.getElementById('hw-title').value.trim(), class: document.getElementById('hw-class').value, subject: document.getElementById('hw-subject').value, dueDate: document.getElementById('hw-due').value, desc: document.getElementById('hw-desc').value.trim(), author: STATE.currentRole === 'teacher' ? 'Faculty' : 'Admin', completedBy: [] };
-            STATE.homeworkDiary.unshift(hw);
-            localStorage.setItem('shiksha_homework', JSON.stringify(STATE.homeworkDiary));
-            closeModal('modal-homework'); renderHomework();
-            await postToCloud({ action: 'addHomework', homework: hw });
-            alert("Homework published to students!");
-        }
-
-        function toggleHomeworkComplete(hwId) {
-            if (STATE.currentRole !== 'parent' || !STATE.currentStudentId) return;
-            const hw = STATE.homeworkDiary.find(h => String(h.id) === String(hwId));
-            if (!hw) return;
-            if (!hw.completedBy) hw.completedBy = [];
-            const idx = hw.completedBy.indexOf(STATE.currentStudentId);
-            if (idx > -1) hw.completedBy.splice(idx, 1);
-            else hw.completedBy.push(STATE.currentStudentId);
-            localStorage.setItem('shiksha_homework', JSON.stringify(STATE.homeworkDiary));
-            renderHomework();
-            postToCloud({ action: 'updateHomework', homework: hw });
-        }
-
-        function renderHomework() {
-            const container = document.getElementById('homework-list-container');
-            const addBtn = document.getElementById('btn-add-homework');
-            if (!container) return;
-            const isStaff = (STATE.currentRole === 'admin' || STATE.currentRole === 'teacher');
-            if (addBtn) addBtn.classList.toggle('hidden', !isStaff);
-            let list = STATE.homeworkDiary;
-            if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
-                const stu = STATE.students.find(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
-                if (stu) list = list.filter(h => h.class === stu.class);
-            }
-            container.innerHTML = list.map(h => {
-                const isCompleted = STATE.currentRole === 'parent' && (h.completedBy || []).includes(STATE.currentStudentId);
-                const completedCount = (h.completedBy || []).length;
-                return `<div class="bg-white p-4 rounded-2xl border border-slate-300 shadow-sm space-y-2.5"><div class="flex items-center justify-between"><span class="text-[10px] font-extrabold uppercase bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">Class ${h.class} &bull; ${h.subject}</span><span class="text-[11px] font-extrabold text-rose-700"><i class="fa-regular fa-clock mr-1"></i>Due: ${h.dueDate}</span></div><h4 class="text-sm font-black text-slate-950">${h.title}</h4><p class="text-xs text-slate-800 font-semibold whitespace-pre-line">${h.desc}</p><div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs font-bold"><span class="text-slate-600">By: ${h.author}</span>${STATE.currentRole === 'parent' ? `<button onclick="toggleHomeworkComplete('${h.id}')" class="px-3 py-1.5 rounded-xl font-extrabold transition ${isCompleted ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-900 border border-slate-300'}"><i class="fa-solid fa-check mr-1"></i> ${isCompleted ? 'Completed' : 'Mark Complete'}</button>` : `<span class="text-indigo-800">${completedCount} Students Completed</span>`}</div></div>`;
-            }).join('') || `<div class="col-span-full p-5 text-center text-slate-800 font-bold text-xs bg-white rounded-2xl border border-slate-300">No homework assigned yet.</div>`;
-        }
-
-        function openApplyLeaveModal() {
-            document.getElementById('leave-from').value = getTodayDateKey();
-            document.getElementById('leave-to').value = getTodayDateKey();
-            document.getElementById('leave-reason').value = '';
-            document.getElementById('modal-apply-leave').classList.remove('hidden');
-        }
-
-        async function handleApplyLeave(e) {
-            e.preventDefault();
-            const student = STATE.students.find(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
-            if (!student) return;
-            const req = { id: Date.now(), studentId: student.id, studentName: student.name, class: student.class, fromDate: document.getElementById('leave-from').value, toDate: document.getElementById('leave-to').value, reason: document.getElementById('leave-reason').value.trim(), status: 'Pending' };
-            STATE.leaveRequests.unshift(req);
-            localStorage.setItem('shiksha_leaves', JSON.stringify(STATE.leaveRequests));
-            closeModal('modal-apply-leave'); renderLeaveRequests();
-            await postToCloud({ action: 'addLeaveRequest', leave: req });
-            alert("Leave application sent to administration!");
-        }
-
-        async function updateLeaveStatus(leaveId, status) {
-            if (STATE.currentRole !== 'admin' && STATE.currentRole !== 'teacher') return;
-            const req = STATE.leaveRequests.find(l => String(l.id) === String(leaveId));
-            if (!req) return;
-            req.status = status;
-            if (status === 'Approved') {
-                if (!STATE.attendanceLogs[req.studentId]) STATE.attendanceLogs[req.studentId] = { daily: {} };
-                if (!STATE.attendanceLogs[req.studentId].daily) STATE.attendanceLogs[req.studentId].daily = {};
-                STATE.attendanceLogs[req.studentId].daily[req.fromDate] = 'L';
-                localStorage.setItem('shiksha_att_logs', JSON.stringify(STATE.attendanceLogs));
-                await postToCloud({ action: 'saveAttendance', logs: STATE.attendanceLogs });
-            }
-            localStorage.setItem('shiksha_leaves', JSON.stringify(STATE.leaveRequests));
-            renderLeaveRequests();
-            await postToCloud({ action: 'updateLeaveRequest', leave: req });
-            alert(`Leave request ${status}!`);
-        }
-
-        function renderLeaveRequests() {
-            const container = document.getElementById('leave-requests-container');
-            const applyBtn = document.getElementById('btn-apply-leave');
-            if (!container) return;
-            const isParent = (STATE.currentRole === 'parent');
-            if (applyBtn) applyBtn.classList.toggle('hidden', !isParent);
-            let list = STATE.leaveRequests;
-            if (isParent && STATE.currentStudentId) {
-                list = list.filter(l => String(l.studentId).trim() === String(STATE.currentStudentId).trim());
-            }
-            container.innerHTML = list.map(l => {
-                const statusColor = l.status === 'Approved' ? 'bg-emerald-100 text-emerald-900 border-emerald-300' : (l.status === 'Rejected' ? 'bg-rose-100 text-rose-900 border-rose-300' : 'bg-amber-100 text-amber-900 border-amber-300');
-                return `<div class="bg-white p-4 rounded-2xl border border-slate-300 shadow-sm space-y-2"><div class="flex items-center justify-between"><span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${l.studentId} &bull; Class ${l.class}</span><span class="text-xs font-black px-2.5 py-0.5 rounded-full border ${statusColor}">${l.status}</span></div><h4 class="text-sm font-extrabold text-slate-950">${l.studentName}</h4><p class="text-xs font-bold text-slate-700">From ${l.fromDate} to ${l.toDate}</p><p class="text-xs text-slate-800 font-semibold bg-slate-50 p-2.5 rounded-xl border border-slate-200">${l.reason}</p>${(!isParent && l.status === 'Pending') ? `<div class="flex gap-2 pt-2 border-t border-slate-200"><button onclick="updateLeaveStatus('${l.id}', 'Approved')" class="flex-1 py-1.5 bg-emerald-600 text-white font-bold rounded-xl text-xs shadow">Approve</button><button onclick="updateLeaveStatus('${l.id}', 'Rejected')" class="flex-1 py-1.5 bg-rose-600 text-white font-bold rounded-xl text-xs shadow">Reject</button></div>` : ''}</div>`;
-            }).join('') || `<div class="col-span-full p-5 text-center text-slate-800 font-bold text-xs bg-white rounded-2xl border border-slate-300">No leave applications found.</div>`;
-        }
-
-        // ================= GALLERY & PROGRESSIVE REPORT =================
+        // ================= GALLERY =================
         function openUploadGalleryModal() {
             if (STATE.currentRole !== 'admin') return;
             const folders = [...new Set(STATE.gallery.map(g => g.folder || 'General Campus'))];
@@ -2245,10 +2234,14 @@
             document.getElementById('gal-folder-name').value = '';
             document.getElementById('gal-item-title').value = '';
             document.getElementById('gal-privacy').value = 'coaching';
+            document.getElementById('gal-file-input').value = '';
+            document.getElementById('gal-url-input').value = '';
             document.getElementById('modal-upload-gallery').classList.remove('hidden');
         }
 
-        function toggleGalleryInputType(type) { document.getElementById('gal-file-input').accept = type === 'photo' ? 'image/*' : 'video/*'; }
+        function toggleGalleryInputType(type) {
+            document.getElementById('gal-file-input').accept = type === 'photo' ? 'image/*' : 'video/*';
+        }
 
         async function handleSaveGalleryItem(e) {
             e.preventDefault();
@@ -2256,15 +2249,23 @@
             const btn = document.getElementById('btn-save-gallery');
             const origText = btn.innerText;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Uploading...';
+
             const folder = document.getElementById('gal-folder-name').value.trim() || 'General Campus';
             const title = document.getElementById('gal-item-title').value.trim();
             const type = document.getElementById('gal-media-type').value;
             const privacy = document.getElementById('gal-privacy').value;
             const file = document.getElementById('gal-file-input').files[0];
             let url = document.getElementById('gal-url-input').value.trim();
-            if (file) { url = type === 'photo' ? await compressImage(file, 900, 0.8) : await readFileAsBase64(file); }
+
+            if (file) {
+                url = type === 'photo' ? await compressImage(file, 900, 0.8) : await readFileAsBase64(file);
+            }
             if (!url) { alert("Select a file or paste URL."); btn.innerText = origText; return; }
-            const newItem = { id: Date.now(), folder, title, type, url, privacy, likes: 0, comments: [], date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) };
+
+            const newItem = {
+                id: Date.now(), folder, title, type, url, privacy, likes: 0, comments: [],
+                date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+            };
             STATE.gallery.unshift(newItem);
             localStorage.setItem('shiksha_gallery', JSON.stringify(STATE.gallery));
             renderGallery(); closeModal('modal-upload-gallery'); btn.innerText = origText;
@@ -2286,17 +2287,74 @@
             const grid = document.getElementById('gallery-items-grid');
             const adminBtn = document.getElementById('btn-admin-upload-gallery');
             if (!folderBar || !grid) return;
+
             if (adminBtn) adminBtn.classList.toggle('hidden', STATE.currentRole !== 'admin');
+
             const visibleItems = getVisibleGalleryItems();
             const folders = ['All', ...new Set(visibleItems.map(i => i.folder || 'General Campus'))];
-            folderBar.innerHTML = folders.map(f => `<button onclick="STATE.selectedGalleryFolder='${f}'; renderGallery();" class="px-3 py-1.5 rounded-xl font-bold whitespace-nowrap transition ${STATE.selectedGalleryFolder === f ? 'bg-indigo-600 text-white shadow' : 'bg-slate-800 text-slate-200'}"><i class="fa-solid fa-folder-open mr-1 text-amber-400"></i> ${f}</button>`).join('');
-            const filtered = STATE.selectedGalleryFolder === 'All' ? visibleItems : visibleItems.filter(i => (i.folder || 'General Campus') === STATE.selectedGalleryFolder);
-            if (filtered.length === 0) { grid.innerHTML = `<div class="col-span-full p-8 text-center text-slate-300 text-xs bg-slate-950 rounded-3xl border border-slate-800">No media items available.</div>`; return; }
+
+            folderBar.innerHTML = folders.map(f => `
+                <button onclick="STATE.selectedGalleryFolder='${f}'; renderGallery();" class="px-3 py-1.5 rounded-xl font-bold whitespace-nowrap transition ${STATE.selectedGalleryFolder === f ? 'bg-indigo-600 text-white shadow' : 'bg-slate-800 text-slate-200'}">
+                    <i class="fa-solid fa-folder-open mr-1 text-amber-400"></i> ${f}
+                </button>
+            `).join('');
+
+            const filtered = STATE.selectedGalleryFolder === 'All'
+                ? visibleItems
+                : visibleItems.filter(i => (i.folder || 'General Campus') === STATE.selectedGalleryFolder);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full p-8 text-center text-slate-300 text-xs bg-slate-950 rounded-3xl border border-slate-800">No media items available.</div>`;
+                return;
+            }
+
             grid.innerHTML = filtered.map(item => {
                 const privBadgeColor = item.privacy === 'private' ? 'bg-rose-950 text-rose-300 border-rose-800' : (item.privacy === 'public' ? 'bg-emerald-950 text-emerald-300 border-emerald-800' : 'bg-indigo-950 text-indigo-300 border-indigo-800');
-                let mediaHtml = item.type === 'video' ? (item.url.includes('youtube.com') ? `<iframe class="w-full h-48 rounded-2xl bg-black" src="https://www.youtube.com/embed/${item.url.split('v=')[1]?.split('&')[0]}" frameborder="0" allowfullscreen></iframe>` : `<video controls class="w-full h-48 rounded-2xl bg-black object-cover"><source src="${item.url}"></video>`) : `<img src="${item.url}" class="w-full h-48 object-cover rounded-2xl border border-slate-800">`;
-                const commentsList = (item.comments || []).map(c => `<div class="text-xs bg-slate-900 p-2 rounded-xl border border-slate-800"><span class="font-bold text-indigo-400">${c.user}:</span> <span class="text-slate-200">${c.text}</span></div>`).join('');
-                return `<div class="bg-slate-950 border border-slate-800 rounded-3xl p-4 flex flex-col justify-between space-y-3 shadow-lg"><div>${mediaHtml}<div class="flex items-center justify-between mt-2.5"><span class="text-xs font-bold text-amber-400"><i class="fa-solid fa-folder mr-1"></i>${item.folder}</span><span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded border ${privBadgeColor}">${item.privacy}</span></div><h4 class="text-sm font-bold text-white mt-1">${item.title}</h4><p class="text-[11px] text-slate-400">${item.date}</p></div><div class="pt-2.5 border-t border-slate-800 space-y-2"><div class="flex items-center justify-between"><button onclick="likeGalleryItem('${item.id}')" class="flex items-center gap-1.5 text-xs font-bold text-rose-400 bg-rose-950/40 px-3 py-1 rounded-xl border border-rose-900/50"><i class="fa-solid fa-heart"></i> <span>${item.likes || 0} Likes</span></button>${STATE.currentRole === 'admin' ? `<button onclick="deleteGalleryItem('${item.id}')" class="text-xs text-slate-400 hover:text-rose-400 p-1"><i class="fa-solid fa-trash"></i></button>` : ''}</div><div class="space-y-1 max-h-20 overflow-y-auto">${commentsList}</div><form onsubmit="addGalleryComment(event, '${item.id}')" class="flex gap-1.5"><input type="text" id="gal-comment-inp-${item.id}" placeholder="Write a comment..." required class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white min-w-0"><button type="submit" class="bg-indigo-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shrink-0"><i class="fa-solid fa-paper-plane"></i></button></form></div></div>`;
+                let mediaHtml = '';
+                if (item.type === 'video') {
+                    if (item.url.includes('youtube.com') || item.url.includes('youtu.be')) {
+                        let vidId = item.url.split('v=')[1] || item.url.split('/').pop();
+                        if (vidId && vidId.includes('&')) vidId = vidId.split('&')[0];
+                        mediaHtml = `<iframe class="w-full h-48 rounded-2xl bg-black" src="https://www.youtube.com/embed/${vidId}" frameborder="0" allowfullscreen></iframe>`;
+                    } else {
+                        mediaHtml = `<video controls class="w-full h-48 rounded-2xl bg-black object-cover"><source src="${item.url}"></video>`;
+                    }
+                } else {
+                    mediaHtml = `<img src="${item.url}" alt="${item.title}" class="w-full h-48 object-cover rounded-2xl border border-slate-800">`;
+                }
+
+                const commentsList = (item.comments || []).map(c => `
+                    <div class="text-xs bg-slate-900 p-2 rounded-xl border border-slate-800">
+                        <span class="font-bold text-indigo-400">${c.user}:</span> <span class="text-slate-200">${c.text}</span>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="bg-slate-950 border border-slate-800 rounded-3xl p-4 flex flex-col justify-between space-y-3 shadow-lg">
+                        <div>
+                            ${mediaHtml}
+                            <div class="flex items-center justify-between mt-2.5">
+                                <span class="text-xs font-bold text-amber-400"><i class="fa-solid fa-folder mr-1"></i>${item.folder}</span>
+                                <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded border ${privBadgeColor}">${item.privacy}</span>
+                            </div>
+                            <h4 class="text-sm font-bold text-white mt-1">${item.title}</h4>
+                            <p class="text-[11px] text-slate-400">${item.date}</p>
+                        </div>
+                        <div class="pt-2.5 border-t border-slate-800 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <button onclick="likeGalleryItem('${item.id}')" class="flex items-center gap-1.5 text-xs font-bold text-rose-400 bg-rose-950/40 px-3 py-1 rounded-xl border border-rose-900/50">
+                                    <i class="fa-solid fa-heart"></i> <span>${item.likes || 0} Likes</span>
+                                </button>
+                                ${STATE.currentRole === 'admin' ? `<button onclick="deleteGalleryItem('${item.id}')" class="text-xs text-slate-400 hover:text-rose-400 p-1"><i class="fa-solid fa-trash"></i></button>` : ''}
+                            </div>
+                            <div class="space-y-1 max-h-20 overflow-y-auto">${commentsList}</div>
+                            <form onsubmit="addGalleryComment(event, '${item.id}')" class="flex gap-1.5">
+                                <input type="text" id="gal-comment-inp-${item.id}" placeholder="Write a comment..." required class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white min-w-0">
+                                <button type="submit" class="bg-indigo-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shrink-0"><i class="fa-solid fa-paper-plane"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                `;
             }).join('');
         }
 
@@ -2335,6 +2393,7 @@
             }
         }
 
+        // ================= STUDENT PROGRESSIVE REPORT (GROWTH CHART + BEHAVIOR COLUMN CHART) =================
         function renderParentGrowthAndRemarks() {
             const section = document.getElementById('parent-growth-analytics-section');
             if (!section || STATE.currentRole !== 'parent' || !STATE.currentStudentId) {
@@ -2342,24 +2401,29 @@
                 return;
             }
             section.classList.remove('hidden');
+
             const student = STATE.students.find(s => String(s.id).trim().toLowerCase() === String(STATE.currentStudentId).trim().toLowerCase());
             if (!student) return;
 
             document.getElementById('growth-student-title').innerText = `${student.name} (${student.id}) - Progressive Report`;
+
             const attStats = calculateDynamicAttendance(student.id);
             const labels = ['Attendance %'];
             const scoresData = [attStats.percentage];
 
-            STATE.testSubmissions.filter(sub => String(sub.studentId).trim() === String(student.id).trim()).forEach(sub => {
-                labels.push(sub.testTitle);
-                scoresData.push(sub.totalMarks > 0 ? Math.round((Number(sub.score) / Number(sub.totalMarks)) * 100) : 0);
+            const myOnlineSubs = STATE.testSubmissions.filter(sub => String(sub.studentId).trim() === String(student.id).trim());
+            myOnlineSubs.forEach(sub => {
+                const pct = sub.totalMarks > 0 ? Math.round((Number(sub.score) / Number(sub.totalMarks)) * 100) : 0;
+                labels.push(`${sub.testTitle}`);
+                scoresData.push(pct);
             });
 
             STATE.examResults.forEach(exam => {
                 const entry = (exam.scores || []).find(sc => String(sc.studentId).trim() === String(student.id).trim());
                 if (entry) {
+                    const pct = exam.maxMarks > 0 ? Math.round((Number(entry.obtained) / Number(exam.maxMarks)) * 100) : 0;
                     labels.push(`${exam.type} (${exam.subject})`);
-                    scoresData.push(exam.maxMarks > 0 ? Math.round((Number(entry.obtained) / Number(exam.maxMarks)) * 100) : 0);
+                    scoresData.push(pct);
                 }
             });
 
@@ -2367,25 +2431,64 @@
             if (growthChartInstance) growthChartInstance.destroy();
             growthChartInstance = new Chart(ctx, {
                 type: 'line',
-                data: { labels, datasets: [{ label: 'Score / Rate (%)', data: scoresData, borderColor: '#4f46e5', backgroundColor: 'rgba(79, 70, 229, 0.15)', borderWidth: 3, pointBackgroundColor: '#10b981', pointRadius: 5, fill: true, tension: 0.35 }] },
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Score / Rate (%)',
+                        data: scoresData,
+                        borderColor: '#4f46e5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.15)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#10b981',
+                        pointRadius: 5,
+                        fill: true,
+                        tension: 0.35
+                    }]
+                },
                 options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { legend: { display: false } } }
             });
 
             const myBehaviors = STATE.behaviorLogs.filter(b => String(b.studentId).trim().toLowerCase() === String(student.id).trim().toLowerCase());
             const greenCount = myBehaviors.filter(b => b.flag === 'green').length;
             const redCount = myBehaviors.filter(b => b.flag === 'red').length;
+
             document.getElementById('behavior-badge-pill').innerText = `${greenCount} Green | ${redCount} Red`;
 
             const behCtx = document.getElementById('studentBehaviorColumnChart').getContext('2d');
             if (behaviorChartInstance) behaviorChartInstance.destroy();
             behaviorChartInstance = new Chart(behCtx, {
                 type: 'bar',
-                data: { labels: ['Green Marks (Positive)', 'Red Marks (Needs Improvement)'], datasets: [{ label: 'Behavior Marks', data: [greenCount, redCount], backgroundColor: ['#10b981', '#ef4444'], borderRadius: 10, barThickness: 48 }] },
-                options: { responsive: true, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, plugins: { legend: { display: false } } }
+                data: {
+                    labels: ['Green Marks (Positive)', 'Red Marks (Needs Improvement)'],
+                    datasets: [{
+                        label: 'Behavior Marks',
+                        data: [greenCount, redCount],
+                        backgroundColor: ['#10b981', '#ef4444'],
+                        borderRadius: 10,
+                        barThickness: 48
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+                    plugins: { legend: { display: false } }
+                }
             });
 
             const behListEl = document.getElementById('parent-behavior-remarks-list');
-            behListEl.innerHTML = myBehaviors.length === 0 ? `<p class="text-xs font-semibold text-slate-700">No behavior remarks recorded yet.</p>` : myBehaviors.slice(0, 10).map(b => `<div class="p-2 rounded-xl border text-xs ${b.flag === 'green' ? 'bg-emerald-50 border-emerald-300 text-emerald-950' : 'bg-rose-50 border-rose-300 text-rose-950'}"><div class="flex justify-between items-center font-extrabold"><span>${b.flag === 'green' ? '🟢 Green' : '🔴 Red'} &bull; ${b.teacherName}</span><span class="text-[10px]">${b.date}</span></div><p class="font-semibold mt-0.5">${b.reason}</p></div>`).join('');
+            if (myBehaviors.length === 0) {
+                behListEl.innerHTML = `<p class="text-xs font-semibold text-slate-700">No behavior remarks recorded yet.</p>`;
+            } else {
+                behListEl.innerHTML = myBehaviors.slice(0, 10).map(b => `
+                    <div class="p-2 rounded-xl border text-xs ${b.flag === 'green' ? 'bg-emerald-50 border-emerald-300 text-emerald-950' : 'bg-rose-50 border-rose-300 text-rose-950'}">
+                        <div class="flex justify-between items-center font-extrabold">
+                            <span>${b.flag === 'green' ? '🟢 Green Mark' : '🔴 Red Mark'} &bull; ${b.teacherName}</span>
+                            <span class="text-[10px]">${b.date}</span>
+                        </div>
+                        <p class="font-semibold mt-0.5">${b.reason}</p>
+                    </div>
+                `).join('');
+            }
 
             const academicScores = scoresData.slice(1);
             const avgScore = academicScores.length > 0 ? Math.round(academicScores.reduce((a, b) => a + b, 0) / academicScores.length) : attStats.percentage;
@@ -2393,12 +2496,28 @@
             const remarkText = document.getElementById('auto-remark-text');
             const tipsList = document.getElementById('auto-tips-list');
             const tips = [];
-            if (avgScore >= 85) { badge.innerText = "Outstanding"; remarkText.innerText = `${student.name} shows strong consistency (${avgScore}% avg).`; tips.push("Practice higher-order problems."); }
-            else { badge.innerText = "Good Progress"; remarkText.innerText = `${student.name} has steady progress (${avgScore}% avg).`; tips.push("Revise daily concepts."); }
+
+            if (attStats.workingDays === 0 && academicScores.length === 0) {
+                badge.innerText = "Fresh Session";
+                remarkText.innerText = `Attendance and test tracking started fresh for ${student.name}.`;
+                tips.push("Attend classes daily and complete online tests on time.");
+            } else if (avgScore >= 85 && attStats.percentage >= 85) {
+                badge.innerText = "Outstanding";
+                remarkText.innerText = `${student.name} is showing strong academic consistency (${avgScore}% avg) and high attendance (${attStats.percentage}%).`;
+                tips.push("Practice NCERT Exemplar and higher-order thinking problems.");
+            } else if (avgScore >= 65) {
+                badge.innerText = "Good Progress";
+                remarkText.innerText = `${student.name} has steady progress (${avgScore}% avg). Consistent revision will push scores higher.`;
+                tips.push("Review test mistakes with faculty during doubt-clearing sessions.");
+            } else {
+                badge.innerText = "Needs Focus";
+                remarkText.innerText = `${student.name} needs focused daily revision and regular attendance (${attStats.percentage}%).`;
+                tips.push("Complete daily practice worksheets and revise NCERT notes regularly.");
+            }
             tipsList.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
         }
 
-        // ================= AI & PDF TEST CREATOR =================
+        // ================= PRECISE FULL-DOCUMENT PDF & IMAGE MCQ EXTRACTOR =================
         function openCreateAiTestModal(prefillData = null) {
             document.getElementById('ai-test-title').value = prefillData?.title ? `${prefillData.title} - Online Test` : '';
             document.getElementById('ai-topic-prompt').value = prefillData?.title || '';
@@ -2406,12 +2525,17 @@
             document.getElementById('ai-test-duration').value = '30';
             document.getElementById('ai-ocr-status').innerText = 'Ready';
             document.getElementById('ai-questions-container').innerHTML = '';
+
             if (prefillData?.class) document.getElementById('ai-test-class').value = prefillData.class;
             if (prefillData?.subject) document.getElementById('ai-test-subject').value = prefillData.subject;
+
             populateTestStudentCheckboxes(document.getElementById('ai-test-class').value);
             addQuestionBlock();
             document.getElementById('modal-create-ai-test').classList.remove('hidden');
-            if (prefillData) scanBookPhotoWithAi(prefillData.link || null);
+
+            if (prefillData) {
+                scanBookPhotoWithAi(prefillData.link || null);
+            }
         }
 
         function createTestFromStudyNote(noteId) {
@@ -2424,7 +2548,12 @@
             const box = document.getElementById('ai-test-students-checkboxes');
             const today = getTodayDateKey();
             const classStudents = STATE.students.filter(s => s.class === cls && (!s.leavingDate || s.leavingDate > today));
-            box.innerHTML = classStudents.map(s => `<label class="flex items-center gap-1.5 p-1.5 bg-white rounded-lg border border-slate-300 cursor-pointer text-xs font-bold text-slate-900"><input type="checkbox" name="ai-assigned-stu" value="${s.id}" checked><span class="truncate">${s.name} (${s.id})</span></label>`).join('') || `<p class="col-span-full text-xs font-bold text-slate-700">No active students.</p>`;
+            box.innerHTML = classStudents.map(s => `
+                <label class="flex items-center gap-1.5 p-1.5 bg-white rounded-lg border border-slate-300 cursor-pointer text-xs font-bold text-slate-900">
+                    <input type="checkbox" name="ai-assigned-stu" value="${s.id}" checked>
+                    <span class="truncate">${s.name} (${s.id})</span>
+                </label>
+            `).join('') || `<p class="col-span-full text-xs font-bold text-slate-700">No active students in Class ${cls}.</p>`;
         }
 
         function toggleSelectAllTestStudents() {
@@ -2434,10 +2563,15 @@
         }
 
         function parseExactMcqsFromRawText(rawText, subj, maxLimit = 50) {
-            const normalized = rawText.replace(/\r/g, '\n').replace(/\s+(?=(?:Q\.?\s*\d+|\d+[\.\)])\s+[A-Za-z\u0900-\u097F])/g, '\n').replace(/\s+(?=\(?[a-dA-D][\)\.]\s+)/g, ' ');
+            const normalized = rawText
+                .replace(/\r/g, '\n')
+                .replace(/\s+(?=(?:Q\.?\s*\d+|\d+[\.\)])\s+[A-Za-z\u0900-\u097F])/g, '\n')
+                .replace(/\s+(?=\(?[a-dA-D][\)\.]\s+)/g, ' ');
+
             const lines = normalized.split('\n').map(l => l.trim()).filter(Boolean);
             const extracted = [];
             let currentQ = null;
+
             const qStartRegex = /^(?:Q\.?\s*\d+|\d+)[\.\)\:\-]\s*(.+)/i;
             const optInlineRegex = /\(?([a-dA-D])[\)\.]\s*([^\(\n]+?)(?=\s*\(?[b-dB-D][\)\.]|\s*(?:Ans|Answer)[\:\.\-]|$)/gi;
             const singleOptRegex = /^\(?([a-dA-D])[\)\.]\s*(.+)/i;
@@ -2445,38 +2579,78 @@
 
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
+
                 const ansMatch = line.match(ansRegex);
-                if (ansMatch && currentQ) currentQ.ans = ansMatch[1].toUpperCase();
+                if (ansMatch && currentQ) {
+                    currentQ.ans = ansMatch[1].toUpperCase();
+                }
 
                 const qMatch = line.match(qStartRegex);
                 if (qMatch && !/^\(?[a-dA-D][\)\.]/.test(line)) {
-                    if (currentQ && currentQ.q) { extracted.push(currentQ); if (extracted.length >= maxLimit) break; }
+                    if (currentQ && currentQ.q) {
+                        extracted.push(currentQ);
+                        if (extracted.length >= maxLimit) break;
+                    }
                     let qBody = qMatch[1].trim();
                     currentQ = { q: qBody, A: '', B: '', C: '', D: '', ans: 'A' };
-                    let m; optInlineRegex.lastIndex = 0;
-                    while ((m = optInlineRegex.exec(qBody)) !== null) { currentQ[m[1].toUpperCase()] = m[2].trim(); }
-                    if (currentQ.A) currentQ.q = qBody.split(/\(?[aA][\)\.]\s*/)[0].trim();
+
+                    let m;
+                    optInlineRegex.lastIndex = 0;
+                    while ((m = optInlineRegex.exec(qBody)) !== null) {
+                        const key = m[1].toUpperCase();
+                        currentQ[key] = m[2].trim();
+                    }
+                    if (currentQ.A) {
+                        currentQ.q = qBody.split(/\(?[aA][\)\.]\s*/)[0].trim();
+                    }
                     continue;
                 }
+
                 if (currentQ) {
                     const sOpt = line.match(singleOptRegex);
-                    if (sOpt) { currentQ[sOpt[1].toUpperCase()] = sOpt[2].replace(ansRegex, '').trim(); continue; }
-                    let foundAnyOpt = false; let m; optInlineRegex.lastIndex = 0;
-                    while ((m = optInlineRegex.exec(line)) !== null) { foundAnyOpt = true; currentQ[m[1].toUpperCase()] = m[2].trim(); }
-                    if (!foundAnyOpt && !ansMatch && !currentQ.A) currentQ.q += ' ' + line;
+                    if (sOpt) {
+                        const key = sOpt[1].toUpperCase();
+                        currentQ[key] = sOpt[2].replace(ansRegex, '').trim();
+                        continue;
+                    }
+
+                    let foundAnyOpt = false;
+                    let m;
+                    optInlineRegex.lastIndex = 0;
+                    while ((m = optInlineRegex.exec(line)) !== null) {
+                        foundAnyOpt = true;
+                        const key = m[1].toUpperCase();
+                        currentQ[key] = m[2].trim();
+                    }
+                    if (!foundAnyOpt && !ansMatch && !currentQ.A) {
+                        currentQ.q += ' ' + line;
+                    }
                 }
             }
-            if (currentQ && currentQ.q && extracted.length < maxLimit) extracted.push(currentQ);
-            return extracted.slice(0, maxLimit).map(item => ({ q: item.q, A: item.A || 'Option A', B: item.B || 'Option B', C: item.C || 'Option C', D: item.D || 'Option D', ans: ['A', 'B', 'C', 'D'].includes(item.ans) ? item.ans : 'A' }));
+
+            if (currentQ && currentQ.q && extracted.length < maxLimit) {
+                extracted.push(currentQ);
+            }
+
+            return extracted.slice(0, maxLimit).map(item => ({
+                q: item.q,
+                A: item.A || 'Option A',
+                B: item.B || 'Option B',
+                C: item.C || 'Option C',
+                D: item.D || 'Option D',
+                ans: ['A', 'B', 'C', 'D'].includes(item.ans) ? item.ans : 'A'
+            }));
         }
 
         async function extractTextFromPdfArrayBuffer(arrayBuffer) {
             const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
             let fullText = '';
-            for (let pageNum = 1; pageNum <= Math.min(pdf.numPages, 25); pageNum++) {
+            const maxPages = Math.min(pdf.numPages, 25);
+            for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
                 const page = await pdf.getPage(pageNum);
                 const textContent = await page.getTextContent();
-                fullText += textContent.items.map(item => item.str).join(' ') + '\n';
+                const pageText = textContent.items.map(item => item.str).join(' ');
+                fullText += pageText + '\n';
             }
             return fullText;
         }
@@ -2488,97 +2662,175 @@
             const subj = document.getElementById('ai-test-subject').value;
             const statusEl = document.getElementById('ai-ocr-status');
 
-            if (!file && !topic && !noteLinkUrl) { alert("Please upload a PDF/Photo or type a Topic first!"); return; }
+            if (!file && !topic && !noteLinkUrl) {
+                alert("Please upload a PDF/Photo OR type a Chapter/Topic name first!");
+                return;
+            }
+
             const apiKey = (document.getElementById('gemini-api-key-inp')?.value || '').trim();
             if (apiKey) localStorage.setItem('shiksha_gemini_api_key', apiKey);
 
+            // CASE 1: PDF UPLOADED
             if (file && (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))) {
                 if (apiKey) {
-                    statusEl.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> AI Reading PDF...`;
+                    statusEl.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> AI Extracting ALL Questions & Options from PDF...`;
                     try {
-                        const base64Pdf = (await readFileAsBase64(file)).split(',')[1];
+                        const pdfDataUrl = await readFileAsBase64(file);
+                        const base64Pdf = pdfDataUrl.split(',')[1];
+                        const promptText = `Carefully read the entire uploaded PDF document for Class ${cls} ${subj}. Extract EVERY SINGLE multiple choice question (all questions present in the PDF, up to 50) along with their exact 4 options and correct answer key. Do NOT stop at 10 if there are more questions in the PDF. Return ONLY a valid JSON array of objects with exact keys: "q", "A", "B", "C", "D", "ans" ("A", "B", "C", or "D"). No markdown.`;
+
                         const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
-                            method: 'POST', headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ contents: [{ parts: [{ text: `Extract all MCQs from this PDF for Class ${cls} ${subj} (up to 50). Return ONLY a valid JSON array with keys: "q", "A", "B", "C", "D", "ans". No markdown.` }, { inline_data: { mime_type: 'application/pdf', data: base64Pdf } }] }] })
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{ parts: [{ text: promptText }, { inline_data: { mime_type: 'application/pdf', data: base64Pdf } }] }]
+                            })
                         });
                         const resJson = await resp.json();
-                        let rawText = (resJson?.candidates?.[0]?.content?.parts?.[0]?.text || '').replace(/```json/gi, '').replace(/```/g, '').trim();
+                        let rawText = resJson?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                        rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
                         const generatedQs = JSON.parse(rawText).slice(0, 50);
                         if (Array.isArray(generatedQs) && generatedQs.length > 0) {
                             document.getElementById('ai-questions-container').innerHTML = '';
                             generatedQs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans || 'A'));
-                            statusEl.innerHTML = `<span class="text-emerald-700">Extracted ${generatedQs.length} MCQs!</span>`;
+                            statusEl.innerHTML = `<span class="text-emerald-700">Extracted All ${generatedQs.length} Questions & Options from PDF!</span>`;
                             return;
                         }
-                    } catch (err) {}
+                    } catch (err) { console.warn("Gemini PDF fallback:", err); }
                 }
-                statusEl.innerHTML = 'Parsing PDF Text...';
+
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Parsing All Questions & Options from PDF...';
                 try {
-                    const exactQs = parseExactMcqsFromRawText(await extractTextFromPdfArrayBuffer(await file.arrayBuffer()), subj, 50);
+                    const arrayBuffer = await file.arrayBuffer();
+                    const pdfText = await extractTextFromPdfArrayBuffer(arrayBuffer);
+                    const exactQs = parseExactMcqsFromRawText(pdfText, subj, 50);
                     if (exactQs.length > 0) {
                         document.getElementById('ai-questions-container').innerHTML = '';
                         exactQs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans));
-                        statusEl.innerHTML = `<span class="text-emerald-700">Extracted ${exactQs.length} MCQs!</span>`;
+                        statusEl.innerHTML = `<span class="text-emerald-700">Extracted ${exactQs.length} Questions & Options from PDF!</span>`;
                         return;
                     }
-                } catch (err) { statusEl.innerText = 'Scanned PDF requires API Key.'; return; }
+                } catch (err) {
+                    statusEl.innerText = 'Scanned PDF: Please enter Gemini API Key above for full OCR.';
+                    return;
+                }
             }
 
+            // CASE 2: JPEG / IMAGE UPLOADED
             if (file && file.type.startsWith('image/')) {
-                statusEl.innerHTML = 'Reading Image...';
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Reading Image High-Res...';
                 const compressedDataUrl = await compressImage(file, 1400, 0.9);
+                if (!compressedDataUrl) { statusEl.innerText = 'Could not read image.'; return; }
+
                 if (apiKey) {
+                    statusEl.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> AI Extracting ALL Questions & Options from Image...`;
                     try {
                         const base64Data = compressedDataUrl.split(',')[1];
+                        const promptText = `Carefully read the entire image for Class ${cls} ${subj}. Extract EVERY SINGLE question visible in the image (do NOT limit to 10; include all questions up to 50) with their exact 4 options and correct answer. Return ONLY a valid JSON array of objects with exact keys: "q", "A", "B", "C", "D", "ans" ("A", "B", "C", or "D"). No markdown.`;
                         const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
-                            method: 'POST', headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ contents: [{ parts: [{ text: `Extract all MCQs from this image for Class ${cls} ${subj} (up to 50). Return ONLY a valid JSON array with keys: "q", "A", "B", "C", "D", "ans". No markdown.` }, { inline_data: { mime_type: 'image/jpeg', data: base64Data } }] }] })
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{ parts: [{ text: promptText }, { inline_data: { mime_type: 'image/jpeg', data: base64Data } }] }]
+                            })
                         });
                         const resJson = await resp.json();
-                        let rawText = (resJson?.candidates?.[0]?.content?.parts?.[0]?.text || '').replace(/```json/gi, '').replace(/```/g, '').trim();
+                        let rawText = resJson?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                        rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
                         const generatedQs = JSON.parse(rawText).slice(0, 50);
                         if (Array.isArray(generatedQs) && generatedQs.length > 0) {
                             document.getElementById('ai-questions-container').innerHTML = '';
                             generatedQs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans || 'A'));
-                            statusEl.innerHTML = `<span class="text-emerald-700">Extracted ${generatedQs.length} MCQs!</span>`;
+                            statusEl.innerHTML = `<span class="text-emerald-700">Extracted All ${generatedQs.length} Questions & Options!</span>`;
                             return;
                         }
-                    } catch (err) {}
+                    } catch (err) { console.warn("Gemini Vision fallback:", err); }
                 }
+
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cloud Vision Extracting All Questions...';
+                try {
+                    const formData = new FormData();
+                    formData.append("base64Image", compressedDataUrl);
+                    formData.append("language", "eng");
+                    formData.append("isOverlayRequired", "false");
+                    formData.append("OCREngine", "2");
+
+                    const ocrResp = await fetch("https://api.ocr.space/parse/image", {
+                        method: "POST",
+                        headers: { "apikey": "helloworld" },
+                        body: formData
+                    });
+                    const ocrData = await ocrResp.json();
+                    const extractedText = ocrData?.ParsedResults?.[0]?.ParsedText || '';
+
+                    if (extractedText && extractedText.trim().length > 10) {
+                        const exactQs = parseExactMcqsFromRawText(extractedText, subj, 50);
+                        if (exactQs.length > 0) {
+                            document.getElementById('ai-questions-container').innerHTML = '';
+                            exactQs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans));
+                            statusEl.innerHTML = `<span class="text-emerald-700">Extracted ${exactQs.length} Questions & Options!</span>`;
+                            return;
+                        }
+                    }
+                } catch (err) { console.warn("Cloud OCR fallback:", err); }
             }
 
+            // CASE 3: TOPIC PROMPT ONLY
             const requestedCount = Math.min(50, Math.max(1, parseInt(document.getElementById('ai-num-questions')?.value || '10', 10)));
             const effectiveTopic = topic || `${subj} Chapter Assessment`;
             if (apiKey) {
-                statusEl.innerHTML = `Generating ${requestedCount} MCQs...`;
+                statusEl.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> Generating ${requestedCount} MCQs...`;
                 try {
+                    const promptText = `Create ${requestedCount} multiple choice questions (MCQs) (strictly maximum 50) for Class ${cls} ${subj} on the topic "${effectiveTopic}". Return ONLY a valid JSON array of objects with exact keys: "q", "A", "B", "C", "D", "ans" ("A", "B", "C", or "D"). No markdown.`;
                     const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
-                        method: 'POST', headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: `Create ${requestedCount} MCQs for Class ${cls} ${subj} on "${effectiveTopic}". Return ONLY a valid JSON array with keys: "q", "A", "B", "C", "D", "ans". No markdown.` }] }] })
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
                     });
                     const resJson = await resp.json();
-                    let rawText = (resJson?.candidates?.[0]?.content?.parts?.[0]?.text || '').replace(/```json/gi, '').replace(/```/g, '').trim();
+                    let rawText = resJson?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                    rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
                     const generatedQs = JSON.parse(rawText).slice(0, 50);
                     if (Array.isArray(generatedQs) && generatedQs.length > 0) {
                         document.getElementById('ai-questions-container').innerHTML = '';
                         generatedQs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans || 'A'));
-                        statusEl.innerHTML = `<span class="text-emerald-700">Generated ${generatedQs.length} MCQs!</span>`;
+                        statusEl.innerHTML = `<span class="text-emerald-700">AI Generated ${generatedQs.length} MCQs!</span>`;
                         return;
                     }
                 } catch (e) {}
             }
-            alert("Please enter a valid Gemini API key for AI text extraction.");
+
+            alert("Could not auto-detect structured questions. If uploading a scanned/handwritten file, please enter your free Gemini API Key in the box above.");
             statusEl.innerText = 'Ready';
         }
 
         function addQuestionBlock(qText = '', optA = '', optB = '', optC = '', optD = '', ans = 'A') {
             const container = document.getElementById('ai-questions-container');
-            if (container.children.length >= 50) { alert("Maximum limit 50 questions reached!"); return; }
+            if (container.children.length >= 50) {
+                alert("Maximum limit of 50 questions per test reached!");
+                return;
+            }
             const idx = container.children.length + 1;
             const div = document.createElement('div');
             div.className = "ai-q-block bg-slate-100 p-3 rounded-2xl border border-slate-300 space-y-2";
-            div.innerHTML = `<div class="flex justify-between items-center"><span class="text-xs font-extrabold text-indigo-800">Question #${idx}</span><button type="button" onclick="this.closest('.ai-q-block').remove(); updateAiQuestionCount();" class="text-rose-700 text-xs"><i class="fa-solid fa-trash"></i></button></div><input type="text" class="q-text w-full border border-slate-400 rounded-xl px-3 py-1.5 text-xs font-bold bg-white text-slate-950" placeholder="Question text..." value="${String(qText).replace(/"/g, '&quot;')}" required><div class="grid grid-cols-2 gap-1.5"><input type="text" class="q-opt-a border border-slate-400 rounded-lg px-2 py-1 text-xs font-semibold bg-white text-slate-950" placeholder="Option A" value="${String(optA).replace(/"/g, '&quot;')}" required><input type="text" class="q-opt-b border border-slate-400 rounded-lg px-2 py-1 text-xs font-semibold bg-white text-slate-950" placeholder="Option B" value="${String(optB).replace(/"/g, '&quot;')}" required><input type="text" class="q-opt-c border border-slate-400 rounded-lg px-2 py-1 text-xs font-semibold bg-white text-slate-950" placeholder="Option C" value="${String(optC).replace(/"/g, '&quot;')}" required><input type="text" class="q-opt-d border border-slate-400 rounded-lg px-2 py-1 text-xs font-semibold bg-white text-slate-950" placeholder="Option D" value="${String(optD).replace(/"/g, '&quot;')}" required></div><div class="flex items-center gap-2 text-xs"><span class="font-extrabold text-slate-900">Correct Answer:</span><select class="q-ans border border-slate-400 rounded-lg px-2 py-1 text-xs font-extrabold text-emerald-800 bg-white"><option value="A" ${ans==='A'?'selected':''}>Option A</option><option value="B" ${ans==='B'?'selected':''}>Option B</option><option value="C" ${ans==='C'?'selected':''}>Option C</option><option value="D" ${ans==='D'?'selected':''}>Option D</option></select></div>`;
-            container.appendChild(div); updateAiQuestionCount();
+            div.innerHTML = `
+                <div class="flex justify-between items-center"><span class="text-xs font-extrabold text-indigo-800">Question #${idx}</span><button type="button" onclick="this.closest('.ai-q-block').remove(); updateAiQuestionCount();" class="text-rose-700 text-xs"><i class="fa-solid fa-trash"></i></button></div>
+                <input type="text" class="q-text w-full border border-slate-400 rounded-xl px-3 py-1.5 text-xs font-bold bg-white text-slate-950" placeholder="Question text..." value="${String(qText).replace(/"/g, '&quot;')}" required>
+                <div class="grid grid-cols-2 gap-1.5">
+                    <input type="text" class="q-opt-a border border-slate-400 rounded-lg px-2 py-1 text-xs font-semibold bg-white text-slate-950" placeholder="Option A" value="${String(optA).replace(/"/g, '&quot;')}" required>
+                    <input type="text" class="q-opt-b border border-slate-400 rounded-lg px-2 py-1 text-xs font-semibold bg-white text-slate-950" placeholder="Option B" value="${String(optB).replace(/"/g, '&quot;')}" required>
+                    <input type="text" class="q-opt-c border border-slate-400 rounded-lg px-2 py-1 text-xs font-semibold bg-white text-slate-950" placeholder="Option C" value="${String(optC).replace(/"/g, '&quot;')}" required>
+                    <input type="text" class="q-opt-d border border-slate-400 rounded-lg px-2 py-1 text-xs font-semibold bg-white text-slate-950" placeholder="Option D" value="${String(optD).replace(/"/g, '&quot;')}" required>
+                </div>
+                <div class="flex items-center gap-2 text-xs">
+                    <span class="font-extrabold text-slate-900">Correct Answer:</span>
+                    <select class="q-ans border border-slate-400 rounded-lg px-2 py-1 text-xs font-extrabold text-emerald-800 bg-white">
+                        <option value="A" ${ans==='A'?'selected':''}>Option A</option><option value="B" ${ans==='B'?'selected':''}>Option B</option><option value="C" ${ans==='C'?'selected':''}>Option C</option><option value="D" ${ans==='D'?'selected':''}>Option D</option>
+                    </select>
+                </div>
+            `;
+            container.appendChild(div);
+            updateAiQuestionCount();
         }
 
         function updateAiQuestionCount() { document.getElementById('ai-q-count').innerText = document.getElementById('ai-questions-container').children.length; }
@@ -2590,31 +2842,62 @@
             const questions = [];
             document.querySelectorAll('.ai-q-block').forEach(b => {
                 if (questions.length < 50) {
-                    questions.push({ q: b.querySelector('.q-text').value.trim(), A: b.querySelector('.q-opt-a').value.trim(), B: b.querySelector('.q-opt-b').value.trim(), C: b.querySelector('.q-opt-c').value.trim(), D: b.querySelector('.q-opt-d').value.trim(), ans: b.querySelector('.q-ans').value });
+                    questions.push({
+                        q: b.querySelector('.q-text').value.trim(),
+                        A: b.querySelector('.q-opt-a').value.trim(), B: b.querySelector('.q-opt-b').value.trim(),
+                        C: b.querySelector('.q-opt-c').value.trim(), D: b.querySelector('.q-opt-d').value.trim(),
+                        ans: b.querySelector('.q-ans').value
+                    });
                 }
             });
             const duration = parseInt(document.getElementById('ai-test-duration').value || '30', 10);
-            const newTest = { id: Date.now(), title: document.getElementById('ai-test-title').value.trim(), class: document.getElementById('ai-test-class').value, subject: document.getElementById('ai-test-subject').value, duration, assignedStudents, questions, createdBy: STATE.currentRole === 'teacher' ? 'Faculty' : 'Admin', date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) };
+            const newTest = {
+                id: Date.now(), title: document.getElementById('ai-test-title').value.trim(),
+                class: document.getElementById('ai-test-class').value, subject: document.getElementById('ai-test-subject').value,
+                duration, assignedStudents, questions, createdBy: STATE.currentRole === 'teacher' ? 'Faculty' : 'Admin',
+                date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })
+            };
             STATE.onlineTests.unshift(newTest);
             localStorage.setItem('shiksha_online_tests', JSON.stringify(STATE.onlineTests));
             renderOnlineTests(); closeModal('modal-create-ai-test');
             await postToCloud({ action: 'saveOnlineTest', test: newTest });
-            alert(`Test published to ${assignedStudents.length} students!`);
+            alert(`Test (${duration} mins, ${questions.length} MCQs) published to ${assignedStudents.length} students!`);
         }
 
         function formatDurationLabel(mins) {
             const m = parseInt(mins || 30, 10);
-            if (m === 60) return '1 Hr'; if (m === 90) return '1.30 Hr'; if (m === 120) return '2 Hr'; return `${m} Min`;
+            if (m === 60) return '1 Hr';
+            if (m === 90) return '1.30 Hr';
+            if (m === 120) return '2 Hr';
+            return `${m} Min`;
         }
 
         function renderOnlineTests() {
             const grid = document.getElementById('online-tests-grid');
             if (!grid) return;
             let tests = STATE.onlineTests;
-            if (STATE.currentRole === 'parent' && STATE.currentStudentId) tests = tests.filter(t => (t.assignedStudents || []).includes(STATE.currentStudentId));
+            if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
+                tests = tests.filter(t => (t.assignedStudents || []).includes(STATE.currentStudentId));
+            }
             grid.innerHTML = tests.map(t => {
                 const sub = STATE.currentRole === 'parent' ? STATE.testSubmissions.find(s => String(s.testId) === String(t.id) && String(s.studentId) === String(STATE.currentStudentId)) : null;
-                return `<div class="bg-white p-4 rounded-2xl border border-slate-300 flex flex-col justify-between gap-2.5 shadow-sm"><div><div class="flex items-center justify-between gap-1"><span class="text-[10px] font-extrabold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">Class ${t.class} &bull; ${t.subject}</span><span class="text-[10px] font-extrabold bg-amber-100 text-amber-900 px-2 py-0.5 rounded"><i class="fa-regular fa-clock mr-1"></i>${formatDurationLabel(t.duration)}</span></div><h4 class="text-sm font-extrabold text-slate-950 mt-1.5">${t.title}</h4><p class="text-xs font-semibold text-slate-700">${(t.questions || []).length} Questions</p></div><div class="pt-2 border-t border-slate-200 flex items-center justify-between"><span class="text-xs font-bold text-slate-700">${t.date}</span>${STATE.currentRole === 'parent' ? (sub ? `<span class="text-xs font-extrabold text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-xl">Score: ${sub.score}/${sub.totalMarks}</span>` : `<button onclick="openAttemptTestModal('${t.id}')" class="text-xs bg-indigo-600 text-white font-bold px-3.5 py-1.5 rounded-xl">Start Test &rarr;</button>`) : `<span class="text-xs font-extrabold text-indigo-800">${(t.assignedStudents || []).length} Assigned</span>`}</div></div>`;
+                const durLabel = formatDurationLabel(t.duration);
+                return `
+                    <div class="bg-white p-4 rounded-2xl border border-slate-300 flex flex-col justify-between gap-2.5 shadow-sm">
+                        <div>
+                            <div class="flex items-center justify-between gap-1">
+                                <span class="text-[10px] font-extrabold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">Class ${t.class} &bull; ${t.subject}</span>
+                                <span class="text-[10px] font-extrabold bg-amber-100 text-amber-900 px-2 py-0.5 rounded"><i class="fa-regular fa-clock mr-1"></i>${durLabel}</span>
+                            </div>
+                            <h4 class="text-sm font-extrabold text-slate-950 mt-1.5">${t.title}</h4>
+                            <p class="text-xs font-semibold text-slate-700">${(t.questions || []).length} Questions</p>
+                        </div>
+                        <div class="pt-2 border-t border-slate-200 flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-700">${t.date}</span>
+                            ${STATE.currentRole === 'parent' ? (sub ? `<span class="text-xs font-extrabold text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-xl">Score: ${sub.score}/${sub.totalMarks}</span>` : `<button onclick="openAttemptTestModal('${t.id}')" class="text-xs bg-indigo-600 text-white font-bold px-3.5 py-1.5 rounded-xl">Start Test &rarr;</button>`) : `<span class="text-xs font-extrabold text-indigo-800">${(t.assignedStudents || []).length} Assigned</span>`}
+                        </div>
+                    </div>
+                `;
             }).join('') || `<div class="col-span-full p-5 text-center text-slate-800 font-bold text-xs bg-white rounded-2xl border border-slate-300">No online tests available.</div>`;
         }
 
@@ -2624,27 +2907,51 @@
             document.getElementById('attempt-test-id').value = test.id;
             document.getElementById('attempt-test-title').innerText = test.title;
             document.getElementById('attempt-test-badge').innerText = `Class ${test.class} • ${test.subject}`;
-            document.getElementById('attempt-questions-list').innerHTML = (test.questions || []).map((q, idx) => `<div class="p-3.5 bg-slate-100 rounded-2xl border border-slate-300 space-y-2"><p class="text-sm font-extrabold text-slate-950">${idx + 1}. ${q.q}</p><div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-bold text-slate-900">${['A', 'B', 'C', 'D'].map(opt => `<label class="flex items-center gap-2 p-2.5 bg-white rounded-xl border border-slate-300 cursor-pointer"><input type="radio" name="stu-ans-${idx}" value="${opt}"><span><b>${opt}:</b> ${q[opt]}</span></label>`).join('')}</div></div>`).join('');
+            document.getElementById('attempt-questions-list').innerHTML = (test.questions || []).map((q, idx) => `
+                <div class="p-3.5 bg-slate-100 rounded-2xl border border-slate-300 space-y-2">
+                    <p class="text-sm font-extrabold text-slate-950">${idx + 1}. ${q.q}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-bold text-slate-900">
+                        ${['A', 'B', 'C', 'D'].map(opt => `<label class="flex items-center gap-2 p-2.5 bg-white rounded-xl border border-slate-300 cursor-pointer"><input type="radio" name="stu-ans-${idx}" value="${opt}"><span><b>${opt}:</b> ${q[opt]}</span></label>`).join('')}
+                    </div>
+                </div>
+            `).join('');
 
             if (testCountdownInterval) clearInterval(testCountdownInterval);
             let remainingSeconds = (parseInt(test.duration || 30, 10)) * 60;
             const timerEl = document.getElementById('attempt-timer-display');
+            const updateTimerText = () => {
+                const hrs = Math.floor(remainingSeconds / 3600);
+                const mins = Math.floor((remainingSeconds % 3600) / 60);
+                const secs = remainingSeconds % 60;
+                timerEl.innerText = hrs > 0
+                    ? `${hrs}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+                    : `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            };
+            updateTimerText();
+
             testCountdownInterval = setInterval(() => {
                 remainingSeconds--;
-                if (remainingSeconds <= 0) { clearInterval(testCountdownInterval); alert("Time is up!"); handleStudentSubmitTest(null); }
-                else {
-                    const m = Math.floor(remainingSeconds / 60), s = remainingSeconds % 60;
-                    timerEl.innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+                if (remainingSeconds <= 0) {
+                    clearInterval(testCountdownInterval);
+                    alert("Time is up! Your test is being auto-submitted.");
+                    handleStudentSubmitTest(null);
+                } else {
+                    updateTimerText();
                 }
             }, 1000);
+
             document.getElementById('modal-attempt-test').classList.remove('hidden');
         }
 
-        function closeAttemptTestModal() { if (testCountdownInterval) clearInterval(testCountdownInterval); closeModal('modal-attempt-test'); }
+        function closeAttemptTestModal() {
+            if (testCountdownInterval) clearInterval(testCountdownInterval);
+            closeModal('modal-attempt-test');
+        }
 
         async function handleStudentSubmitTest(e) {
             if (e) e.preventDefault();
             if (testCountdownInterval) clearInterval(testCountdownInterval);
+
             const testId = document.getElementById('attempt-test-id').value;
             const test = STATE.onlineTests.find(t => String(t.id) === String(testId));
             const student = STATE.students.find(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
@@ -2654,12 +2961,17 @@
                 const sel = document.querySelector(`input[name="stu-ans-${idx}"]:checked`);
                 if (sel && sel.value === q.ans) score++;
             });
-            const submission = { id: Date.now(), testId: test.id, testTitle: test.title, studentId: student.id, studentName: student.name, studentClass: student.class, score, totalMarks: (test.questions || []).length, date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) };
+            const submission = {
+                id: Date.now(), testId: test.id, testTitle: test.title,
+                studentId: student.id, studentName: student.name, studentClass: student.class,
+                score, totalMarks: (test.questions || []).length,
+                date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+            };
             STATE.testSubmissions.unshift(submission);
             localStorage.setItem('shiksha_test_submissions', JSON.stringify(STATE.testSubmissions));
             renderOnlineTests(); renderTestSubmissions(); renderParentGrowthAndRemarks(); closeModal('modal-attempt-test');
             await postToCloud({ action: 'submitOnlineTest', submission });
-            alert(`Test Submitted! Score: ${score}/${submission.totalMarks}.`);
+            alert(`Test Submitted! You scored ${score}/${submission.totalMarks}.`);
         }
 
         function renderTestSubmissions() {
@@ -2667,15 +2979,40 @@
             if (!grid) return;
             let subs = STATE.testSubmissions;
             if (STATE.currentRole === 'parent' && STATE.currentStudentId) subs = subs.filter(s => String(s.studentId).trim() === String(STATE.currentStudentId).trim());
-            grid.innerHTML = subs.map(s => `<div class="bg-white p-3.5 rounded-2xl border border-slate-300 flex items-center justify-between shadow-sm"><div><span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${s.studentId}</span><h4 class="text-sm font-extrabold text-slate-950 mt-0.5">${s.studentName}</h4><p class="text-xs font-semibold text-slate-700">${s.testTitle} &bull; ${s.date}</p></div><span class="text-xs font-black px-3 py-1 rounded-xl bg-emerald-100 text-emerald-900 border border-emerald-300">${s.score}/${s.totalMarks}</span></div>`).join('') || `<div class="col-span-full p-5 text-center text-slate-800 font-bold text-xs">No test submissions yet.</div>`;
+            grid.innerHTML = subs.map(s => `
+                <div class="bg-white p-3.5 rounded-2xl border border-slate-300 flex items-center justify-between shadow-sm">
+                    <div><span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${s.studentId}</span><h4 class="text-sm font-extrabold text-slate-950 mt-0.5">${s.studentName}</h4><p class="text-xs font-semibold text-slate-700">${s.testTitle} &bull; ${s.date}</p></div>
+                    <span class="text-xs font-black px-3 py-1 rounded-xl bg-emerald-100 text-emerald-900 border border-emerald-300">${s.score}/${s.totalMarks}</span>
+                </div>
+            `).join('') || `<div class="col-span-full p-5 text-center text-slate-800 font-bold text-xs">No test submissions yet.</div>`;
         }
 
+        function openManualMarksModal() { loadStudentsForOfflineMarks(document.getElementById('off-exam-class').value); document.getElementById('modal-offline-marks').classList.remove('hidden'); }
+        function loadStudentsForOfflineMarks(cls) {
+            const today = getTodayDateKey();
+            const students = STATE.students.filter(s => s.class === cls && (!s.leavingDate || s.leavingDate > today));
+            document.getElementById('off-marks-students-list').innerHTML = students.map(s => `<div class="flex items-center justify-between bg-slate-100 p-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-950"><span>${s.name} (${s.id})</span><input type="number" data-stuid="${s.id}" min="0" placeholder="Marks" class="off-mark-inp w-20 border border-slate-400 rounded-lg px-2 py-1 text-center font-extrabold"></div>`).join('');
+        }
+        async function handleSaveOfflineMarks(e) {
+            e.preventDefault();
+            const scores = [];
+            document.querySelectorAll('.off-mark-inp').forEach(inp => { if (inp.value !== '') scores.push({ studentId: inp.getAttribute('data-stuid'), obtained: inp.value }); });
+            const resultObj = { id: Date.now(), title: document.getElementById('off-exam-type').value, type: document.getElementById('off-exam-type').value, class: document.getElementById('off-exam-class').value, subject: document.getElementById('off-exam-subject').value.trim(), maxMarks: document.getElementById('off-exam-max').value, scores, date: getTodayDateKey() };
+            STATE.examResults.push(resultObj);
+            localStorage.setItem('shiksha_exam_results', JSON.stringify(STATE.examResults));
+            closeModal('modal-offline-marks');
+            await postToCloud({ action: 'saveExamResult', result: resultObj });
+            alert("Marks saved & growth charts updated!");
+        }
+
+        // ================= PDF PROGRESS REPORT GENERATOR =================
         function openPdfReportModal() {
             const selGroup = document.getElementById('pdf-student-select-group');
             const sel = document.getElementById('pdf-student-select');
             const today = getTodayDateKey();
             document.getElementById('pdf-from-date').value = today.slice(0, 8) + '01';
             document.getElementById('pdf-to-date').value = today;
+
             if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
                 selGroup.classList.add('hidden');
                 sel.innerHTML = `<option value="${STATE.currentStudentId}" selected>${STATE.currentStudentId}</option>`;
@@ -2696,42 +3033,88 @@
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            doc.setFillColor(15, 23, 42); doc.rect(0, 0, 210, 32, 'F');
-            doc.setTextColor(255, 255, 255); doc.setFontSize(18); doc.text("SHIKSHA COACHING INSTITUTE", 14, 15);
-            doc.setFontSize(10); doc.text("Official Student Attendance & Academic Progress Report", 14, 23);
+            doc.setFillColor(15, 23, 42);
+            doc.rect(0, 0, 210, 32, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(18);
+            doc.text("SHIKSHA COACHING INSTITUTE", 14, 15);
+            doc.setFontSize(10);
+            doc.text("Official Student Attendance & Academic Progress Report | Panchwati, Jhansi", 14, 23);
 
-            doc.setTextColor(30, 41, 59); doc.setFontSize(11);
+            doc.setTextColor(30, 41, 59);
+            doc.setFontSize(11);
             doc.text(`Student Name: ${student.name}`, 14, 44);
             doc.text(`Student ID: ${student.id}`, 14, 51);
             doc.text(`Class & Board: ${student.class} (${student.board})`, 14, 58);
             doc.text(`Report Period: ${fromDate} to ${toDate}`, 120, 44);
+            doc.text(`Father's Name: ${student.fatherName || 'N/A'}`, 120, 51);
 
             const stuLog = STATE.attendanceLogs[student.id] || { daily: {} };
+            const dailyEntries = Object.entries(stuLog.daily || {}).filter(([dt]) => dt >= fromDate && dt <= toDate && !isDateHolidayOrSunday(dt)).sort((a, b) => a[0].localeCompare(b[0]));
             let pCount = 0, aCount = 0, lCount = 0;
-            Object.entries(stuLog.daily || {}).forEach(([dt, st]) => {
-                if (dt >= fromDate && dt <= toDate && !isDateHolidayOrSunday(dt)) {
-                    if (st === 'P') pCount++; else if (st === 'A') aCount++; else if (st === 'L') lCount++;
-                }
-            });
+            dailyEntries.forEach(([, st]) => { if (st === 'P') pCount++; else if (st === 'A') aCount++; else if (st === 'L') lCount++; });
 
-            doc.setFontSize(12); doc.text("1. Attendance Summary", 14, 72);
-            doc.setFontSize(10); doc.text(`Present: ${pCount} | Absent: ${aCount} | Leave: ${lCount}`, 14, 80);
-            doc.save(`${student.name}_Progress_Report.pdf`);
+            doc.setFontSize(12);
+            doc.text("1. Attendance Summary (Selected Date Range)", 14, 72);
+            doc.setFontSize(10);
+            doc.text(`Present Days: ${pCount}   |   Absent Days: ${aCount}   |   Leave Days: ${lCount}`, 14, 80);
+
+            let yPos = 90;
+            if (dailyEntries.length > 0) {
+                doc.setFontSize(9);
+                dailyEntries.slice(0, 15).forEach(([dt, st]) => {
+                    const label = st === 'P' ? 'Present' : (st === 'A' ? 'Absent' : 'On Leave');
+                    doc.text(`• ${dt}: ${label}`, 18, yPos);
+                    yPos += 6;
+                });
+            } else {
+                doc.text("• No attendance records marked in this selected date range.", 18, yPos);
+                yPos += 10;
+            }
+
+            yPos += 6;
+            doc.setFontSize(12);
+            doc.text("2. Online & Periodic Test Performance", 14, yPos);
+            yPos += 8;
+            doc.setFontSize(10);
+            const subs = STATE.testSubmissions.filter(sub => String(sub.studentId).trim() === String(student.id).trim());
+            if (subs.length > 0) {
+                subs.forEach(sub => { doc.text(`• ${sub.testTitle} (${sub.date}): Scored ${sub.score} / ${sub.totalMarks}`, 18, yPos); yPos += 7; });
+            } else {
+                doc.text("• No test submissions recorded yet.", 18, yPos);
+                yPos += 7;
+            }
+
+            yPos += 6;
+            doc.setFontSize(12);
+            doc.text("3. Behavior & Discipline Summary", 14, yPos);
+            yPos += 8;
+            doc.setFontSize(10);
+            const behs = STATE.behaviorLogs.filter(b => String(b.studentId).trim() === String(student.id).trim());
+            const gCount = behs.filter(b => b.flag === 'green').length;
+            const rCount = behs.filter(b => b.flag === 'red').length;
+            doc.text(`Green Marks (Positive): ${gCount}   |   Red Marks (Needs Improvement): ${rCount}`, 18, yPos);
+
+            doc.save(`${student.name}_${student.id}_Progress_Report.pdf`);
             closeModal('modal-pdf-report');
         }
 
+        // ================= PASSWORD, FEES, PHOTO+GENDER PROFILES, NOTICES & AUTH =================
         function openChangePasswordModal() {
             if (!STATE.currentRole) return;
             const titleEl = document.getElementById('modal-pwd-title');
             const adminPhoneGroup = document.getElementById('admin-phone-edit-group');
             const currentPwdGroup = document.getElementById('current-pwd-group');
-            document.getElementById('upd-current-pwd').value = ''; document.getElementById('upd-new-pwd').value = '';
+            document.getElementById('upd-current-pwd').value = '';
+            document.getElementById('upd-new-pwd').value = '';
             if (STATE.currentRole === 'admin') {
-                titleEl.innerHTML = 'Update Admin Credentials'; adminPhoneGroup.classList.remove('hidden'); currentPwdGroup.classList.add('hidden');
+                titleEl.innerHTML = '<i class="fa-solid fa-key text-indigo-700 mr-1.5"></i> Update Admin Credentials';
+                adminPhoneGroup.classList.remove('hidden'); currentPwdGroup.classList.add('hidden');
                 document.getElementById('upd-admin-phone').value = STATE.adminUser.phone || '';
                 document.getElementById('upd-new-pwd').value = STATE.adminUser.password || '';
             } else {
-                titleEl.innerHTML = 'Change Password'; adminPhoneGroup.classList.add('hidden'); currentPwdGroup.classList.remove('hidden');
+                titleEl.innerHTML = '<i class="fa-solid fa-key text-indigo-700 mr-1.5"></i> Change Password';
+                adminPhoneGroup.classList.add('hidden'); currentPwdGroup.classList.remove('hidden');
             }
             document.getElementById('modal-change-password').classList.remove('hidden');
         }
@@ -2742,6 +3125,7 @@
             const newPwd = document.getElementById('upd-new-pwd').value.trim();
             if (STATE.currentRole === 'admin') {
                 const newPhone = cleanPhone(document.getElementById('upd-admin-phone').value.trim());
+                if (newPhone.length !== 10) return alert("Enter valid 10-digit mobile.");
                 STATE.adminUser = { phone: newPhone, password: newPwd };
                 localStorage.setItem('shiksha_admin_user', JSON.stringify(STATE.adminUser));
                 await postToCloud({ action: 'updateAdmin', adminUser: STATE.adminUser });
@@ -2769,30 +3153,55 @@
             const s = STATE.students.find(item => item.id === studentId);
             if (!s) return;
             document.getElementById('fee-modal-stu-id').value = s.id;
-            document.getElementById('fee-modal-stu-info').innerText = `${s.name} (${s.id})`;
+            document.getElementById('fee-modal-stu-info').innerText = `${s.name} (${s.id}) - Class ${s.class}`;
+            document.getElementById('fee-modal-mode').value = 'Cash';
+            document.getElementById('fee-modal-txid-box').classList.add('hidden');
             document.getElementById('fee-modal-amount').value = Number(s.feePending) > 0 ? s.feePending : '';
             document.getElementById('fee-modal-current-due').innerText = `₹${s.feePending || 0}`;
             document.getElementById('modal-collect-fee').classList.remove('hidden');
         }
         function toggleFeeTxIdField(mode) { document.getElementById('fee-modal-txid-box').classList.toggle('hidden', mode !== 'Online via UPI'); }
-
         async function handleAdminCollectFee(e) {
             e.preventDefault();
             const stuId = document.getElementById('fee-modal-stu-id').value;
             const mode = document.getElementById('fee-modal-mode').value;
+            const txId = document.getElementById('fee-modal-txid').value.trim();
             const month = document.getElementById('fee-modal-month').value;
             const paidAmount = parseFloat(document.getElementById('fee-modal-amount').value) || 0;
             const student = STATE.students.find(s => s.id === stuId);
             if (!student) return;
             student.feePending = Math.max(0, (parseFloat(student.feePending) || 0) - paidAmount);
-            const receiptNote = `Paid ₹${paidAmount} (${month} - ${mode})`;
+            const txNote = (mode === 'Online via UPI' && txId) ? ` [UTR: ${txId}]` : '';
+            const receiptNote = `Paid ₹${paidAmount} (${month} - ${mode}${txNote})`;
             student.feeHistory = student.feeHistory ? `${receiptNote} | ${student.feeHistory}` : receiptNote;
             localStorage.setItem('shiksha_students', JSON.stringify(STATE.students));
             renderFees(); renderStudents(); updateKpis(); closeModal('modal-collect-fee');
             await postToCloud({ action: 'addStudent', student });
-            alert(`Fee updated successfully!`);
+            alert(`Fee updated: ${receiptNote}`);
         }
-
+        function renderFees() {
+            const container = document.getElementById('fees-list-container');
+            if (!container) return;
+            let list = STATE.students;
+            if (STATE.currentRole === 'parent' && STATE.currentStudentId) list = list.filter(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
+            container.innerHTML = list.map(s => {
+                const isPaid = Number(s.feePending) <= 0;
+                const lastRec = s.feeHistory ? s.feeHistory.split('|')[0].trim() : '';
+                return `
+                    <div class="bg-white p-4 rounded-2xl border border-slate-300 flex flex-col justify-between gap-2 shadow-sm">
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="min-w-0"><span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${s.id}</span><h4 class="text-sm font-extrabold text-slate-950 mt-1 truncate">${s.name} (Class ${s.class})</h4></div>
+                            <span class="text-xs font-black px-2.5 py-0.5 rounded-full shrink-0 ${isPaid ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">${isPaid ? 'PAID' : 'Due: ₹' + s.feePending}</span>
+                        </div>
+                        ${lastRec ? `<p class="text-xs font-bold text-emerald-900 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg truncate">${lastRec}</p>` : ''}
+                        <div class="flex items-center justify-end gap-1.5 pt-2 border-t border-slate-200">
+                            ${STATE.currentRole === 'admin' ? `<button onclick="openCollectFeeModal('${s.id}')" class="text-xs bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-xl">Collect / Update Fee</button>` : ''}
+                            ${(!isPaid && STATE.currentRole === 'parent') ? `<button onclick="initiateDirectUpiPay('${s.name}', '${s.feePending}')" class="text-xs bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-xl">Pay UPI</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('') || `<p class="text-xs font-bold text-slate-800">No fee records.</p>`;
+        }
         function initiateDirectUpiPay(name, amount) { window.location.href = `upi://pay?pa=${COACHING_UPI_ID}&pn=SHIKSHA%20Coaching%20Institute&am=${amount}&cu=INR&tn=${encodeURIComponent('Fee - ' + name)}`; }
 
         function previewProfileImage(input, previewId) {
@@ -2820,13 +3229,20 @@
             document.getElementById('pub-stat-students').innerText = active.length;
             document.getElementById('pub-stat-teachers').innerText = getValidUniqueTeachers().length;
         }
-
         function renderPublicTeachers() {
             const container = document.getElementById('pub-teachers-grid');
             if (!container) return;
-            container.innerHTML = getValidUniqueTeachers().map(t => `<div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl flex items-start space-x-3">${t.photo ? `<img src="${t.photo}" class="w-12 h-12 rounded-2xl object-cover border border-indigo-500/40 shrink-0">` : `<div class="w-12 h-12 rounded-2xl bg-indigo-950 text-indigo-400 flex items-center justify-center font-bold text-base shrink-0">${(t.name||'T').charAt(0)}</div>`}<div class="min-w-0"><h4 class="text-sm font-bold text-white truncate">${t.name}</h4><p class="text-xs text-amber-400 font-semibold">${t.qualifications || ''} ${t.gender ? '&bull; ' + t.gender : ''}</p><p class="text-xs text-indigo-400 mt-0.5 truncate">${t.subjects || t.dept || ''}</p></div></div>`).join('');
+            container.innerHTML = getValidUniqueTeachers().map(t => `
+                <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl flex items-start space-x-3">
+                    ${t.photo ? `<img src="${t.photo}" class="w-12 h-12 rounded-2xl object-cover border border-indigo-500/40 shrink-0">` : `<div class="w-12 h-12 rounded-2xl bg-indigo-950 text-indigo-400 flex items-center justify-center font-bold text-base shrink-0">${(t.name||'T').charAt(0)}</div>`}
+                    <div class="min-w-0">
+                        <h4 class="text-sm font-bold text-white truncate">${t.name}</h4>
+                        <p class="text-xs text-amber-400 font-semibold">${t.qualifications || ''} ${t.gender ? '&bull; ' + t.gender : ''}</p>
+                        <p class="text-xs text-indigo-400 mt-0.5 truncate">${t.subjects || t.dept || ''}</p>
+                    </div>
+                </div>
+            `).join('');
         }
-
         function setStudentStatusFilter(f) { STATE.studentStatusFilter = f; renderStudents(); }
 
         function renderStudents() {
@@ -2841,16 +3257,41 @@
                 list = list.filter(s => String(s.id || '').trim().toLowerCase() === targetId || (targetId === '' && cleanPhone(s.phone) === targetPhone));
 
                 if (list.length === 0) {
-                    container.innerHTML = `<div class="col-span-full p-5 bg-white rounded-2xl border border-slate-300 text-xs font-bold text-slate-900">Student profile not synced yet. Tap the <b>Synced</b> badge to refresh.</div>`;
+                    container.innerHTML = `<div class="col-span-full p-5 bg-white rounded-2xl border border-slate-300 text-xs font-bold text-slate-900">Student profile not synced yet. Tap the <b>Local / Synced</b> badge in the top bar to refresh.</div>`;
                     return;
                 }
+
                 const s = list[0];
                 const sBeh = STATE.behaviorLogs.filter(b => String(b.studentId).trim().toLowerCase() === String(s.id).trim().toLowerCase());
                 const gCnt = sBeh.filter(b => b.flag === 'green').length;
                 const rCnt = sBeh.filter(b => b.flag === 'red').length;
                 const attStats = calculateDynamicAttendance(s.id);
 
-                container.innerHTML = `<div class="col-span-full bg-white p-5 rounded-3xl border border-slate-300 shadow-sm space-y-4"><div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200"><div class="flex items-center gap-3"><img src="${s.photo || './logo.png'}" class="w-16 h-16 rounded-2xl object-cover border-2 border-indigo-200 bg-slate-100 shrink-0"><div><span class="text-xs font-mono font-extrabold bg-indigo-100 text-indigo-900 px-2.5 py-0.5 rounded">${s.id}</span><h3 class="text-lg font-black text-slate-950 mt-1">${s.name}</h3><p class="text-xs font-bold text-slate-700">Class ${s.class} &bull; ${s.board} &bull; ${s.gender || 'Student'}</p></div></div><span class="text-xs font-black px-3 py-1 rounded-full ${Number(s.feePending) <= 0 ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">${Number(s.feePending) <= 0 ? 'Fees Paid' : 'Fee Due: ₹' + s.feePending}</span></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs"><div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Father's Name</span><b class="text-slate-950 text-sm">${s.fatherName || 'N/A'}</b></div><div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Mother's Name</span><b class="text-slate-950 text-sm">${s.motherName || 'N/A'}</b></div><div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Gender</span><b class="text-slate-950 text-sm">${s.gender || 'Not Specified'}</b></div><div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Registered Mobile</span><b class="text-slate-950 text-sm">${s.phone}</b></div><div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-200"><span class="text-emerald-800 font-bold block">Monthly Attendance</span><b class="text-emerald-950 text-sm">${attStats.percentage}% (${attStats.present}P / ${attStats.absent}A)</b></div><div class="p-3 bg-indigo-50 rounded-2xl border border-indigo-200"><span class="text-indigo-800 font-bold block">Behavior Score</span><b class="text-emerald-700 text-sm">${gCnt} Green</b> &bull; <b class="text-rose-700 text-sm">${rCnt} Red</b></div></div></div>`;
+                container.innerHTML = `
+                    <div class="col-span-full bg-white p-5 rounded-3xl border border-slate-300 shadow-sm space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200">
+                            <div class="flex items-center gap-3">
+                                <img src="${s.photo || './logo.png'}" alt="${s.name}" class="w-16 h-16 rounded-2xl object-cover border-2 border-indigo-200 bg-slate-100 shrink-0">
+                                <div>
+                                    <span class="text-xs font-mono font-extrabold bg-indigo-100 text-indigo-900 px-2.5 py-0.5 rounded">${s.id}</span>
+                                    <h3 class="text-lg font-black text-slate-950 mt-1">${s.name}</h3>
+                                    <p class="text-xs font-bold text-slate-700">Class ${s.class} &bull; ${s.board} &bull; ${s.gender || 'Student'}</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-black px-3 py-1 rounded-full ${Number(s.feePending) <= 0 ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">
+                                ${Number(s.feePending) <= 0 ? 'Fees Paid' : 'Fee Due: ₹' + s.feePending}
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                            <div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Father's Name</span><b class="text-slate-950 text-sm">${s.fatherName || 'N/A'}</b></div>
+                            <div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Mother's Name</span><b class="text-slate-950 text-sm">${s.motherName || 'N/A'}</b></div>
+                            <div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Gender</span><b class="text-slate-950 text-sm">${s.gender || 'Not Specified'}</b></div>
+                            <div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Registered Mobile</span><b class="text-slate-950 text-sm">${s.phone}</b></div>
+                            <div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-200"><span class="text-emerald-800 font-bold block">Monthly Attendance</span><b class="text-emerald-950 text-sm">${attStats.percentage}% (${attStats.present}P / ${attStats.absent}A)</b></div>
+                            <div class="p-3 bg-indigo-50 rounded-2xl border border-indigo-200"><span class="text-indigo-800 font-bold block">Behavior Score</span><b class="text-emerald-700 text-sm">${gCnt} Green</b> &bull; <b class="text-rose-700 text-sm">${rCnt} Red</b></div>
+                        </div>
+                    </div>
+                `;
                 return;
             }
 
@@ -2865,7 +3306,37 @@
                 const todayRed = sBeh.some(b => b.dateKey === today && b.flag === 'red');
                 const todayGreen = sBeh.some(b => b.dateKey === today && b.flag === 'green');
 
-                return `<div class="bg-white p-4 rounded-2xl border border-slate-300 flex flex-col justify-between gap-2.5 shadow-sm hover:border-indigo-500 transition"><div onclick="openMasterStudentForm('${s.id}')" class="flex items-center justify-between cursor-pointer gap-2"><div class="flex items-center gap-2.5 min-w-0"><img src="${s.photo || './logo.png'}" class="w-11 h-11 rounded-xl object-cover border border-slate-300 bg-slate-100 shrink-0"><div class="min-w-0"><span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${s.id}</span><h4 class="text-sm font-extrabold text-slate-950 mt-0.5 truncate">${s.name}</h4><p class="text-xs font-semibold text-slate-700 truncate">Class ${s.class} (${s.board}) &bull; ${s.gender || ''}</p></div></div><span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full shrink-0 ${Number(s.feePending) <= 0 ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">${Number(s.feePending) <= 0 ? 'Paid' : '₹' + s.feePending}</span></div><div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs"><span class="font-extrabold text-slate-800">Behavior: <b class="text-emerald-700">${gCnt}G</b> / <b class="text-rose-700">${rCnt}R</b></span>${isStaff ? `<div class="flex items-center gap-3"><label class="flex items-center gap-1 cursor-pointer font-extrabold text-rose-700 bg-rose-50 px-2 py-1 rounded-lg border border-rose-300"><input type="checkbox" ${todayRed ? 'checked' : ''} onchange="openBehaviorModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', 'red')" class="accent-rose-600 w-3.5 h-3.5"><span>Red</span></label><label class="flex items-center gap-1 cursor-pointer font-extrabold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-300"><input type="checkbox" ${todayGreen ? 'checked' : ''} onchange="openBehaviorModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', 'green')" class="accent-emerald-600 w-3.5 h-3.5"><span>Green</span></label></div>` : `<button onclick="switchPortalTab('home')" class="text-indigo-700 font-extrabold hover:underline">View Chart &rarr;</button>`}</div></div>`;
+                return `
+                    <div class="bg-white p-4 rounded-2xl border border-slate-300 flex flex-col justify-between gap-2.5 shadow-sm hover:border-indigo-500 transition">
+                        <div onclick="openMasterStudentForm('${s.id}')" class="flex items-center justify-between cursor-pointer gap-2">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <img src="${s.photo || './logo.png'}" class="w-11 h-11 rounded-xl object-cover border border-slate-300 bg-slate-100 shrink-0">
+                                <div class="min-w-0">
+                                    <span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${s.id}</span>
+                                    <h4 class="text-sm font-extrabold text-slate-950 mt-0.5 truncate">${s.name}</h4>
+                                    <p class="text-xs font-semibold text-slate-700 truncate">Class ${s.class} (${s.board}) &bull; ${s.gender || ''}</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full shrink-0 ${Number(s.feePending) <= 0 ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">${Number(s.feePending) <= 0 ? 'Paid' : '₹' + s.feePending}</span>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs">
+                            <span class="font-extrabold text-slate-800">Behavior: <b class="text-emerald-700">${gCnt}G</b> / <b class="text-rose-700">${rCnt}R</b></span>
+                            ${isStaff ? `
+                                <div class="flex items-center gap-3">
+                                    <label class="flex items-center gap-1 cursor-pointer font-extrabold text-rose-700 bg-rose-50 px-2 py-1 rounded-lg border border-rose-300">
+                                        <input type="checkbox" ${todayRed ? 'checked' : ''} onchange="openBehaviorModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', 'red')" class="accent-rose-600 w-3.5 h-3.5">
+                                        <span>Red</span>
+                                    </label>
+                                    <label class="flex items-center gap-1 cursor-pointer font-extrabold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-300">
+                                        <input type="checkbox" ${todayGreen ? 'checked' : ''} onchange="openBehaviorModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', 'green')" class="accent-emerald-600 w-3.5 h-3.5">
+                                        <span>Green</span>
+                                    </label>
+                                </div>
+                            ` : `<button onclick="switchPortalTab('home')" class="text-indigo-700 font-extrabold hover:underline">View Chart &rarr;</button>`}
+                        </div>
+                    </div>
+                `;
             }).join('') || `<p class="text-xs font-bold text-slate-800">No students found.</p>`;
         }
 
@@ -2875,16 +3346,32 @@
             const container = document.getElementById('teachers-list-container');
             if (!container || !card) return;
 
-            if (STATE.currentRole === 'parent') { card.classList.add('hidden'); return; }
+            if (STATE.currentRole === 'parent') {
+                card.classList.add('hidden');
+                return;
+            }
             card.classList.remove('hidden');
 
             let list = getValidUniqueTeachers();
             if (STATE.currentRole === 'teacher') {
                 heading.innerHTML = `<i class="fa-solid fa-user-tie text-indigo-700"></i> My Faculty Profile`;
                 list = list.filter(t => cleanPhone(t.phone) === cleanPhone(STATE.currentUserPhone));
-            } else { heading.innerHTML = `<i class="fa-solid fa-chalkboard-user text-indigo-700"></i> Faculty Directory`; }
+            } else {
+                heading.innerHTML = `<i class="fa-solid fa-chalkboard-user text-indigo-700"></i> Faculty Directory`;
+            }
 
-            container.innerHTML = list.map(t => `<div onclick="openMasterTeacherForm('${t.phone}')" class="flex items-center justify-between p-3 bg-slate-100 border border-slate-300 rounded-2xl cursor-pointer hover:border-indigo-500 gap-2"><div class="flex items-center gap-2.5 min-w-0"><img src="${t.photo || './logo.png'}" class="w-10 h-10 rounded-xl object-cover border border-slate-300 bg-white shrink-0"><div class="min-w-0"><h4 class="text-sm font-extrabold text-slate-950 truncate">${t.name}</h4><p class="text-xs font-semibold text-slate-800 truncate">${t.subjects || t.dept} &bull; ${t.gender || ''} &bull; ${t.phone}</p></div></div><i class="fa-solid fa-pen-to-square text-sm text-indigo-700 shrink-0"></i></div>`).join('') || `<p class="text-xs font-bold text-slate-700">No faculty profile found.</p>`;
+            container.innerHTML = list.map(t => `
+                <div onclick="openMasterTeacherForm('${t.phone}')" class="flex items-center justify-between p-3 bg-slate-100 border border-slate-300 rounded-2xl cursor-pointer hover:border-indigo-500 gap-2">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <img src="${t.photo || './logo.png'}" class="w-10 h-10 rounded-xl object-cover border border-slate-300 bg-white shrink-0">
+                        <div class="min-w-0">
+                            <h4 class="text-sm font-extrabold text-slate-950 truncate">${t.name}</h4>
+                            <p class="text-xs font-semibold text-slate-800 truncate">${t.subjects || t.dept} &bull; ${t.gender || ''} &bull; ${t.phone}</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-pen-to-square text-sm text-indigo-700 shrink-0"></i>
+                </div>
+            `).join('') || `<p class="text-xs font-bold text-slate-700">No faculty profile found.</p>`;
         }
 
         function openAddTeacherModal() {
@@ -2904,7 +3391,10 @@
 
         function openMasterTeacherForm(phone) {
             if (STATE.currentRole === 'parent') return;
-            if (STATE.currentRole === 'teacher' && cleanPhone(phone) !== cleanPhone(STATE.currentUserPhone)) { alert("Access Denied."); return; }
+            if (STATE.currentRole === 'teacher' && cleanPhone(phone) !== cleanPhone(STATE.currentUserPhone)) {
+                alert("Access Denied: You can only view your own profile.");
+                return;
+            }
             const t = getValidUniqueTeachers().find(item => cleanPhone(item.phone) === cleanPhone(phone));
             if (!t) return;
             document.getElementById('inp-teach-name').value = t.name || '';
@@ -2920,9 +3410,13 @@
             const saveBtn = document.getElementById('btn-save-teacher-submit');
             const delBtn = document.getElementById('btn-delete-teacher-modal');
             if (STATE.currentRole === 'admin') {
-                saveBtn.classList.remove('hidden'); delBtn.classList.remove('hidden');
+                saveBtn.classList.remove('hidden');
+                delBtn.classList.remove('hidden');
                 delBtn.onclick = () => deleteTeacher(t.phone);
-            } else { saveBtn.classList.add('hidden'); delBtn.classList.add('hidden'); }
+            } else {
+                saveBtn.classList.add('hidden');
+                delBtn.classList.add('hidden');
+            }
             document.getElementById('modal-teacher').classList.remove('hidden');
         }
 
@@ -2936,7 +3430,19 @@
             const photoFile = document.getElementById('inp-teach-photo').files[0];
             const photo = photoFile ? await compressImage(photoFile, 400, 0.75) : (existing.photo || '');
 
-            const obj = { ...existing, name: document.getElementById('inp-teach-name').value.trim(), gender: document.getElementById('inp-teach-gender').value, qualifications: document.getElementById('inp-teach-qual').value.trim(), dept: subjs, subjects: subjs, phone, password: document.getElementById('inp-teach-pwd').value.trim(), aadhaar: document.getElementById('inp-teach-aadhaar').value.trim(), salary: document.getElementById('inp-teach-salary').value || '0', photo };
+            const obj = {
+                ...existing,
+                name: document.getElementById('inp-teach-name').value.trim(),
+                gender: document.getElementById('inp-teach-gender').value,
+                qualifications: document.getElementById('inp-teach-qual').value.trim(),
+                dept: subjs,
+                subjects: subjs,
+                phone,
+                password: document.getElementById('inp-teach-pwd').value.trim(),
+                aadhaar: document.getElementById('inp-teach-aadhaar').value.trim(),
+                salary: document.getElementById('inp-teach-salary').value || '0',
+                photo
+            };
             const idx = STATE.registeredTeachers.findIndex(t => cleanPhone(t.phone) === phone);
             if (idx > -1) STATE.registeredTeachers[idx] = obj; else STATE.registeredTeachers.push(obj);
             localStorage.setItem('shiksha_teachers', JSON.stringify(STATE.registeredTeachers));
@@ -2971,7 +3477,10 @@
         }
 
         function openMasterStudentForm(id) {
-            if (STATE.currentRole === 'parent' && String(id).trim().toLowerCase() !== String(STATE.currentStudentId).trim().toLowerCase()) { alert("Access Denied."); return; }
+            if (STATE.currentRole === 'parent' && String(id).trim().toLowerCase() !== String(STATE.currentStudentId).trim().toLowerCase()) {
+                alert("Access Denied: You can only view your own profile.");
+                return;
+            }
             const s = STATE.students.find(item => String(item.id).trim().toLowerCase() === String(id).trim().toLowerCase());
             if (!s) return;
             document.getElementById('edit-stu-id').value = s.id;
@@ -2992,9 +3501,13 @@
             const saveBtn = document.getElementById('btn-save-student-submit');
             const delBtn = document.getElementById('btn-delete-student-modal');
             if (STATE.currentRole === 'admin') {
-                saveBtn.classList.remove('hidden'); delBtn.classList.remove('hidden');
+                saveBtn.classList.remove('hidden');
+                delBtn.classList.remove('hidden');
                 delBtn.onclick = () => deleteStudent(s.id);
-            } else { saveBtn.classList.add('hidden'); delBtn.classList.add('hidden'); }
+            } else {
+                saveBtn.classList.add('hidden');
+                delBtn.classList.add('hidden');
+            }
             document.getElementById('modal-student').classList.remove('hidden');
         }
 
@@ -3006,7 +3519,22 @@
             const photoFile = document.getElementById('inp-stu-photo').files[0];
             const photo = photoFile ? await compressImage(photoFile, 400, 0.75) : (existing.photo || '');
 
-            const obj = { ...existing, id, name: document.getElementById('inp-stu-name').value.trim(), gender: document.getElementById('inp-stu-gender').value, fatherName: document.getElementById('inp-stu-father').value.trim(), motherName: document.getElementById('inp-stu-mother').value.trim(), class: document.getElementById('inp-stu-class').value, board: document.getElementById('inp-stu-board').value, phone: cleanPhone(document.getElementById('inp-stu-phone').value), password: document.getElementById('inp-stu-pwd').value.trim(), admissionDate: document.getElementById('inp-stu-adm-date').value, leavingDate: document.getElementById('inp-stu-leave-date').value, feePending: parseFloat(document.getElementById('inp-stu-fee').value) || 0, photo };
+            const obj = {
+                ...existing,
+                id,
+                name: document.getElementById('inp-stu-name').value.trim(),
+                gender: document.getElementById('inp-stu-gender').value,
+                fatherName: document.getElementById('inp-stu-father').value.trim(),
+                motherName: document.getElementById('inp-stu-mother').value.trim(),
+                class: document.getElementById('inp-stu-class').value,
+                board: document.getElementById('inp-stu-board').value,
+                phone: cleanPhone(document.getElementById('inp-stu-phone').value),
+                password: document.getElementById('inp-stu-pwd').value.trim(),
+                admissionDate: document.getElementById('inp-stu-adm-date').value,
+                leavingDate: document.getElementById('inp-stu-leave-date').value,
+                feePending: parseFloat(document.getElementById('inp-stu-fee').value) || 0,
+                photo
+            };
             const idx = STATE.students.findIndex(s => s.id === id);
             if (idx > -1) STATE.students[idx] = obj; else STATE.students.unshift(obj);
             localStorage.setItem('shiksha_students', JSON.stringify(STATE.students));
@@ -3033,7 +3561,6 @@
             document.getElementById('inp-notice-desc').value = n.desc;
             document.getElementById('modal-add-notice').classList.remove('hidden');
         }
-
         async function handleSaveNotice(e) {
             e.preventDefault();
             const title = document.getElementById('inp-notice-title').value.trim();
@@ -3043,7 +3570,8 @@
             const idx = STATE.notices.findIndex(n => n.id == payload.id);
             if (idx > -1) STATE.notices[idx] = payload; else STATE.notices.unshift(payload);
             localStorage.setItem('shiksha_notices', JSON.stringify(STATE.notices));
-            renderNotices(); closeModal('modal-add-notice'); playNotificationChime();
+            renderNotices(); closeModal('modal-add-notice');
+            playNotificationChime();
             await postToCloud({ action: 'addNotice', notice: payload });
         }
 
@@ -3077,7 +3605,18 @@
                 const stu = STATE.students.find(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
                 if (stu) list = list.filter(m => m.class === stu.class);
             }
-            container.innerHTML = list.map(m => `<div class="p-4 bg-white border border-slate-300 rounded-2xl flex items-center justify-between gap-2 shadow-sm"><div class="min-w-0"><span class="text-xs font-extrabold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">Class ${m.class} &bull; ${m.subject}</span><h4 class="text-sm font-extrabold text-slate-950 mt-1 truncate">${m.title}</h4></div><div class="flex items-center gap-1.5 shrink-0">${isStaff ? `<button onclick="createTestFromStudyNote('${m.id}')" title="Generate AI Test" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 font-extrabold px-2.5 py-2 rounded-xl"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>AI Test</button>` : ''}<a href="${m.link}" target="_blank" class="text-xs bg-indigo-600 text-white font-bold px-3 py-2 rounded-xl"><i class="fa-solid fa-download"></i></a></div></div>`).join('') || `<p class="text-xs font-bold text-slate-800">No notes available.</p>`;
+            container.innerHTML = list.map(m => `
+                <div class="p-4 bg-white border border-slate-300 rounded-2xl flex items-center justify-between gap-2 shadow-sm">
+                    <div class="min-w-0">
+                        <span class="text-xs font-extrabold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">Class ${m.class} &bull; ${m.subject}</span>
+                        <h4 class="text-sm font-extrabold text-slate-950 mt-1 truncate">${m.title}</h4>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        ${isStaff ? `<button onclick="createTestFromStudyNote('${m.id}')" title="Generate AI Test from Note" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 font-extrabold px-2.5 py-2 rounded-xl"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>AI Test</button>` : ''}
+                        <a href="${m.link}" target="_blank" title="Download Note" class="text-xs bg-indigo-600 text-white font-bold px-3 py-2 rounded-xl"><i class="fa-solid fa-download"></i></a>
+                    </div>
+                </div>
+            `).join('') || `<p class="text-xs font-bold text-slate-800">No notes available.</p>`;
         }
 
         function openHolidayModal() { document.getElementById('inp-holiday-date').value = getTodayDateKey(); document.getElementById('modal-holiday').classList.remove('hidden'); }
@@ -3086,11 +3625,21 @@
             const dateVal = formatDateForInput(document.getElementById('inp-holiday-date').value);
             const titleVal = document.getElementById('inp-holiday-title').value.trim();
             if (!dateVal || !titleVal) return;
+
             const existingIdx = STATE.holidays.findIndex(h => formatDateForInput(h.date) === dateVal);
             const h = { date: dateVal, title: titleVal };
-            if (existingIdx > -1) STATE.holidays[existingIdx] = h; else STATE.holidays.push(h);
+
+            if (existingIdx > -1) {
+                STATE.holidays[existingIdx] = h;
+                alert(`Holiday on ${dateVal} updated to "${titleVal}" (Total holidays count unchanged).`);
+            } else {
+                STATE.holidays.push(h);
+                alert(`Holiday "${titleVal}" declared for ${dateVal}. Attendance is disabled on this date.`);
+            }
+
             localStorage.setItem('shiksha_holidays', JSON.stringify(STATE.holidays));
-            closeModal('modal-holiday'); renderAttendanceList();
+            closeModal('modal-holiday');
+            renderAttendanceList();
             await postToCloud({ action: 'addHoliday', holiday: h });
         }
 
@@ -3111,7 +3660,6 @@
                 });
             });
         }
-
         async function handleSecureLogin(e, mode) {
             e.preventDefault();
             const prefix = mode === 'mobile' ? 'm-' : 'd-';
@@ -3120,19 +3668,22 @@
             const errBox = document.getElementById(`${prefix}auth-error-box`);
             const errMsg = document.getElementById(`${prefix}auth-error-msg`);
             errBox.classList.add('hidden');
+
             await fetchCloudDatabase();
 
             if (STATE.loginRoleSelect === 'admin') {
                 if (cleanPhone(phone) !== cleanPhone(STATE.adminUser.phone) || password !== STATE.adminUser.password) {
                     errMsg.innerText = "Invalid Admin Mobile or Password!"; errBox.classList.remove('hidden'); return;
                 }
-                closeModal('modal-login-gateway'); authorizeRole('admin');
+                closeModal('modal-login-gateway');
+                authorizeRole('admin');
             } else if (STATE.loginRoleSelect === 'teacher') {
                 const t = getValidUniqueTeachers().find(item => cleanPhone(item.phone) === cleanPhone(phone));
                 if (!t || String(t.password).trim() !== password) {
                     errMsg.innerText = "Invalid Teacher Credentials!"; errBox.classList.remove('hidden'); return;
                 }
-                closeModal('modal-login-gateway'); authorizeRole('teacher', phone);
+                closeModal('modal-login-gateway');
+                authorizeRole('teacher', phone);
             } else {
                 const matches = STATE.students.filter(s => cleanPhone(s.phone) === cleanPhone(phone));
                 if (matches.length === 0) { errMsg.innerText = "No student found."; errBox.classList.remove('hidden'); return; }
@@ -3149,6 +3700,74 @@
             }
         }
 
+        function authorizeRole(role, phone = null, studentId = null) {
+            STATE.currentRole = role;
+            STATE.currentUserPhone = phone;
+            STATE.currentStudentId = studentId || localStorage.getItem('shiksha_auth_student_id');
+            localStorage.setItem('shiksha_auth_role', role);
+            if (phone) localStorage.setItem('shiksha_auth_phone', phone);
+            if (studentId) localStorage.setItem('shiksha_auth_student_id', studentId);
+
+            document.getElementById('btn-header-login').classList.add('hidden');
+            document.getElementById('portal-user-badge').classList.remove('hidden');
+            document.getElementById('portal-user-badge').classList.add('flex');
+
+            let roleLabel = role.toUpperCase();
+            if (role === 'parent' && STATE.currentStudentId) {
+                const s = STATE.students.find(item => String(item.id).trim() === String(STATE.currentStudentId).trim());
+                if (s) roleLabel = s.name.split(' ')[0].toUpperCase();
+            }
+            document.getElementById('header-role-pill').innerText = roleLabel;
+            document.getElementById('portal-role-pill-side').innerText = roleLabel;
+
+            const isAdmin = (role === 'admin');
+            const isStaff = (role === 'admin' || role === 'teacher');
+            const isStudent = (role === 'parent');
+
+            document.getElementById('kpi-total-students-card').classList.toggle('hidden', isStudent);
+            document.getElementById('kpi-present-label').innerText = isStudent ? 'My Attendance %' : 'Present Today';
+            document.getElementById('nav-btn-faculty-dir').classList.toggle('hidden', !isAdmin && !!role);
+
+            document.getElementById('side-students-label').innerText = isStudent ? 'My Profile' : 'Student Directory';
+            document.getElementById('m-students-label').innerText = isStudent ? 'Profile' : 'Students';
+            document.getElementById('students-tab-heading').innerText = isStudent ? 'My Student Profile' : 'Student Records';
+
+            document.getElementById('kpi-due-fees-card').classList.toggle('hidden', !isAdmin);
+            document.getElementById('admin-fee-summary-banner').classList.toggle('hidden', !isAdmin);
+            document.getElementById('btn-add-teacher-top').classList.toggle('hidden', !isAdmin);
+            document.getElementById('btn-add-student-top').classList.toggle('hidden', !isAdmin);
+            document.getElementById('btn-mark-holiday').classList.toggle('hidden', !isAdmin);
+            document.getElementById('btn-reset-attendance').classList.toggle('hidden', !isAdmin);
+            document.getElementById('student-status-filter-bar').classList.toggle('hidden', !isStaff);
+
+            document.getElementById('btn-portal-add-notice').classList.toggle('hidden', !isStaff);
+            document.getElementById('btn-upload-notes-portal').classList.toggle('hidden', !isStaff);
+            document.getElementById('btn-save-attendance').classList.toggle('hidden', !isStaff);
+            document.getElementById('btn-create-ai-test').classList.toggle('hidden', !isStaff);
+            document.getElementById('btn-manual-marks-entry').classList.toggle('hidden', !isStaff);
+
+            if (chatPollingInterval) clearInterval(chatPollingInterval);
+            chatPollingInterval = setInterval(() => {
+                fetchCloudDatabase(false);
+            }, 5000);
+
+            openPortalView();
+            switchPortalTab('home');
+            renderAllViews();
+        }
+
+        function logout() {
+            if (chatPollingInterval) clearInterval(chatPollingInterval);
+            localStorage.removeItem('shiksha_auth_role');
+            localStorage.removeItem('shiksha_auth_phone');
+            localStorage.removeItem('shiksha_auth_student_id');
+            STATE.currentRole = null; STATE.currentUserPhone = null; STATE.currentStudentId = null;
+            document.getElementById('btn-header-login').classList.remove('hidden');
+            document.getElementById('portal-user-badge').classList.add('hidden');
+            document.getElementById('nav-btn-faculty-dir').classList.remove('hidden');
+            showPublicSection('home');
+        }
+
         function updateKpis() {
             const todayKey = getTodayDateKey();
             if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
@@ -3156,8 +3775,10 @@
                 document.getElementById('kpi-present-count').innerText = `${stats.percentage}%`;
                 return;
             }
+
             const active = STATE.students.filter(s => !s.leavingDate || s.leavingDate > todayKey);
             document.getElementById('kpi-total-students').innerText = active.length;
+
             let presentToday = 0;
             if (!isDateHolidayOrSunday(todayKey)) {
                 active.forEach(s => {
@@ -3166,10 +3787,11 @@
                 });
             }
             document.getElementById('kpi-present-count').innerText = presentToday;
+
             if (STATE.currentRole === 'admin') {
                 const due = active.reduce((acc, s) => acc + (parseFloat(s.feePending) || 0), 0);
                 document.getElementById('kpi-due-fees').innerText = '₹' + due;
-                document.getElementById('fee-total-due-large')?.innerText = '₹' + due;
+                document.getElementById('fee-total-due-large').innerText = '₹' + due;
             }
         }
 
@@ -3177,7 +3799,9 @@
         function copyUpiId() { navigator.clipboard.writeText(COACHING_UPI_ID); alert("UPI ID Copied: " + COACHING_UPI_ID); }
 
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(() => {}); });
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            });
         }
     </script>
 </body>
