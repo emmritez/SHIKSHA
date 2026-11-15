@@ -366,30 +366,42 @@
                             </div>
                         </div>
 
-                        <div id="parent-growth-analytics-section" class="hidden bg-white rounded-2xl border border-slate-300 p-4 shadow-sm space-y-3 w-full">
+                        <!-- STUDENT PROGRESSIVE REPORT -->
+                        <div id="parent-growth-analytics-section" class="hidden bg-white rounded-2xl border border-slate-300 p-4 shadow-sm space-y-4 w-full">
                             <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-200">
                                 <div>
-                                    <span class="text-xs font-extrabold uppercase text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full">Growth Analytics</span>
-                                    <h3 id="growth-student-title" class="text-sm font-black text-slate-950 mt-1">Student Performance</h3>
+                                    <span class="text-xs font-extrabold uppercase text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full">Student Progressive Report</span>
+                                    <h3 id="growth-student-title" class="text-sm font-black text-slate-950 mt-1">Academic & Behavior Progress</h3>
                                 </div>
                                 <button onclick="openPdfReportModal()" class="text-xs bg-rose-600 text-white font-bold px-3.5 py-1.5 rounded-xl shadow-sm">
                                     <i class="fa-solid fa-file-pdf mr-1"></i> PDF Report
                                 </button>
                             </div>
-                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-center">
-                                <div class="lg:col-span-2 bg-slate-50 p-3 rounded-2xl border border-slate-300 w-full">
-                                    <canvas id="studentGrowthChart" height="140"></canvas>
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
+                                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-300 w-full flex flex-col justify-between">
+                                    <span class="text-xs font-extrabold text-slate-900 uppercase mb-2 block"><i class="fa-solid fa-chart-line text-indigo-600 mr-1"></i> Test & Attendance Growth</span>
+                                    <canvas id="studentGrowthChart" height="150"></canvas>
                                 </div>
-                                <div class="bg-gradient-to-br from-indigo-950 to-slate-900 text-white p-4 rounded-2xl border border-indigo-800/60 space-y-2.5">
+                                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-300 w-full flex flex-col justify-between">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-extrabold text-slate-900 uppercase"><i class="fa-solid fa-chart-column text-emerald-600 mr-1"></i> Behavior Column Chart (Green vs Red)</span>
+                                        <span id="behavior-badge-pill" class="text-[11px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900">0 Green | 0 Red</span>
+                                    </div>
+                                    <canvas id="studentBehaviorColumnChart" height="150"></canvas>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div class="bg-gradient-to-br from-indigo-950 to-slate-900 text-white p-4 rounded-2xl border border-indigo-800/60 space-y-2">
                                     <div class="flex items-center justify-between">
-                                        <span class="text-xs uppercase font-bold text-amber-400"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> REMARKS</span>
+                                        <span class="text-xs uppercase font-bold text-amber-400"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Academic Summary</span>
                                         <span id="remark-grade-badge" class="text-xs font-black px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">Active</span>
                                     </div>
                                     <p id="auto-remark-text" class="text-xs text-slate-100 leading-relaxed"></p>
-                                    <div class="pt-2 border-t border-slate-800">
-                                        <span class="text-xs font-bold text-indigo-300 uppercase block mb-1">Tips to Improve:</span>
-                                        <ul id="auto-tips-list" class="text-xs text-slate-200 space-y-1 list-disc pl-4"></ul>
-                                    </div>
+                                    <ul id="auto-tips-list" class="text-xs text-slate-200 space-y-1 list-disc pl-4 pt-1 border-t border-slate-800"></ul>
+                                </div>
+                                <div class="bg-slate-100 p-4 rounded-2xl border border-slate-300 space-y-2">
+                                    <span class="text-xs font-black text-slate-950 uppercase block"><i class="fa-solid fa-clipboard-list text-indigo-700 mr-1"></i> Recent Teacher Behavior Remarks</span>
+                                    <div id="parent-behavior-remarks-list" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
                                 </div>
                             </div>
                         </div>
@@ -428,7 +440,7 @@
                         <div id="students-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
                     </section>
 
-                    <!-- TAB: ATTENDANCE -->
+                    <!-- TAB: 3-COLUMN ATTENDANCE REGISTER -->
                     <section id="portal-tab-attendance" class="hidden space-y-3.5 w-full">
                         <div class="flex flex-wrap items-center justify-between gap-2">
                             <div>
@@ -439,7 +451,9 @@
                                 <button id="btn-reset-attendance" onclick="resetCurrentMonthAttendance()" class="hidden text-xs bg-amber-100 text-amber-950 border border-amber-400 font-bold px-3 py-1.5 rounded-xl">Reset</button>
                                 <button onclick="openPdfReportModal()" class="text-xs bg-indigo-50 text-indigo-800 border border-indigo-300 font-bold px-3 py-1.5 rounded-xl">PDF</button>
                                 <button id="btn-mark-holiday" onclick="openHolidayModal()" class="hidden text-xs bg-rose-50 text-rose-700 border border-rose-300 font-bold px-3 py-1.5 rounded-xl">Holiday</button>
-                                <button id="btn-save-attendance" onclick="saveAttendance(true)" class="hidden text-xs bg-emerald-600 text-white font-bold px-3.5 py-1.5 rounded-xl shadow">Sync</button>
+                                <button id="btn-save-attendance" onclick="submitAndSaveAttendance()" class="hidden text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-4 py-2 rounded-xl shadow-md flex items-center gap-1.5">
+                                    <i class="fa-solid fa-check-double"></i> <span>Submit Attendance</span>
+                                </button>
                             </div>
                         </div>
 
@@ -466,7 +480,20 @@
                         </div>
 
                         <div id="att-class-chips" class="flex space-x-1.5 overflow-x-auto pb-1 hide-scrollbar text-xs w-full"></div>
-                        <div id="attendance-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+
+                        <div id="attendance-table-wrapper" class="bg-white rounded-2xl border border-slate-300 overflow-hidden shadow-sm">
+                            <table id="attendance-register-table" class="w-full border-collapse text-left">
+                                <thead>
+                                    <tr class="border-b-2 border-slate-300 text-xs font-black uppercase">
+                                        <th class="p-3 bg-slate-100 text-slate-950">Student Name & ID</th>
+                                        <th class="p-3 text-center bg-emerald-100 text-emerald-950 w-16 sm:w-20 border-l border-emerald-200">P</th>
+                                        <th class="p-3 text-center bg-rose-100 text-rose-950 w-16 sm:w-20 border-l border-rose-200">A</th>
+                                        <th class="p-3 text-center bg-amber-100 text-amber-950 w-16 sm:w-20 border-l border-amber-200">L</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="attendance-list-container" class="divide-y divide-slate-200"></tbody>
+                            </table>
+                        </div>
                     </section>
 
                     <!-- TAB: AI ONLINE TESTS -->
@@ -595,8 +622,51 @@
         <span>CBSE &bull; ICSE &bull; UP Board &bull; Smart ERP Portal</span>
     </footer>
 
-    <!-- ================= ALL 14 MODALS ================= -->
-    <!-- 1. GALLERY UPLOAD MODAL -->
+    <!-- ================= ALL 16 MODALS ================= -->
+    <!-- 1. TEACHER BEHAVIOR REMARKS MODAL -->
+    <div id="modal-behavior-remark" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl text-slate-950">
+            <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
+                <div>
+                    <span id="beh-modal-badge" class="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full">Behavior Flag</span>
+                    <h4 id="beh-modal-student-title" class="text-sm font-black mt-1">Student Name</h4>
+                </div>
+                <button onclick="closeBehaviorModal()" class="text-slate-700 hover:text-black"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+            <form onsubmit="handleSaveBehaviorRemark(event)" class="space-y-3">
+                <input type="hidden" id="beh-student-id">
+                <input type="hidden" id="beh-student-name">
+                <input type="hidden" id="beh-flag-type">
+                <div>
+                    <span class="text-xs font-extrabold text-slate-800 block mb-1.5">Quick Reason Tags (Tap to fill):</span>
+                    <div id="beh-quick-chips" class="flex flex-wrap gap-1.5"></div>
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold mb-1">Reason / Teacher Remark *</label>
+                    <textarea id="beh-remark-text" rows="3" required placeholder="Write reason for giving this mark..." class="w-full border border-slate-400 rounded-xl px-3 py-2 text-xs font-semibold"></textarea>
+                </div>
+                <button type="submit" id="btn-submit-behavior" class="w-full py-2.5 text-white font-bold rounded-xl text-xs shadow">Save Behavior Mark</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. POST-SUBMIT ABSENT WHATSAPP DISPATCH MODAL -->
+    <div id="modal-absent-whatsapp" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl text-slate-950 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
+                <div>
+                    <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-900">Attendance Submitted</span>
+                    <h4 class="text-sm font-black mt-1">Send Absentee WhatsApp Alerts</h4>
+                </div>
+                <button onclick="closeModal('modal-absent-whatsapp')" class="text-slate-700"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+            <p class="text-xs font-semibold text-slate-800 mb-3">The following students are marked <b>ABSENT (A)</b> today. Tap <b>Send WhatsApp</b> next to each student to notify their parent:</p>
+            <div id="absent-whatsapp-list" class="space-y-2"></div>
+            <button onclick="closeModal('modal-absent-whatsapp')" class="w-full mt-4 py-2.5 bg-slate-900 text-white font-bold rounded-xl text-xs">Done</button>
+        </div>
+    </div>
+
+    <!-- 3. GALLERY UPLOAD MODAL -->
     <div id="modal-upload-gallery" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl text-slate-950 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
@@ -642,7 +712,7 @@
         </div>
     </div>
 
-    <!-- 2. AI TEST CREATOR MODAL -->
+    <!-- 4. AI TEST CREATOR MODAL -->
     <div id="modal-create-ai-test" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-2xl rounded-3xl p-5 shadow-2xl text-slate-950 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
@@ -719,7 +789,7 @@
         </div>
     </div>
 
-    <!-- 3. ATTEMPT ONLINE TEST MODAL -->
+    <!-- 5. ATTEMPT ONLINE TEST MODAL -->
     <div id="modal-attempt-test" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-xl rounded-3xl p-5 shadow-2xl text-slate-950 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-300 sticky top-0 bg-white z-10 py-1">
@@ -740,7 +810,7 @@
         </div>
     </div>
 
-    <!-- 4. PDF REPORT MODAL -->
+    <!-- 6. PDF REPORT MODAL -->
     <div id="modal-pdf-report" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl text-slate-950">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
@@ -761,7 +831,7 @@
         </div>
     </div>
 
-    <!-- 5. OFFLINE EXAM MARKS MODAL -->
+    <!-- 7. OFFLINE EXAM MARKS MODAL -->
     <div id="modal-offline-marks" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl text-slate-950 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
@@ -793,7 +863,7 @@
         </div>
     </div>
 
-    <!-- 6. DESKTOP LOGIN MODAL -->
+    <!-- 8. DESKTOP LOGIN MODAL -->
     <div id="modal-login-gateway" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
         <div class="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
             <button onclick="closeModal('modal-login-gateway')" class="absolute top-4 right-4 text-slate-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -830,7 +900,7 @@
         </div>
     </div>
 
-    <!-- 7. UNIVERSAL CHANGE PASSWORD MODAL -->
+    <!-- 9. UNIVERSAL CHANGE PASSWORD MODAL -->
     <div id="modal-change-password" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl text-slate-950">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
@@ -855,7 +925,7 @@
         </div>
     </div>
 
-    <!-- 8. ADMIN FEE COLLECTION MODAL -->
+    <!-- 10. ADMIN FEE COLLECTION MODAL -->
     <div id="modal-collect-fee" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl text-slate-950">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
@@ -896,7 +966,7 @@
         </div>
     </div>
 
-    <!-- 9. FACULTY MODAL -->
+    <!-- 11. FACULTY MODAL -->
     <div id="modal-teacher" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl max-h-[90vh] overflow-y-auto text-slate-950">
             <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
@@ -934,7 +1004,7 @@
         </div>
     </div>
 
-    <!-- 10. STUDENT MODAL -->
+    <!-- 12. STUDENT MODAL -->
     <div id="modal-student" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl max-h-[90vh] overflow-y-auto text-slate-950">
             <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
@@ -979,7 +1049,7 @@
         </div>
     </div>
 
-    <!-- 11. NOTICE MODAL -->
+    <!-- 13. NOTICE MODAL -->
     <div id="modal-add-notice" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl text-slate-950">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200"><h4 class="text-sm font-black">Post Notice</h4><button onclick="closeModal('modal-add-notice')" class="text-slate-700"><i class="fa-solid fa-xmark"></i></button></div>
@@ -992,7 +1062,7 @@
         </div>
     </div>
 
-    <!-- 12. UPLOAD NOTES MODAL -->
+    <!-- 14. UPLOAD NOTES MODAL -->
     <div id="modal-add-note" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl text-slate-950">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200"><h4 class="text-sm font-black">Upload Study Material</h4><button onclick="closeModal('modal-add-note')" class="text-slate-700"><i class="fa-solid fa-xmark"></i></button></div>
@@ -1008,7 +1078,7 @@
         </div>
     </div>
 
-    <!-- 13. HOLIDAY MODAL -->
+    <!-- 15. HOLIDAY MODAL -->
     <div id="modal-holiday" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl text-slate-950">
             <div class="flex justify-between items-center mb-3"><h4 class="text-sm font-black">Declare Holiday</h4><button onclick="closeModal('modal-holiday')" class="text-slate-700"><i class="fa-solid fa-xmark"></i></button></div>
@@ -1020,7 +1090,7 @@
         </div>
     </div>
 
-    <!-- 14. QR MODAL -->
+    <!-- 16. QR MODAL -->
     <div id="modal-upi-qr" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-xs rounded-3xl p-5 shadow-2xl text-center relative text-slate-950">
             <button onclick="closeModal('modal-upi-qr')" class="absolute top-4 right-4 text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -1055,6 +1125,7 @@
             students: JSON.parse(localStorage.getItem('shiksha_students') || '[]'),
             holidays: JSON.parse(localStorage.getItem('shiksha_holidays') || '[]'),
             attendanceLogs: JSON.parse(localStorage.getItem('shiksha_att_logs') || '{}'),
+            behaviorLogs: JSON.parse(localStorage.getItem('shiksha_behavior_logs') || '[]'),
             notices: JSON.parse(localStorage.getItem('shiksha_notices') || JSON.stringify([
                 { id: 1, title: 'Admissions Open for Session 2026-27', tag: 'Important', desc: 'Classes 1st to 10th admissions open with conceptual smart learning.', date: 'Recent', author: 'Admin' }
             ])),
@@ -1071,11 +1142,13 @@
 
         let currentEditingNoticeId = null;
         let growthChartInstance = null;
+        let behaviorChartInstance = null;
         let previousSectionBeforeGallery = 'home';
         let chatPollingInterval = null;
         let lastToastActionTab = 'home';
         let testCountdownInterval = null;
         let deferredInstallPrompt = null;
+        let isEditingAttendance = false;
 
         // ================= CHROME PWA INSTALL PROMPT HANDLER =================
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -1328,7 +1401,9 @@
             renderStudents();
             renderTeachers();
             renderAttendanceClassChips();
-            renderAttendanceList();
+            if (!isEditingAttendance) {
+                renderAttendanceList();
+            }
             renderNotices();
             renderNotes();
             renderFees();
@@ -1505,7 +1580,7 @@
                         localStorage.setItem('shiksha_admin_user', JSON.stringify(STATE.adminUser));
                     }
 
-                    if (data.attendanceLogs && typeof data.attendanceLogs === 'object') {
+                    if (!isEditingAttendance && data.attendanceLogs && typeof data.attendanceLogs === 'object') {
                         const currentMonth = getCurrentMonthKey();
                         if (data.attendanceLogs._activeMonth === currentMonth) {
                             STATE.attendanceLogs = data.attendanceLogs;
@@ -1513,6 +1588,11 @@
                             STATE.attendanceLogs = { _activeMonth: currentMonth };
                         }
                         localStorage.setItem('shiksha_att_logs', JSON.stringify(STATE.attendanceLogs));
+                    }
+
+                    if (Array.isArray(data.behaviorLogs)) {
+                        STATE.behaviorLogs = [...data.behaviorLogs].reverse();
+                        localStorage.setItem('shiksha_behavior_logs', JSON.stringify(STATE.behaviorLogs));
                     }
 
                     if (Array.isArray(data.holidays)) {
@@ -1588,7 +1668,7 @@
             } catch (e) { console.error("Cloud push failed:", e); }
         }
 
-        // ================= ACCURATE MONTHLY ATTENDANCE & PERCENTAGE BAR =================
+        // ================= 3-COLUMN COLOR-CODED ATTENDANCE (GREEN P, RED A, YELLOW L + DOT CHECKMARK) =================
         function calculateDynamicAttendance(studentId) {
             const currentMonth = getCurrentMonthKey();
             const studentLog = STATE.attendanceLogs[studentId] || { daily: {} };
@@ -1642,6 +1722,7 @@
         async function resetCurrentMonthAttendance() {
             if (STATE.currentRole !== 'admin') return;
             if (!confirm("Reset all attendance logs to start fresh from today?")) return;
+            isEditingAttendance = false;
             STATE.attendanceLogs = { _activeMonth: getCurrentMonthKey() };
             localStorage.setItem('shiksha_att_logs', JSON.stringify(STATE.attendanceLogs));
             renderAttendanceList();
@@ -1660,34 +1741,73 @@
             `).join('');
         }
 
-        function markAtt(id, status, btn) {
+        function selectAttendanceRadio(studentId, status) {
             if (STATE.currentRole === 'parent') return;
             enforceMonthlyAttendanceReset();
+            isEditingAttendance = true;
 
             const todayKey = getTodayDateKey();
-            const parent = btn.parentElement;
-            parent.querySelectorAll('.att-btn').forEach(b => b.className = "att-btn w-7 h-7 rounded-lg text-xs font-extrabold bg-slate-200 text-slate-900 transition");
+            if (!STATE.attendanceLogs[studentId]) STATE.attendanceLogs[studentId] = { daily: {} };
+            if (!STATE.attendanceLogs[studentId].daily) STATE.attendanceLogs[studentId].daily = {};
 
-            if (!STATE.attendanceLogs[id]) STATE.attendanceLogs[id] = { daily: {} };
-            if (!STATE.attendanceLogs[id].daily) STATE.attendanceLogs[id].daily = {};
-
-            STATE.attendanceLogs[id].daily[todayKey] = status;
-            if (status === 'P') btn.className = "att-btn w-7 h-7 rounded-lg text-xs font-extrabold bg-emerald-600 text-white shadow";
-            if (status === 'A') btn.className = "att-btn w-7 h-7 rounded-lg text-xs font-extrabold bg-rose-600 text-white shadow";
-            if (status === 'L') btn.className = "att-btn w-7 h-7 rounded-lg text-xs font-extrabold bg-amber-500 text-white shadow";
-
-            const waBtn = document.getElementById(`absent-wa-btn-${id}`);
-            if (waBtn) {
-                if (status === 'A') waBtn.classList.remove('hidden');
-                else waBtn.classList.add('hidden');
-            }
-
+            STATE.attendanceLogs[studentId].daily[todayKey] = status;
             localStorage.setItem('shiksha_att_logs', JSON.stringify(STATE.attendanceLogs));
+
+            ['P', 'A', 'L'].forEach(opt => {
+                const dot = document.getElementById(`att-dot-${studentId}-${opt}`);
+                const ring = document.getElementById(`att-ring-${studentId}-${opt}`);
+                if (dot && ring) {
+                    if (opt === status) {
+                        dot.classList.remove('scale-0');
+                        dot.classList.add('scale-100');
+                    } else {
+                        dot.classList.remove('scale-100');
+                        dot.classList.add('scale-0');
+                    }
+                }
+            });
 
             const activeClassStudents = STATE.students.filter(s => s.class === STATE.selectedAttClass && (!s.leavingDate || s.leavingDate > todayKey));
             updateAttendanceAnalyticsCard(null, activeClassStudents);
             updateKpis();
-            saveAttendance(false);
+        }
+
+        async function submitAndSaveAttendance() {
+            if (STATE.currentRole === 'parent') return;
+            const btn = document.getElementById('btn-save-attendance');
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Saving...</span>';
+
+            STATE.attendanceLogs._activeMonth = getCurrentMonthKey();
+            localStorage.setItem('shiksha_att_logs', JSON.stringify(STATE.attendanceLogs));
+            await postToCloud({ action: 'saveAttendance', logs: STATE.attendanceLogs });
+            isEditingAttendance = false;
+            btn.innerHTML = origHtml;
+
+            const todayKey = getTodayDateKey();
+            const classStudents = STATE.students.filter(s => s.class === STATE.selectedAttClass && (!s.leavingDate || s.leavingDate > todayKey));
+            const absentStudents = classStudents.filter(s => {
+                const log = STATE.attendanceLogs[s.id];
+                return log && log.daily && log.daily[todayKey] === 'A';
+            });
+
+            if (absentStudents.length > 0) {
+                const listEl = document.getElementById('absent-whatsapp-list');
+                listEl.innerHTML = absentStudents.map(s => `
+                    <div class="flex items-center justify-between p-3 bg-rose-50 border border-rose-200 rounded-2xl gap-2">
+                        <div class="min-w-0">
+                            <p class="text-xs font-black text-slate-950 truncate">${s.name} (${s.id})</p>
+                            <p class="text-[11px] font-bold text-slate-700">Parent Mobile: ${s.phone}</p>
+                        </div>
+                        <button type="button" onclick="triggerAbsentWhatsAppAlert('${s.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shrink-0 shadow">
+                            <i class="fa-brands fa-whatsapp text-sm"></i> <span>Send WhatsApp</span>
+                        </button>
+                    </div>
+                `).join('');
+                document.getElementById('modal-absent-whatsapp').classList.remove('hidden');
+            } else {
+                alert("Attendance submitted and synced to Cloud successfully!");
+            }
         }
 
         function triggerAbsentWhatsAppAlert(studentId) {
@@ -1725,46 +1845,43 @@
             }
 
             if (list.length === 0) {
-                container.innerHTML = `<div class="col-span-full p-5 text-center text-slate-800 font-bold text-xs">No active students in Class ${STATE.selectedAttClass}.</div>`;
+                container.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-800 font-bold text-xs">No active students in Class ${STATE.selectedAttClass}.</td></tr>`;
                 return;
             }
+
+            const isReadOnly = (STATE.currentRole === 'parent');
 
             list.forEach(s => {
                 const stuLog = STATE.attendanceLogs[s.id] || {};
                 const todayStatus = (stuLog.daily && stuLog.daily[todayKey]) ? stuLog.daily[todayKey] : '';
 
-                const pClass = todayStatus === 'P' ? 'bg-emerald-600 text-white shadow' : 'bg-slate-200 text-slate-900';
-                const aClass = todayStatus === 'A' ? 'bg-rose-600 text-white shadow' : 'bg-slate-200 text-slate-900';
-                const lClass = todayStatus === 'L' ? 'bg-amber-500 text-white shadow' : 'bg-slate-200 text-slate-900';
-                const waHidden = todayStatus === 'A' ? '' : 'hidden';
-
-                let parentBadge = `<span class="text-xs font-extrabold px-2.5 py-1 rounded-lg bg-slate-200 text-slate-900">Not Marked</span>`;
-                if (todayStatus === 'P') parentBadge = `<span class="text-xs font-extrabold px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-900 border border-emerald-300">Present Today</span>`;
-                if (todayStatus === 'A') parentBadge = `<span class="text-xs font-extrabold px-2.5 py-1 rounded-lg bg-rose-100 text-rose-900 border border-rose-300">Absent Today</span>`;
-                if (todayStatus === 'L') parentBadge = `<span class="text-xs font-extrabold px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 border border-amber-300">On Leave</span>`;
-
-                const card = document.createElement('div');
-                card.className = "bg-white p-3.5 rounded-2xl border border-slate-300 flex items-center justify-between shadow-sm gap-2";
-                card.innerHTML = `
-                    <div onclick="openMasterStudentForm('${s.id}')" class="cursor-pointer min-w-0">
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition";
+                tr.innerHTML = `
+                    <td class="p-3 bg-white">
                         <div class="flex items-center gap-1.5">
                             <span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded shrink-0">${s.id}</span>
-                            <h4 class="text-sm font-extrabold text-slate-950 truncate">${s.name}</h4>
+                            <span class="text-sm font-extrabold text-slate-950 truncate">${s.name}</span>
                         </div>
-                        <p class="text-xs font-semibold text-slate-700 truncate">Class ${s.class} &bull; ${s.phone}</p>
-                    </div>
-                    ${STATE.currentRole === 'parent' ? parentBadge : `
-                        <div class="flex items-center space-x-1 shrink-0">
-                            <button onclick="markAtt('${s.id}', 'P', this)" class="att-btn w-7 h-7 rounded-lg text-xs font-extrabold ${pClass}">P</button>
-                            <button onclick="markAtt('${s.id}', 'A', this)" class="att-btn w-7 h-7 rounded-lg text-xs font-extrabold ${aClass}">A</button>
-                            <button onclick="markAtt('${s.id}', 'L', this)" class="att-btn w-7 h-7 rounded-lg text-xs font-extrabold ${lClass}">L</button>
-                            <button id="absent-wa-btn-${s.id}" onclick="triggerAbsentWhatsAppAlert('${s.id}')" title="Send Absent WhatsApp Message" class="${waHidden} w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center shadow">
-                                <i class="fa-brands fa-whatsapp text-sm"></i>
-                            </button>
-                        </div>
-                    `}
+                        <span class="text-[11px] font-semibold text-slate-700 block">Class ${s.class} &bull; ${s.phone}</span>
+                    </td>
+                    <td class="p-3 text-center bg-emerald-50/90 border-l border-emerald-200">
+                        <button type="button" ${isReadOnly ? 'disabled' : `onclick="selectAttendanceRadio('${s.id}', 'P')"`} id="att-ring-${s.id}-P" class="w-7 h-7 mx-auto rounded-full border-2 border-emerald-600 bg-white flex items-center justify-center shadow-sm focus:outline-none">
+                            <span id="att-dot-${s.id}-P" class="w-3.5 h-3.5 rounded-full bg-emerald-600 transition-transform duration-150 ${todayStatus === 'P' ? 'scale-100' : 'scale-0'}"></span>
+                        </button>
+                    </td>
+                    <td class="p-3 text-center bg-rose-50/90 border-l border-rose-200">
+                        <button type="button" ${isReadOnly ? 'disabled' : `onclick="selectAttendanceRadio('${s.id}', 'A')"`} id="att-ring-${s.id}-A" class="w-7 h-7 mx-auto rounded-full border-2 border-rose-600 bg-white flex items-center justify-center shadow-sm focus:outline-none">
+                            <span id="att-dot-${s.id}-A" class="w-3.5 h-3.5 rounded-full bg-rose-600 transition-transform duration-150 ${todayStatus === 'A' ? 'scale-100' : 'scale-0'}"></span>
+                        </button>
+                    </td>
+                    <td class="p-3 text-center bg-amber-50/90 border-l border-amber-200">
+                        <button type="button" ${isReadOnly ? 'disabled' : `onclick="selectAttendanceRadio('${s.id}', 'L')"`} id="att-ring-${s.id}-L" class="w-7 h-7 mx-auto rounded-full border-2 border-amber-500 bg-white flex items-center justify-center shadow-sm focus:outline-none">
+                            <span id="att-dot-${s.id}-L" class="w-3.5 h-3.5 rounded-full bg-amber-500 transition-transform duration-150 ${todayStatus === 'L' ? 'scale-100' : 'scale-0'}"></span>
+                        </button>
+                    </td>
                 `;
-                container.appendChild(card);
+                container.appendChild(tr);
             });
         }
 
@@ -1790,11 +1907,73 @@
             document.getElementById('bar-absent').style.width = `${aRatio}%`;
         }
 
-        async function saveAttendance(showAlert = false) {
-            STATE.attendanceLogs._activeMonth = getCurrentMonthKey();
-            localStorage.setItem('shiksha_att_logs', JSON.stringify(STATE.attendanceLogs));
-            await postToCloud({ action: 'saveAttendance', logs: STATE.attendanceLogs });
-            if (showAlert) alert("Attendance synced across all devices!");
+        // ================= STUDENT BEHAVIOR TRACKING (RED & GREEN CHECKBOXES + REMARKS + COLUMN CHART) =================
+        function openBehaviorModal(studentId, studentName, flagType) {
+            if (STATE.currentRole !== 'teacher' && STATE.currentRole !== 'admin') return;
+
+            document.getElementById('beh-student-id').value = studentId;
+            document.getElementById('beh-student-name').value = studentName;
+            document.getElementById('beh-flag-type').value = flagType;
+            document.getElementById('beh-remark-text').value = '';
+            document.getElementById('beh-modal-student-title').innerText = `${studentName} (${studentId})`;
+
+            const badge = document.getElementById('beh-modal-badge');
+            const submitBtn = document.getElementById('btn-submit-behavior');
+            const chipsBox = document.getElementById('beh-quick-chips');
+
+            if (flagType === 'green') {
+                badge.className = "text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900";
+                badge.innerText = "Green Mark (Positive Behavior)";
+                submitBtn.className = "w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs shadow";
+                const greenReasons = ["Homework Complete", "Active Class Participation", "Excellent Test Performance", "Disciplined & Punctual", "Helping Peers"];
+                chipsBox.innerHTML = greenReasons.map(r => `<button type="button" onclick="document.getElementById('beh-remark-text').value='${r}'" class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-900 border border-emerald-300 hover:bg-emerald-100">${r}</button>`).join('');
+            } else {
+                badge.className = "text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-900";
+                badge.innerText = "Red Mark (Needs Improvement)";
+                submitBtn.className = "w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-xs shadow";
+                const redReasons = ["Incomplete Homework", "Late Arrival", "Talking / Distracted in Class", "Unprepared for Test", "Disruptive Behavior"];
+                chipsBox.innerHTML = redReasons.map(r => `<button type="button" onclick="document.getElementById('beh-remark-text').value='${r}'" class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-rose-50 text-rose-900 border border-rose-300 hover:bg-rose-100">${r}</button>`).join('');
+            }
+
+            document.getElementById('modal-behavior-remark').classList.remove('hidden');
+        }
+
+        function closeBehaviorModal() {
+            closeModal('modal-behavior-remark');
+            renderStudents();
+        }
+
+        async function handleSaveBehaviorRemark(e) {
+            e.preventDefault();
+            const studentId = document.getElementById('beh-student-id').value;
+            const studentName = document.getElementById('beh-student-name').value;
+            const flag = document.getElementById('beh-flag-type').value;
+            const reason = document.getElementById('beh-remark-text').value.trim();
+            if (!reason) return;
+
+            let teacherName = 'Admin';
+            if (STATE.currentRole === 'teacher') {
+                const t = STATE.registeredTeachers.find(item => cleanPhone(item.phone) === cleanPhone(STATE.currentUserPhone));
+                teacherName = t ? t.name : 'Faculty';
+            }
+
+            const entry = {
+                id: Date.now(),
+                studentId,
+                studentName,
+                flag,
+                reason,
+                teacherName,
+                date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+                dateKey: getTodayDateKey()
+            };
+
+            STATE.behaviorLogs.unshift(entry);
+            localStorage.setItem('shiksha_behavior_logs', JSON.stringify(STATE.behaviorLogs));
+            closeModal('modal-behavior-remark');
+            renderStudents();
+            await postToCloud({ action: 'addBehaviorLog', log: entry });
+            alert(`${flag === 'green' ? 'Green' : 'Red'} behavior mark recorded for ${studentName}!`);
         }
 
         // ================= TEACHER-STUDENT ONLY CHAT + RED BADGE =================
@@ -2124,7 +2303,7 @@
             }
         }
 
-        // ================= PARENT GROWTH CHART & AUTO-REMARKS =================
+        // ================= STUDENT PROGRESSIVE REPORT (GROWTH CHART + BEHAVIOR COLUMN CHART) =================
         function renderParentGrowthAndRemarks() {
             const section = document.getElementById('parent-growth-analytics-section');
             if (!section || STATE.currentRole !== 'parent' || !STATE.currentStudentId) {
@@ -2136,7 +2315,7 @@
             const student = STATE.students.find(s => s.id === STATE.currentStudentId);
             if (!student) return;
 
-            document.getElementById('growth-student-title').innerText = `${student.name} (${student.id}) - Performance`;
+            document.getElementById('growth-student-title').innerText = `${student.name} (${student.id}) - Progressive Report`;
 
             const attStats = calculateDynamicAttendance(student.id);
             const labels = ['Attendance %'];
@@ -2178,6 +2357,48 @@
                 },
                 options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { legend: { display: false } } }
             });
+
+            const myBehaviors = STATE.behaviorLogs.filter(b => String(b.studentId) === String(student.id));
+            const greenCount = myBehaviors.filter(b => b.flag === 'green').length;
+            const redCount = myBehaviors.filter(b => b.flag === 'red').length;
+
+            document.getElementById('behavior-badge-pill').innerText = `${greenCount} Green | ${redCount} Red`;
+
+            const behCtx = document.getElementById('studentBehaviorColumnChart').getContext('2d');
+            if (behaviorChartInstance) behaviorChartInstance.destroy();
+            behaviorChartInstance = new Chart(behCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Green Marks (Positive)', 'Red Marks (Needs Improvement)'],
+                    datasets: [{
+                        label: 'Behavior Marks',
+                        data: [greenCount, redCount],
+                        backgroundColor: ['#10b981', '#ef4444'],
+                        borderRadius: 10,
+                        barThickness: 48
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            const behListEl = document.getElementById('parent-behavior-remarks-list');
+            if (myBehaviors.length === 0) {
+                behListEl.innerHTML = `<p class="text-xs font-semibold text-slate-700">No behavior remarks recorded yet.</p>`;
+            } else {
+                behListEl.innerHTML = myBehaviors.slice(0, 10).map(b => `
+                    <div class="p-2 rounded-xl border text-xs ${b.flag === 'green' ? 'bg-emerald-50 border-emerald-300 text-emerald-950' : 'bg-rose-50 border-rose-300 text-rose-950'}">
+                        <div class="flex justify-between items-center font-extrabold">
+                            <span>${b.flag === 'green' ? '🟢 Green Mark' : '🔴 Red Mark'} &bull; ${b.teacherName}</span>
+                            <span class="text-[10px]">${b.date}</span>
+                        </div>
+                        <p class="font-semibold mt-0.5">${b.reason}</p>
+                    </div>
+                `).join('');
+            }
 
             const academicScores = scoresData.slice(1);
             const avgScore = academicScores.length > 0 ? Math.round(academicScores.reduce((a, b) => a + b, 0) / academicScores.length) : attStats.percentage;
@@ -2713,7 +2934,7 @@
             let yPos = 90;
             if (dailyEntries.length > 0) {
                 doc.setFontSize(9);
-                dailyEntries.slice(0, 18).forEach(([dt, st]) => {
+                dailyEntries.slice(0, 15).forEach(([dt, st]) => {
                     const label = st === 'P' ? 'Present' : (st === 'A' ? 'Absent' : 'On Leave');
                     doc.text(`• ${dt}: ${label}`, 18, yPos);
                     yPos += 6;
@@ -2733,7 +2954,18 @@
                 subs.forEach(sub => { doc.text(`• ${sub.testTitle} (${sub.date}): Scored ${sub.score} / ${sub.totalMarks}`, 18, yPos); yPos += 7; });
             } else {
                 doc.text("• No test submissions recorded yet.", 18, yPos);
+                yPos += 7;
             }
+
+            yPos += 6;
+            doc.setFontSize(12);
+            doc.text("3. Behavior & Discipline Summary", 14, yPos);
+            yPos += 8;
+            doc.setFontSize(10);
+            const behs = STATE.behaviorLogs.filter(b => String(b.studentId) === String(student.id));
+            const gCount = behs.filter(b => b.flag === 'green').length;
+            const rCount = behs.filter(b => b.flag === 'red').length;
+            doc.text(`Green Marks (Positive): ${gCount}   |   Red Marks (Needs Improvement): ${rCount}`, 18, yPos);
 
             doc.save(`${student.name}_${student.id}_Progress_Report.pdf`);
             closeModal('modal-pdf-report');
@@ -2855,10 +3087,13 @@
             container.innerHTML = STATE.registeredTeachers.map(t => `<div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl flex items-start space-x-3"><div class="w-12 h-12 rounded-2xl bg-indigo-950 text-indigo-400 flex items-center justify-center font-bold text-base shrink-0">${(t.name||'T').charAt(0)}</div><div class="min-w-0"><h4 class="text-sm font-bold text-white truncate">${t.name}</h4><p class="text-xs text-amber-400 font-semibold">${t.qualifications || ''}</p><p class="text-xs text-indigo-400 mt-0.5 truncate">${t.subjects || t.dept || ''}</p></div></div>`).join('');
         }
         function setStudentStatusFilter(f) { STATE.studentStatusFilter = f; renderStudents(); }
+
         function renderStudents() {
             const container = document.getElementById('students-list-container');
             if (!container) return;
             let list = STATE.students;
+            const isStaff = (STATE.currentRole === 'admin' || STATE.currentRole === 'teacher');
+
             if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
                 list = list.filter(s => s.id === STATE.currentStudentId);
             } else {
@@ -2866,7 +3101,41 @@
                 if (STATE.studentStatusFilter === 'active') list = list.filter(s => !s.leavingDate || s.leavingDate > today);
                 else if (STATE.studentStatusFilter === 'inactive') list = list.filter(s => s.leavingDate && s.leavingDate <= today);
             }
-            container.innerHTML = list.map(s => `<div onclick="openMasterStudentForm('${s.id}')" class="bg-white p-4 rounded-2xl border border-slate-300 flex items-center justify-between cursor-pointer hover:border-indigo-500 gap-2 shadow-sm"><div class="min-w-0"><span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${s.id}</span><h4 class="text-sm font-extrabold text-slate-950 mt-0.5 truncate">${s.name}</h4><p class="text-xs font-semibold text-slate-700 truncate">Class ${s.class} (${s.board}) &bull; ${s.phone}</p></div><span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full shrink-0 ${Number(s.feePending) <= 0 ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">${Number(s.feePending) <= 0 ? 'Paid' : '₹' + s.feePending}</span></div>`).join('') || `<p class="text-xs font-bold text-slate-800">No students found.</p>`;
+
+            container.innerHTML = list.map(s => {
+                const sBeh = STATE.behaviorLogs.filter(b => String(b.studentId) === String(s.id));
+                const gCnt = sBeh.filter(b => b.flag === 'green').length;
+                const rCnt = sBeh.filter(b => b.flag === 'red').length;
+
+                return `
+                    <div class="bg-white p-4 rounded-2xl border border-slate-300 flex flex-col justify-between gap-2.5 shadow-sm hover:border-indigo-500 transition">
+                        <div onclick="openMasterStudentForm('${s.id}')" class="flex items-center justify-between cursor-pointer gap-2">
+                            <div class="min-w-0">
+                                <span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${s.id}</span>
+                                <h4 class="text-sm font-extrabold text-slate-950 mt-0.5 truncate">${s.name}</h4>
+                                <p class="text-xs font-semibold text-slate-700 truncate">Class ${s.class} (${s.board}) &bull; ${s.phone}</p>
+                            </div>
+                            <span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full shrink-0 ${Number(s.feePending) <= 0 ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">${Number(s.feePending) <= 0 ? 'Paid' : '₹' + s.feePending}</span>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs">
+                            <span class="font-extrabold text-slate-800">Behavior: <b class="text-emerald-700">${gCnt}G</b> / <b class="text-rose-700">${rCnt}R</b></span>
+                            ${isStaff ? `
+                                <div class="flex items-center gap-3">
+                                    <label class="flex items-center gap-1 cursor-pointer font-extrabold text-rose-700 bg-rose-50 px-2 py-1 rounded-lg border border-rose-300">
+                                        <input type="checkbox" onchange="if(this.checked){ openBehaviorModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', 'red'); }" class="accent-rose-600 w-3.5 h-3.5">
+                                        <span>Red</span>
+                                    </label>
+                                    <label class="flex items-center gap-1 cursor-pointer font-extrabold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-300">
+                                        <input type="checkbox" onchange="if(this.checked){ openBehaviorModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', 'green'); }" class="accent-emerald-600 w-3.5 h-3.5">
+                                        <span>Green</span>
+                                    </label>
+                                </div>
+                            ` : `<button onclick="switchPortalTab('home')" class="text-indigo-700 font-extrabold hover:underline">View Chart &rarr;</button>`}
+                        </div>
+                    </div>
+                `;
+            }).join('') || `<p class="text-xs font-bold text-slate-800">No students found.</p>`;
         }
 
         function renderTeachers() {
