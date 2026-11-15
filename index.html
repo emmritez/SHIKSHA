@@ -28,8 +28,6 @@
         }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .mobile-menu-item { display:flex; align-items:center; gap:.65rem; min-height:44px; padding:.7rem .75rem; border:1px solid #334155; border-radius:.8rem; background:#0f172a; color:#e2e8f0; text-align:left; }
-        .mobile-menu-item:active { background:#312e81; border-color:#6366f1; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 antialiased min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white pt-24 pb-16 md:pb-12">
@@ -93,19 +91,6 @@
                         <i class="fa-solid fa-qrcode"></i> <span>Pay QR</span>
                     </button>
                 </div>
-            </div>
-        </div>
-<div class="grid grid-cols-2 gap-2 text-xs font-bold">
-                <button onclick="mobileMenuGo('home')" class="mobile-menu-item"><i class="fa-solid fa-house text-indigo-300"></i> Home & Notices</button>
-                <button onclick="mobileMenuGo('students')" class="mobile-menu-item"><i class="fa-solid fa-users text-sky-300"></i> Students</button>
-                <button onclick="mobileMenuGo('attendance')" class="mobile-menu-item"><i class="fa-solid fa-calendar-check text-emerald-300"></i> Attendance</button>
-                <button onclick="mobileMenuGo('tests')" class="mobile-menu-item"><i class="fa-solid fa-brain text-amber-300"></i> Online Tests</button>
-                <button id="mobile-menu-chat" onclick="mobileMenuGo('chat')" class="mobile-menu-item"><i class="fa-solid fa-comments text-sky-300"></i> Chat</button>
-                <button onclick="mobileMenuGo('fees')" class="mobile-menu-item"><i class="fa-solid fa-indian-rupee-sign text-emerald-300"></i> Fees & Slips</button>
-                <button onclick="mobileMenuGo('homework')" class="mobile-menu-item"><i class="fa-solid fa-book-open text-violet-300"></i> Homework Diary</button>
-                <button onclick="mobileMenuGo('timetable')" class="mobile-menu-item"><i class="fa-solid fa-calendar-days text-cyan-300"></i> Timetable & PTM</button>
-                <button onclick="mobileMenuGo('leaves')" class="mobile-menu-item"><i class="fa-solid fa-envelope-open-text text-rose-300"></i> Leave Requests</button>
-                <button onclick="mobileMenuGo('notes')" class="mobile-menu-item"><i class="fa-solid fa-book-bookmark text-amber-200"></i> Study Notes</button>
             </div>
         </div>
     </header>
@@ -272,7 +257,7 @@
     </div>
 
     <!-- ================= UNIFIED PORTAL VIEW ================= -->
-    <div id="view-portal" class="hidden flex-1 bg-slate-900 md:py-4 md:px-6 lg:px-8 w-full max-w-full overflow-x-hidden">
+    <div id="view-portal" style="display:none" class="hidden flex-1 bg-slate-900 md:py-4 md:px-6 lg:px-8 w-full max-w-full overflow-x-hidden">
         <div class="max-w-7xl mx-auto bg-slate-50 min-h-[calc(100vh-10rem)] md:rounded-3xl shadow-2xl flex flex-col md:flex-row overflow-hidden text-slate-950 md:border md:border-slate-800 w-full">
 
             <aside class="hidden md:flex flex-col justify-between w-64 bg-slate-950 p-4 border-r border-slate-800 text-white shrink-0">
@@ -327,7 +312,7 @@
                 <div class="flex-1 p-3.5 sm:p-5 lg:p-6 overflow-y-auto overflow-x-hidden w-full">
 
                     <!-- TAB: COMPLETE ROLE-BASED MENU PAGE -->
-                    <section id="portal-tab-menu" class="hidden space-y-4 w-full">
+                    <section id="portal-tab-menu" style="display:none" class="hidden space-y-4 w-full">
                         <div class="rounded-2xl bg-slate-950 text-white p-4 border border-slate-800 shadow-sm">
                             <span class="text-[10px] font-black uppercase tracking-[.18em] text-indigo-300">SHIKSHA ERP • QUICK ACCESS</span>
                             <h2 class="text-xl font-black mt-1">All Options & Features</h2>
@@ -1569,6 +1554,7 @@
             facView.classList.add('hidden');
             galView.classList.add('hidden');
             portalView.classList.add('hidden');
+            portalView.style.display = 'none';
             if (mBottomNav && !STATE.currentRole) mBottomNav.classList.add('hidden');
 
             if (section === 'gallery') {
@@ -1611,6 +1597,7 @@
             facView.classList.add('hidden');
             galView.classList.add('hidden');
             portalView.classList.remove('hidden');
+            portalView.style.display = 'flex';
             if (mBottomNav) mBottomNav.classList.remove('hidden');
             configureMobileBottomNav();
 
@@ -1705,7 +1692,10 @@
             STATE.activePortalTab = tab;
             ['home', 'students', 'attendance', 'tests', 'chat', 'fees', 'homework', 'timetable', 'leaves', 'notes', 'menu'].forEach(t => {
                 const page = document.getElementById(`portal-tab-${t}`);
-                if (page) page.classList.add('hidden');
+                if (page) {
+                    page.classList.add('hidden');
+                    page.style.display = 'none';
+                }
                 
                 const sideBtn = document.getElementById(`side-portal-${t}`);
                 if (sideBtn) {
@@ -1737,7 +1727,10 @@
                 }
             });
             const activePage = document.getElementById(`portal-tab-${tab}`);
-            if (activePage) activePage.classList.remove('hidden');
+            if (activePage) {
+                activePage.classList.remove('hidden');
+                activePage.style.display = 'block';
+            }
 
             if (tab === 'chat') renderChatInterface();
             if (tab === 'fees') { initializeNewErpModules(); renderFeeAnalytics(); renderFeeReport(); }
