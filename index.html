@@ -1440,29 +1440,39 @@
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            enforceMonthlyAttendanceReset();
-            const savedKey = localStorage.getItem('shiksha_gemini_api_key');
-            const keyInp = document.getElementById('gemini-api-key-inp');
-            if (savedKey && keyInp) keyInp.value = savedKey;
+window.addEventListener('DOMContentLoaded', () => {
+    enforceMonthlyAttendanceReset();
 
-            const savedSession = localStorage.getItem('shiksha_auth_role');
-            const savedPhone = localStorage.getItem('shiksha_auth_phone');
-            const savedStudentId = localStorage.getItem('shiksha_auth_student_id');
-            
-            if (savedSession) {
-                authorizeRole(savedSession, savedPhone, savedStudentId);
-            } else {
-                setLoginRole('admin');
-                showPublicSection('home');
-            }
+    const savedKey = localStorage.getItem('shiksha_gemini_api_key');
+    const keyInp = document.getElementById('gemini-api-key-inp');
+    if (savedKey && keyInp) keyInp.value = savedKey;
 
-            renderAllViews();
-            fetchCloudDatabase();
+    const savedSession = localStorage.getItem('shiksha_auth_role');
+    const savedPhone = localStorage.getItem('shiksha_auth_phone');
+    const savedStudentId = localStorage.getItem('shiksha_auth_student_id');
+    
+    // Validate session before auto-authorizing to prevent loops
+    if (savedSession === 'admin') {
+        authorizeRole('admin');
+    } else if (savedSession === 'teacher' && savedPhone) {
+        authorizeRole('teacher', savedPhone);
+    } else if (savedSession === 'parent' && savedStudentId) {
+        authorizeRole('parent', savedPhone, savedStudentId);
+    } else {
+        // Clear invalid partial state and fallback to login gateway
+        localStorage.removeItem('shiksha_auth_role');
+        localStorage.removeItem('shiksha_auth_phone');
+        localStorage.removeItem('shiksha_auth_student_id');
+        setLoginRole('admin');
+        showPublicSection('home');
+    }
 
-            const dateDisplay = document.getElementById('att-date-display');
-            if (dateDisplay) dateDisplay.innerText = new Date().toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
-        });
+    renderAllViews();
+    fetchCloudDatabase();
+
+    const dateDisplay = document.getElementById('att-date-display');
+    if (dateDisplay) dateDisplay.innerText = new Date().toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+});
 
         async function setupBiometricQuickLogin() {
             if (!window.PublicKeyCredential) {
