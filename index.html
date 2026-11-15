@@ -292,6 +292,9 @@
                         <button onclick="switchPortalTab('fees')" id="side-portal-fees" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition">
                             <i class="fa-solid fa-indian-rupee-sign w-4"></i> <span>Fees & Slips</span>
                         </button>
+                        <button onclick="switchPortalTab('homework')" id="side-portal-homework" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition"><i class="fa-solid fa-book-open w-4"></i><span>Homework Diary</span></button>
+                        <button onclick="switchPortalTab('timetable')" id="side-portal-timetable" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition"><i class="fa-solid fa-calendar-days w-4"></i><span>Timetable & PTM</span></button>
+                        <button onclick="switchPortalTab('leaves')" id="side-portal-leaves" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition"><i class="fa-solid fa-envelope-open-text w-4"></i><span>Leave Requests</span></button>
                         <button onclick="switchPortalTab('notes')" id="side-portal-notes" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition">
                             <i class="fa-solid fa-book-bookmark w-4"></i> <span>Study Notes</span>
                         </button>
@@ -342,6 +345,11 @@
                             <div id="portal-notices-container" class="space-y-2.5 max-h-64 overflow-y-auto pr-0.5"></div>
                         </div>
 
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="switchPortalTab('homework')" class="rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-900 p-2.5 text-xs font-extrabold"><i class="fa-solid fa-book-open block text-base mb-1"></i>Homework</button>
+                            <button onclick="switchPortalTab('timetable')" class="rounded-xl bg-sky-50 border border-sky-200 text-sky-900 p-2.5 text-xs font-extrabold"><i class="fa-solid fa-calendar-days block text-base mb-1"></i>Timetable</button>
+                            <button onclick="switchPortalTab('leaves')" class="rounded-xl bg-amber-50 border border-amber-200 text-amber-900 p-2.5 text-xs font-extrabold"><i class="fa-solid fa-envelope-open-text block text-base mb-1"></i>Leave</button>
+                        </div>
                         <div id="portal-kpis-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full">
                             <div id="kpi-total-students-card" class="bg-white p-4 rounded-2xl border border-slate-300 shadow-sm flex items-center justify-between">
                                 <div>
@@ -554,19 +562,57 @@
                         </div>
                     </section>
 
-                    <!-- TAB: FEES -->
+                    <!-- TAB: FEES & FINANCIAL REPORTS -->
                     <section id="portal-tab-fees" class="hidden space-y-3.5 w-full">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-sm font-black text-slate-950 uppercase">Fee Records</h3>
-                            <button onclick="openUpiQrModal()" class="text-xs bg-indigo-50 text-indigo-800 border border-indigo-300 font-bold px-3 py-1.5 rounded-xl">
-                                <i class="fa-solid fa-qrcode mr-1"></i> Scan QR
-                            </button>
+                        <div class="flex flex-wrap items-center justify-between gap-2"><h3 class="text-sm font-black text-slate-950 uppercase">Fees, Payments & Reports</h3><button onclick="openUpiQrModal()" class="text-xs bg-indigo-50 text-indigo-800 border border-indigo-300 font-bold px-3 py-1.5 rounded-xl"><i class="fa-solid fa-qrcode mr-1"></i> Scan QR</button></div>
+                        <div id="admin-fee-summary-banner" class="hidden bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-4 rounded-2xl"><span class="text-xs text-indigo-200 uppercase font-bold">Outstanding Fee Balance</span><h3 id="fee-total-due-large" class="text-2xl font-black mt-0.5">₹0</h3></div>
+                        <div id="admin-fee-chart-panel" class="hidden bg-white rounded-2xl border border-slate-300 p-4 shadow-sm space-y-3">
+                            <div class="flex flex-wrap items-center justify-between gap-2"><div><h4 class="text-xs font-black uppercase text-slate-950">Monthly Fee Collection Status</h4><p class="text-[11px] text-slate-600">Paid students compared with unpaid students</p></div><input id="fee-chart-month" type="month" class="border border-slate-300 rounded-lg px-2 py-1.5 text-xs font-bold" onchange="renderFeeAnalytics()"></div>
+                            <div class="grid grid-cols-3 gap-2 text-center"><div class="rounded-xl bg-emerald-50 p-2"><div id="fee-chart-paid" class="text-xl font-black text-emerald-700">0</div><div class="text-[10px] font-bold text-emerald-900">Paid</div></div><div class="rounded-xl bg-rose-50 p-2"><div id="fee-chart-unpaid" class="text-xl font-black text-rose-700">0</div><div class="text-[10px] font-bold text-rose-900">Unpaid</div></div><div class="rounded-xl bg-indigo-50 p-2"><div id="fee-chart-total" class="text-xl font-black text-indigo-700">0</div><div class="text-[10px] font-bold text-indigo-900">Active</div></div></div>
+                            <canvas id="feeCollectionChart" height="125"></canvas>
                         </div>
-                        <div id="admin-fee-summary-banner" class="hidden bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-4 rounded-2xl">
-                            <span class="text-xs text-indigo-200 uppercase font-bold">Total Due Fees (Admin Only)</span>
-                            <h3 id="fee-total-due-large" class="text-2xl font-black mt-0.5">₹0</h3>
+                        <div class="bg-white rounded-2xl border border-slate-300 p-4 shadow-sm space-y-3">
+                            <div><h4 class="text-xs font-black uppercase text-slate-950">Fee Details by Financial Period</h4><p class="text-[11px] text-slate-600">Select any month range within a financial year.</p></div>
+                            <div class="grid grid-cols-2 gap-2"><div><label class="block text-[11px] font-extrabold mb-1 text-slate-800">From Month</label><input id="fee-report-from" type="month" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-xs font-bold"></div><div><label class="block text-[11px] font-extrabold mb-1 text-slate-800">To Month</label><input id="fee-report-to" type="month" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-xs font-bold"></div></div>
+                            <div class="flex flex-wrap gap-2"><button onclick="renderFeeReport()" class="bg-indigo-600 text-white rounded-xl px-3 py-2 text-xs font-extrabold"><i class="fa-solid fa-filter mr-1"></i> Show Details</button><button onclick="downloadFeeReportPdf()" class="bg-rose-600 text-white rounded-xl px-3 py-2 text-xs font-extrabold"><i class="fa-solid fa-file-pdf mr-1"></i> Download PDF</button></div>
+                            <div id="fee-report-summary" class="text-xs font-bold text-slate-800"></div>
+                            <div class="overflow-x-auto"><table class="w-full text-left text-xs border-collapse min-w-[560px]"><thead><tr class="bg-slate-100 text-slate-900"><th class="p-2 border border-slate-200">Student</th><th class="p-2 border border-slate-200">Month</th><th class="p-2 border border-slate-200">Status</th><th class="p-2 border border-slate-200">Paid Date</th><th class="p-2 border border-slate-200">Amount</th><th class="p-2 border border-slate-200">Mode / Receipt</th></tr></thead><tbody id="fee-report-table-body"><tr><td colspan="6" class="p-3 text-slate-600 text-center">Choose a month range to view records.</td></tr></tbody></table></div>
                         </div>
-                        <div id="fees-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+                        <div class="pt-1"><h4 class="text-xs font-black uppercase text-slate-900 mb-2">Student Fee Accounts</h4><div id="fees-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div></div>
+                    </section>
+                    <!-- TAB: HOMEWORK DIARY -->
+                    <section id="portal-tab-homework" class="hidden space-y-3.5 w-full">
+                        <div><h3 class="text-sm font-black uppercase text-slate-950">Daily Homework & Classwork Diary</h3><p class="text-xs text-slate-600">Class-wise assignments and completion tracking</p></div>
+                        <form id="homework-create-form" onsubmit="saveHomeworkEntry(event)" class="hidden bg-white border border-slate-300 rounded-2xl p-4 shadow-sm space-y-2">
+                            <div class="grid grid-cols-2 gap-2"><div><label class="block text-[11px] font-bold mb-1">Class</label><select id="hw-class" class="w-full border rounded-lg p-2 text-xs font-bold"></select></div><div><label class="block text-[11px] font-bold mb-1">Subject</label><input id="hw-subject" required class="w-full border rounded-lg p-2 text-xs font-bold" placeholder="Subject"></div></div>
+                            <div><label class="block text-[11px] font-bold mb-1">Title</label><input id="hw-title" required class="w-full border rounded-lg p-2 text-xs font-bold" placeholder="Homework / classwork title"></div>
+                            <div><label class="block text-[11px] font-bold mb-1">Instructions</label><textarea id="hw-desc" rows="3" class="w-full border rounded-lg p-2 text-xs" placeholder="Write the work to complete..."></textarea></div>
+                            <div><label class="block text-[11px] font-bold mb-1">Due Date</label><input id="hw-due" type="date" required class="w-full border rounded-lg p-2 text-xs font-bold"></div>
+                            <button class="bg-indigo-600 text-white rounded-xl px-4 py-2 text-xs font-bold">Publish Homework</button>
+                        </form>
+                        <div class="bg-white border border-slate-300 rounded-2xl p-3 space-y-2"><div class="flex gap-2 items-center"><select id="hw-filter-class" onchange="renderHomeworkDiary()" class="border rounded-lg p-2 text-xs font-bold"><option value="all">All Classes</option></select><button onclick="renderHomeworkDiary()" class="bg-slate-800 text-white rounded-lg px-3 py-2 text-xs font-bold">Refresh</button></div><div id="homework-list" class="space-y-2"></div></div>
+                    </section>
+                    <!-- TAB: TIMETABLE & PTM -->
+                    <section id="portal-tab-timetable" class="hidden space-y-3.5 w-full">
+                        <div><h3 class="text-sm font-black uppercase text-slate-950">Weekly Class Timetable & PTM Scheduler</h3><p class="text-xs text-slate-600">Class schedule for students, parents and faculty</p></div>
+                        <form id="timetable-create-form" onsubmit="saveTimetableEntry(event)" class="hidden bg-white border border-slate-300 rounded-2xl p-4 shadow-sm space-y-2">
+                            <div class="grid grid-cols-2 gap-2"><div><label class="block text-[11px] font-bold mb-1">Class</label><select id="tt-class" class="w-full border rounded-lg p-2 text-xs font-bold"></select></div><div><label class="block text-[11px] font-bold mb-1">Day</label><select id="tt-day" class="w-full border rounded-lg p-2 text-xs font-bold"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></div></div>
+                            <div class="grid grid-cols-2 gap-2"><div><label class="block text-[11px] font-bold mb-1">Start Time</label><input id="tt-start" type="time" required class="w-full border rounded-lg p-2 text-xs"></div><div><label class="block text-[11px] font-bold mb-1">End Time</label><input id="tt-end" type="time" required class="w-full border rounded-lg p-2 text-xs"></div></div>
+                            <div class="grid grid-cols-2 gap-2"><div><label class="block text-[11px] font-bold mb-1">Subject</label><input id="tt-subject" required class="w-full border rounded-lg p-2 text-xs" placeholder="Subject"></div><div><label class="block text-[11px] font-bold mb-1">Faculty</label><select id="tt-teacher" class="w-full border rounded-lg p-2 text-xs font-bold"></select></div></div>
+                            <button class="bg-indigo-600 text-white rounded-xl px-4 py-2 text-xs font-bold">Save Class Slot</button>
+                        </form>
+                        <div class="bg-white border border-slate-300 rounded-2xl p-3 space-y-2"><div class="flex flex-wrap gap-2"><select id="tt-filter-class" onchange="renderTimetable()" class="border rounded-lg p-2 text-xs font-bold"><option value="all">All Classes</option></select><select id="tt-filter-day" onchange="renderTimetable()" class="border rounded-lg p-2 text-xs font-bold"><option value="all">All Days</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></div><div id="timetable-list" class="space-y-2"></div></div>
+                        <div class="bg-white border border-slate-300 rounded-2xl p-4 space-y-2"><h4 class="text-xs font-black uppercase">Parent–Teacher Meeting (PTM)</h4><p class="text-xs text-slate-600">PTM entries can be added as a timetable slot using “PTM” as the subject and the meeting time.</p></div>
+                    </section>
+                    <!-- TAB: LEAVE REQUESTS -->
+                    <section id="portal-tab-leaves" class="hidden space-y-3.5 w-full">
+                        <div><h3 class="text-sm font-black uppercase text-slate-950">Student Leave Application Portal</h3><p class="text-xs text-slate-600">Submit leave applications and review their status</p></div>
+                        <form id="leave-request-form" onsubmit="submitLeaveRequest(event)" class="hidden bg-white border border-slate-300 rounded-2xl p-4 shadow-sm space-y-2">
+                            <div class="grid grid-cols-2 gap-2"><div><label class="block text-[11px] font-bold mb-1">From Date</label><input id="leave-from" type="date" required class="w-full border rounded-lg p-2 text-xs"></div><div><label class="block text-[11px] font-bold mb-1">To Date</label><input id="leave-to" type="date" required class="w-full border rounded-lg p-2 text-xs"></div></div>
+                            <div><label class="block text-[11px] font-bold mb-1">Reason</label><textarea id="leave-reason" required rows="3" class="w-full border rounded-lg p-2 text-xs" placeholder="Reason for leave"></textarea></div>
+                            <button class="bg-indigo-600 text-white rounded-xl px-4 py-2 text-xs font-bold">Submit Leave Request</button>
+                        </form>
+                        <div id="leave-requests-list" class="space-y-2"></div>
                     </section>
 
                     <!-- TAB: STUDY NOTES -->
@@ -587,32 +633,35 @@
 
     <!-- ================= FROZEN MOBILE BOTTOM FOOTER BAR ================= -->
     <nav id="mobile-bottom-nav" class="hidden md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-300 h-14 shadow-lg">
-        <div id="mobile-nav-grid" class="grid grid-cols-6 h-full items-center">
-            <button onclick="switchPortalTab('home')" id="m-nav-home" class="flex flex-col items-center justify-center text-indigo-700 transition">
+        <div id="mobile-nav-grid" class="flex h-full items-center overflow-x-auto hide-scrollbar">
+            <button onclick="switchPortalTab('home')" id="m-nav-home" class="min-w-[62px] flex flex-col items-center justify-center text-indigo-700 transition">
                 <i class="fa-solid fa-house text-sm"></i>
                 <span class="text-[10px] font-extrabold mt-0.5">Home</span>
             </button>
-            <button onclick="switchPortalTab('students')" id="m-nav-students" class="flex flex-col items-center justify-center text-slate-800 transition">
+            <button onclick="switchPortalTab('students')" id="m-nav-students" class="min-w-[62px] flex flex-col items-center justify-center text-slate-800 transition">
                 <i class="fa-solid fa-users text-sm"></i>
                 <span class="text-[10px] font-extrabold mt-0.5" id="m-students-label">Students</span>
             </button>
-            <button onclick="switchPortalTab('attendance')" id="m-nav-attendance" class="flex flex-col items-center justify-center text-slate-800 transition">
+            <button onclick="switchPortalTab('attendance')" id="m-nav-attendance" class="min-w-[62px] flex flex-col items-center justify-center text-slate-800 transition">
                 <i class="fa-solid fa-calendar-check text-sm"></i>
                 <span class="text-[10px] font-extrabold mt-0.5">Attend</span>
             </button>
-            <button onclick="switchPortalTab('tests')" id="m-nav-tests" class="flex flex-col items-center justify-center text-slate-800 transition">
+            <button onclick="switchPortalTab('tests')" id="m-nav-tests" class="min-w-[62px] flex flex-col items-center justify-center text-slate-800 transition">
                 <i class="fa-solid fa-brain text-sm"></i>
                 <span class="text-[10px] font-extrabold mt-0.5">Tests</span>
             </button>
-            <button onclick="switchPortalTab('chat')" id="m-nav-chat" class="relative flex flex-col items-center justify-center text-slate-800 transition">
+            <button onclick="switchPortalTab('chat')" id="m-nav-chat" class="min-w-[62px] relative flex flex-col items-center justify-center text-slate-800 transition">
                 <i class="fa-solid fa-comments text-sm"></i>
                 <span class="text-[10px] font-extrabold mt-0.5">Chat</span>
                 <span id="m-chat-badge" class="hidden absolute top-1 right-2 bg-rose-600 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center animate-pulse">0</span>
             </button>
-            <button onclick="switchPortalTab('fees')" id="m-nav-fees" class="flex flex-col items-center justify-center text-slate-800 transition">
+            <button onclick="switchPortalTab('fees')" id="m-nav-fees" class="min-w-[62px] flex flex-col items-center justify-center text-slate-800 transition">
                 <i class="fa-solid fa-indian-rupee-sign text-sm"></i>
                 <span class="text-[10px] font-extrabold mt-0.5">Fees</span>
             </button>
+            <button onclick="switchPortalTab('homework')" id="m-nav-homework" class="min-w-[70px] flex flex-col items-center justify-center text-slate-800 transition"><i class="fa-solid fa-book-open text-sm"></i><span class="text-[10px] font-extrabold mt-0.5">Homework</span></button>
+            <button onclick="switchPortalTab('timetable')" id="m-nav-timetable" class="min-w-[70px] flex flex-col items-center justify-center text-slate-800 transition"><i class="fa-solid fa-calendar-days text-sm"></i><span class="text-[10px] font-extrabold mt-0.5">Schedule</span></button>
+            <button onclick="switchPortalTab('leaves')" id="m-nav-leaves" class="min-w-[62px] flex flex-col items-center justify-center text-slate-800 transition"><i class="fa-solid fa-envelope-open-text text-sm"></i><span class="text-[10px] font-extrabold mt-0.5">Leave</span></button>
         </div>
     </nav>
 
@@ -951,9 +1000,7 @@
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="block text-xs font-extrabold mb-1">Month *</label>
-                        <select id="fee-modal-month" class="w-full border border-slate-400 rounded-xl px-2.5 py-2 text-xs bg-white font-bold">
-                            <option value="January">January</option><option value="February">February</option><option value="March">March</option><option value="April">April</option><option value="May">May</option><option value="June">June</option><option value="July">July</option><option value="August">August</option><option value="September">September</option><option value="October">October</option><option value="November" selected>November</option><option value="December">December</option>
-                        </select>
+                        <input id="fee-modal-month" type="month" required class="w-full border border-slate-400 rounded-xl px-2.5 py-2 text-xs bg-white font-bold">
                     </div>
                     <div>
                         <label class="block text-xs font-extrabold mb-1">Amount (₹) *</label>
@@ -1167,6 +1214,11 @@
             testSubmissions: JSON.parse(localStorage.getItem('shiksha_test_submissions') || '[]'),
             examResults: JSON.parse(localStorage.getItem('shiksha_exam_results') || '[]'),
             chatMessages: JSON.parse(localStorage.getItem('shiksha_chat_messages') || '[]'),
+            feePayments: JSON.parse(localStorage.getItem('shiksha_fee_payments') || '[]'),
+            timetable: JSON.parse(localStorage.getItem('shiksha_timetable') || '[]'),
+            homeworkDiary: JSON.parse(localStorage.getItem('shiksha_homework') || '[]'),
+            leaveRequests: JSON.parse(localStorage.getItem('shiksha_leave_requests') || '[]'),
+            feeReportMonth: new Date().toISOString().slice(0, 7),
             loginRoleSelect: 'admin'
         };
 
@@ -1459,6 +1511,7 @@
             renderNotices();
             renderNotes();
             renderFees();
+            renderFeeAnalytics(); renderFeeReport(); renderHomeworkDiary(); renderTimetable(); renderLeaveRequests();
             renderGallery();
             renderOnlineTests();
             renderTestSubmissions();
@@ -1543,7 +1596,7 @@
             if (tab === 'chat' && STATE.currentRole === 'admin') return;
 
             STATE.activePortalTab = tab;
-            ['home', 'students', 'attendance', 'tests', 'chat', 'fees', 'notes'].forEach(t => {
+            ['home', 'students', 'attendance', 'tests', 'chat', 'fees', 'homework', 'timetable', 'leaves', 'notes'].forEach(t => {
                 const page = document.getElementById(`portal-tab-${t}`);
                 if (page) page.classList.add('hidden');
                 
@@ -1579,9 +1632,11 @@
             const activePage = document.getElementById(`portal-tab-${tab}`);
             if (activePage) activePage.classList.remove('hidden');
 
-            if (tab === 'chat') {
-                renderChatInterface();
-            }
+            if (tab === 'chat') renderChatInterface();
+            if (tab === 'fees') { initializeNewErpModules(); renderFeeAnalytics(); renderFeeReport(); }
+            if (tab === 'homework') { initializeNewErpModules(); renderHomeworkDiary(); }
+            if (tab === 'timetable') { initializeNewErpModules(); renderTimetable(); }
+            if (tab === 'leaves') { initializeNewErpModules(); renderLeaveRequests(); }
             window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
@@ -1604,6 +1659,11 @@
                         });
                         localStorage.setItem('shiksha_students', JSON.stringify(STATE.students));
                     }
+
+                    if (Array.isArray(data.feePayments)) { STATE.feePayments = data.feePayments; localStorage.setItem('shiksha_fee_payments', JSON.stringify(STATE.feePayments)); }
+                    if (Array.isArray(data.timetable)) { STATE.timetable = data.timetable; localStorage.setItem('shiksha_timetable', JSON.stringify(STATE.timetable)); }
+                    if (Array.isArray(data.homeworkDiary)) { STATE.homeworkDiary = data.homeworkDiary; localStorage.setItem('shiksha_homework', JSON.stringify(STATE.homeworkDiary)); }
+                    if (Array.isArray(data.leaveRequests)) { STATE.leaveRequests = data.leaveRequests; localStorage.setItem('shiksha_leave_requests', JSON.stringify(STATE.leaveRequests)); }
 
                     if (Array.isArray(data.teachers)) {
                         STATE.registeredTeachers = data.teachers.map(cloudT => {
@@ -3150,59 +3210,152 @@
 
         function openCollectFeeModal(studentId) {
             if (STATE.currentRole !== 'admin') return;
-            const s = STATE.students.find(item => item.id === studentId);
+            const s = STATE.students.find(item => String(item.id) === String(studentId));
             if (!s) return;
             document.getElementById('fee-modal-stu-id').value = s.id;
             document.getElementById('fee-modal-stu-info').innerText = `${s.name} (${s.id}) - Class ${s.class}`;
             document.getElementById('fee-modal-mode').value = 'Cash';
+            document.getElementById('fee-modal-txid').value = '';
             document.getElementById('fee-modal-txid-box').classList.add('hidden');
-            document.getElementById('fee-modal-amount').value = Number(s.feePending) > 0 ? s.feePending : '';
+            document.getElementById('fee-modal-amount').value = Number(s.feePending) > 0 ? s.feePending : (s.monthlyFee || '');
             document.getElementById('fee-modal-current-due').innerText = `₹${s.feePending || 0}`;
+            document.getElementById('fee-modal-month').value = new Date().toISOString().slice(0, 7);
             document.getElementById('modal-collect-fee').classList.remove('hidden');
+            document.getElementById('modal-collect-fee').style.display = 'flex';
         }
         function toggleFeeTxIdField(mode) { document.getElementById('fee-modal-txid-box').classList.toggle('hidden', mode !== 'Online via UPI'); }
+
         async function handleAdminCollectFee(e) {
             e.preventDefault();
+            if (STATE.currentRole !== 'admin') return alert('Only Admin can record fee payments.');
             const stuId = document.getElementById('fee-modal-stu-id').value;
             const mode = document.getElementById('fee-modal-mode').value;
             const txId = document.getElementById('fee-modal-txid').value.trim();
-            const month = document.getElementById('fee-modal-month').value;
-            const paidAmount = parseFloat(document.getElementById('fee-modal-amount').value) || 0;
-            const student = STATE.students.find(s => s.id === stuId);
-            if (!student) return;
-            student.feePending = Math.max(0, (parseFloat(student.feePending) || 0) - paidAmount);
+            const monthKey = document.getElementById('fee-modal-month').value;
+            const paidAmount = Number(document.getElementById('fee-modal-amount').value) || 0;
+            const student = STATE.students.find(s => String(s.id) === String(stuId));
+            if (!student || !monthKey || paidAmount <= 0) return alert('Enter a valid month and payment amount.');
+            const now = new Date();
+            const payment = {
+                id: 'FEE-' + now.getTime() + '-' + Math.random().toString(36).slice(2, 7).toUpperCase(),
+                receiptNo: 'SHK-' + now.getFullYear() + '-' + String(now.getTime()).slice(-7),
+                studentId: String(student.id), studentName: student.name, class: student.class,
+                monthKey, paymentDate: now.toISOString(), amount: paidAmount, mode, transactionId: txId,
+                recordedBy: STATE.currentUserPhone || 'Admin'
+            };
+            student.feePending = Math.max(0, (Number(student.feePending) || 0) - paidAmount);
+            const monthLabel = new Date(monthKey + '-01T00:00:00').toLocaleDateString('en-IN', {month:'long', year:'numeric'});
             const txNote = (mode === 'Online via UPI' && txId) ? ` [UTR: ${txId}]` : '';
-            const receiptNote = `Paid ₹${paidAmount} (${month} - ${mode}${txNote})`;
+            const receiptNote = `Paid ₹${paidAmount} (${monthLabel} - ${mode}${txNote})`;
             student.feeHistory = student.feeHistory ? `${receiptNote} | ${student.feeHistory}` : receiptNote;
+            STATE.feePayments.unshift(payment);
+            localStorage.setItem('shiksha_fee_payments', JSON.stringify(STATE.feePayments));
             localStorage.setItem('shiksha_students', JSON.stringify(STATE.students));
-            renderFees(); renderStudents(); updateKpis(); closeModal('modal-collect-fee');
-            await postToCloud({ action: 'addStudent', student });
-            alert(`Fee updated: ${receiptNote}`);
+            closeModal('modal-collect-fee');
+            await postToCloud({action:'recordFeePayment', payment});
+            await postToCloud({action:'addStudent', student});
+            renderAllViews();
+            downloadSingleFeeReceipt(payment);
+            alert(`Payment recorded. Receipt: ${payment.receiptNo}`);
         }
+        function escapeFeeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+        }
+        function getMonthLabel(monthKey) {
+            if (!monthKey) return '';
+            const d = new Date(monthKey + '-01T00:00:00');
+            return isNaN(d) ? monthKey : d.toLocaleDateString('en-IN', {month:'short', year:'numeric'});
+        }
+        function getPaymentsForStudentMonth(studentId, monthKey) {
+            return STATE.feePayments.filter(p => String(p.studentId) === String(studentId) && String(p.monthKey) === String(monthKey));
+        }
+        function isStudentMonthPaid(studentId, monthKey) { return getPaymentsForStudentMonth(studentId, monthKey).length > 0; }
         function renderFees() {
             const container = document.getElementById('fees-list-container');
             if (!container) return;
             let list = STATE.students;
             if (STATE.currentRole === 'parent' && STATE.currentStudentId) list = list.filter(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
             container.innerHTML = list.map(s => {
-                const isPaid = Number(s.feePending) <= 0;
-                const lastRec = s.feeHistory ? s.feeHistory.split('|')[0].trim() : '';
-                return `
-                    <div class="bg-white p-4 rounded-2xl border border-slate-300 flex flex-col justify-between gap-2 shadow-sm">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="min-w-0"><span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${s.id}</span><h4 class="text-sm font-extrabold text-slate-950 mt-1 truncate">${s.name} (Class ${s.class})</h4></div>
-                            <span class="text-xs font-black px-2.5 py-0.5 rounded-full shrink-0 ${isPaid ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">${isPaid ? 'PAID' : 'Due: ₹' + s.feePending}</span>
-                        </div>
-                        ${lastRec ? `<p class="text-xs font-bold text-emerald-900 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg truncate">${lastRec}</p>` : ''}
-                        <div class="flex items-center justify-end gap-1.5 pt-2 border-t border-slate-200">
-                            ${STATE.currentRole === 'admin' ? `<button onclick="openCollectFeeModal('${s.id}')" class="text-xs bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-xl">Collect / Update Fee</button>` : ''}
-                            ${(!isPaid && STATE.currentRole === 'parent') ? `<button onclick="initiateDirectUpiPay('${s.name}', '${s.feePending}')" class="text-xs bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-xl">Pay UPI</button>` : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('') || `<p class="text-xs font-bold text-slate-800">No fee records.</p>`;
+                const isAdmin = STATE.currentRole === 'admin';
+                const isPaid = isStudentMonthPaid(s.id, new Date().toISOString().slice(0,7));
+                const recent = STATE.feePayments.filter(p => String(p.studentId) === String(s.id)).slice(0,2);
+                const legacy = s.feeHistory ? String(s.feeHistory).split('|')[0].trim() : '';
+                return `<div class="bg-white p-4 rounded-2xl border border-slate-300 flex flex-col gap-2 shadow-sm">
+                    <div class="flex items-start justify-between gap-2"><div class="min-w-0"><span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${escapeFeeHtml(s.id)}</span><h4 class="text-sm font-extrabold text-slate-950 mt-1">${escapeFeeHtml(s.name)} (Class ${escapeFeeHtml(s.class)})</h4></div><span class="text-[10px] font-black px-2 py-1 rounded-full ${isPaid?'bg-emerald-100 text-emerald-900':'bg-rose-100 text-rose-900'}">${isPaid?'PAID THIS MONTH':'DUE THIS MONTH'}</span></div>
+                    ${STATE.currentRole==='teacher'?'':`<p class="text-xs font-bold text-slate-700">Outstanding balance: ₹${Number(s.feePending)||0}</p>`}
+                    ${legacy?`<p class="text-[11px] text-emerald-800">${escapeFeeHtml(legacy)}</p>`:''}
+                    ${(STATE.currentRole==='admin'||STATE.currentRole==='parent')&&recent.length?`<div class="text-[11px] text-slate-700">${recent.map(p=>`<div>${escapeFeeHtml(getMonthLabel(p.monthKey))}: ₹${Number(p.amount)||0} • ${new Date(p.paymentDate).toLocaleDateString('en-IN')}</div>`).join('')}</div>`:''}
+                    <div class="flex flex-wrap justify-end gap-1.5 pt-2 border-t border-slate-200">
+                    ${isAdmin?`<button onclick="openCollectFeeModal('${String(s.id).replace(/'/g,"\\'")}')" class="text-xs bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-xl">Record Payment</button><button onclick="sendFeeReminder('${String(s.id).replace(/'/g,"\\'")}')" class="text-xs bg-green-600 text-white font-bold px-3 py-1.5 rounded-xl"><i class="fa-brands fa-whatsapp mr-1"></i>Reminder</button>`:''}
+                    ${STATE.currentRole==='parent'?`<button onclick="downloadStudentFeeHistoryPdf('${String(s.id).replace(/'/g,"\\'")}')" class="text-xs bg-rose-600 text-white font-bold px-3 py-1.5 rounded-xl">Fee PDF</button>`:''}
+                    ${STATE.currentRole==='parent'&&!isPaid?`<button onclick="initiateDirectUpiPay('${String(s.name).replace(/'/g,"\\'")}','${Number(s.feePending)||0}')" class="text-xs bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-xl">Pay UPI</button>`:''}
+                    </div></div>`;
+            }).join('') || '<p class="text-xs font-bold text-slate-800">No fee records.</p>';
         }
-        function initiateDirectUpiPay(name, amount) { window.location.href = `upi://pay?pa=${COACHING_UPI_ID}&pn=SHIKSHA%20Coaching%20Institute&am=${amount}&cu=INR&tn=${encodeURIComponent('Fee - ' + name)}`; }
+        function getFeeRangeRows() {
+            const from=document.getElementById('fee-report-from')?.value||'', to=document.getElementById('fee-report-to')?.value||'';
+            if(!from||!to||from>to)return [];
+            let students=STATE.students;
+            if(STATE.currentRole==='parent')students=students.filter(s=>String(s.id)===String(STATE.currentStudentId));
+            const months=[];let cursor=new Date(from+'-01T12:00:00'),end=new Date(to+'-01T12:00:00');
+            while(cursor<=end&&months.length<36){months.push(cursor.getFullYear()+'-'+String(cursor.getMonth()+1).padStart(2,'0'));cursor.setMonth(cursor.getMonth()+1);}
+            const rows=[];
+            students.forEach(student=>months.forEach(monthKey=>{
+                const payments=getPaymentsForStudentMonth(student.id,monthKey);
+                rows.push({student,monthKey,paid:payments.length>0,paymentDate:payments.length?payments.map(p=>p.paymentDate).sort().slice(-1)[0]:'',amount:payments.reduce((a,p)=>a+(Number(p.amount)||0),0),payments});
+            }));
+            return rows;
+        }
+        function renderFeeReport() {
+            const body=document.getElementById('fee-report-table-body');if(!body)return;
+            const from=document.getElementById('fee-report-from')?.value||'',to=document.getElementById('fee-report-to')?.value||'';
+            if(!from||!to)return;
+            if(from>to){body.innerHTML='<tr><td colspan="6" class="p-3 text-center text-rose-700">From month must be earlier than To month.</td></tr>';return;}
+            const rows=getFeeRangeRows(),paid=rows.filter(r=>r.paid).length,due=rows.length-paid,total=rows.reduce((a,r)=>a+r.amount,0);
+            const summary=document.getElementById('fee-report-summary');
+            if(summary)summary.innerText=STATE.currentRole==='teacher'?`${getMonthLabel(from)} to ${getMonthLabel(to)} • ${paid} paid month-records • ${due} due month-records`:`${getMonthLabel(from)} to ${getMonthLabel(to)} • ${paid} paid month-records • ${due} due month-records • Collected ₹${total.toLocaleString('en-IN')}`;
+            body.innerHTML=rows.map(r=>{
+                const date=r.paymentDate?new Date(r.paymentDate).toLocaleDateString('en-IN'):'—';
+                const details=r.payments.map(p=>`${p.mode||''} / ${p.receiptNo||p.id||''}`).join(', ');
+                const amount=STATE.currentRole==='teacher'?(r.paid?'Paid':'Due'):(r.paid?'₹'+r.amount.toLocaleString('en-IN'):'—');
+                return `<tr class="text-slate-800"><td class="p-2 border border-slate-200 font-bold">${escapeFeeHtml(r.student.name)}<div class="text-[10px]">${escapeFeeHtml(r.student.id)} • ${escapeFeeHtml(r.student.class)}</div></td><td class="p-2 border border-slate-200">${escapeFeeHtml(getMonthLabel(r.monthKey))}</td><td class="p-2 border border-slate-200"><b class="${r.paid?'text-emerald-700':'text-rose-700'}">${r.paid?'PAID':'DUE'}</b></td><td class="p-2 border border-slate-200">${date}</td><td class="p-2 border border-slate-200">${amount}</td><td class="p-2 border border-slate-200">${STATE.currentRole==='teacher'?'—':escapeFeeHtml(details)}</td></tr>`;
+            }).join('')||'<tr><td colspan="6" class="p-3 text-center">No records in selected period.</td></tr>';
+        }
+        let feeChartInstance=null;
+        function renderFeeAnalytics() {
+            const input=document.getElementById('fee-chart-month'),canvas=document.getElementById('feeCollectionChart');
+            if(!input||!canvas||STATE.currentRole!=='admin')return;
+            if(!input.value)input.value=new Date().toISOString().slice(0,7);
+            const month=input.value;
+            const active=STATE.students.filter(s=>!s.leavingDate||String(s.leavingDate)>month+'-31');
+            const paid=active.filter(s=>isStudentMonthPaid(s.id,month)).length,unpaid=active.length-paid;
+            document.getElementById('fee-chart-paid').innerText=paid;document.getElementById('fee-chart-unpaid').innerText=unpaid;document.getElementById('fee-chart-total').innerText=active.length;
+            if(typeof Chart==='undefined')return;
+            if(feeChartInstance)feeChartInstance.destroy();
+            feeChartInstance=new Chart(canvas,{type:'doughnut',data:{labels:['Paid','Unpaid'],datasets:[{data:[paid,unpaid]}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+        }
+        function buildFeePdf(title,rows,fileName) {
+            if(!window.jspdf?.jsPDF)return alert('PDF library is not loaded. Refresh the page.');
+            const {jsPDF}=window.jspdf,doc=new jsPDF({orientation:'landscape'});
+            doc.setFontSize(16);doc.text('SHIKSHA COACHING INSTITUTE',14,15);doc.setFontSize(11);doc.text(title,14,23);doc.setFontSize(8);doc.text('Generated: '+new Date().toLocaleString('en-IN'),14,29);
+            let y=38;const heads=['Student / ID','Class','Month','Status','Paid Date','Amount','Payment Details'],widths=[45,18,28,20,25,24,85];let x=14;
+            heads.forEach((h,i)=>{doc.setFont(undefined,'bold');doc.text(h,x,y);x+=widths[i];});y+=9;doc.line(14,y,doc.internal.pageSize.getWidth()-14,y);y+=6;
+            rows.forEach(r=>{if(y>185){doc.addPage();y=18;}const detail=(r.payments||[]).map(p=>`${p.mode||''} ${p.receiptNo||''} ${p.transactionId||''}`).join('; ');const vals=[r.student.name+' / '+r.student.id,String(r.student.class||''),getMonthLabel(r.monthKey),r.paid?'PAID':'DUE',r.paymentDate?new Date(r.paymentDate).toLocaleDateString('en-IN'):'-',(STATE.currentRole==='teacher'?'—':(r.paid?'Rs '+r.amount:'-')), (STATE.currentRole==='teacher'?'—':detail)];x=14;vals.forEach((v,i)=>{doc.setFont(undefined,'normal');doc.text(doc.splitTextToSize(String(v),widths[i]-2)[0]||'-',x,y);x+=widths[i];});y+=7;});
+            doc.save(fileName);
+        }
+        function downloadFeeReportPdf(){const rows=getFeeRangeRows(),from=document.getElementById('fee-report-from').value,to=document.getElementById('fee-report-to').value;if(!rows.length||from>to)return alert('Select a valid month range.');buildFeePdf(`Fee Report: ${getMonthLabel(from)} to ${getMonthLabel(to)}`,rows,`SHIKSHA_Fee_Report_${from}_to_${to}.pdf`);}
+        function downloadStudentFeeHistoryPdf(studentId){const rows=getFeeRangeRows().filter(r=>String(r.student.id)===String(studentId));if(!rows.length)return alert('Select a valid month range first.');buildFeePdf(`Student Fee History: ${rows[0].student.name}`,rows,`SHIKSHA_Fee_History_${studentId}.pdf`);}
+        function downloadSingleFeeReceipt(payment){const s=STATE.students.find(x=>String(x.id)===String(payment.studentId))||{name:payment.studentName,id:payment.studentId,class:payment.class};buildFeePdf(`Fee Receipt: ${payment.receiptNo}`,[{student:s,monthKey:payment.monthKey,paid:true,paymentDate:payment.paymentDate,amount:Number(payment.amount)||0,payments:[payment]}],`${payment.receiptNo}.pdf`);}
+        function sendFeeReminder(studentId){
+            if(STATE.currentRole!=='admin')return;const s=STATE.students.find(x=>String(x.id)===String(studentId));if(!s||!s.phone)return alert('Parent mobile number is not available.');
+            const month=document.getElementById('fee-chart-month')?.value||new Date().toISOString().slice(0,7);
+            const dueAmount=Number(s.feePending)||0;
+            const upiLink=`upi://pay?pa=${COACHING_UPI_ID}&pn=${encodeURIComponent('SHIKSHA Coaching Institute')}&am=${dueAmount}&cu=INR&tn=${encodeURIComponent('Fee - '+s.name)}`;
+            const qrLink=`https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(upiLink)}`;
+            const message=`Namaste ${s.fatherName||'Parent'} ji. SHIKSHA Coaching Institute fee reminder for ${s.name}, Class ${s.class}. Outstanding balance: Rs ${dueAmount}. Month: ${getMonthLabel(month)}. UPI ID: ${COACHING_UPI_ID}. UPI QR: ${qrLink}. Payment ke baad receipt institute se prapt karein.`;
+            window.open(`https://wa.me/91${String(s.phone).replace(/\\D/g,'')}?text=${encodeURIComponent(message)}`,'_blank');
+        }
+        function initiateDirectUpiPay(name,amount){window.location.href=`upi://pay?pa=${COACHING_UPI_ID}&pn=SHIKSHA%20Coaching%20Institute&am=${amount}&cu=INR&tn=${encodeURIComponent('Fee - '+name)}`;}
 
         function previewProfileImage(input, previewId) {
             const file = input.files && input.files[0];
@@ -3723,6 +3876,7 @@
             const isAdmin = (role === 'admin');
             const isStaff = (role === 'admin' || role === 'teacher');
             const isStudent = (role === 'parent');
+            setTimeout(initializeNewErpModules, 0);
 
             document.getElementById('kpi-total-students-card').classList.toggle('hidden', isStudent);
             document.getElementById('kpi-present-label').innerText = isStudent ? 'My Attendance %' : 'Present Today';
@@ -3804,5 +3958,59 @@
             });
         }
     </script>
+
+<script>
+function setSelectOptions(id,values,includeAll=false){const el=document.getElementById(id);if(!el)return;el.innerHTML=(includeAll?'<option value="all">All Classes</option>':'')+values.map(v=>`<option value="${escapeFeeHtml(v)}">${escapeFeeHtml(v)}</option>`).join('');}
+function initializeNewErpModules(){
+    ['hw-class','tt-class'].forEach(id=>setSelectOptions(id,ALL_CLASSES));
+    ['hw-filter-class','tt-filter-class'].forEach(id=>setSelectOptions(id,ALL_CLASSES,true));
+    const teach=document.getElementById('tt-teacher');if(teach)teach.innerHTML='<option value="">Select Faculty</option>'+getValidUniqueTeachers().map(t=>`<option value="${escapeFeeHtml(t.name)}">${escapeFeeHtml(t.name)}</option>`).join('');
+    const staff=['admin','teacher'].includes(STATE.currentRole);
+    const a=document.getElementById('homework-create-form'),b=document.getElementById('timetable-create-form'),c=document.getElementById('leave-request-form'),d=document.getElementById('admin-fee-chart-panel');
+    if(a)a.classList.toggle('hidden',!staff);if(b)b.classList.toggle('hidden',STATE.currentRole!=='admin');if(c)c.classList.toggle('hidden',STATE.currentRole!=='parent');if(d)d.classList.toggle('hidden',STATE.currentRole!=='admin');
+    const from=document.getElementById('fee-report-from'),to=document.getElementById('fee-report-to');
+    if(from&&!from.value){const n=new Date(),y=n.getMonth()>=3?n.getFullYear():n.getFullYear()-1;from.value=`${y}-04`;}
+    if(to&&!to.value)to.value=new Date().toISOString().slice(0,7);
+    const cm=document.getElementById('fee-chart-month');if(cm&&!cm.value)cm.value=new Date().toISOString().slice(0,7);
+}
+async function saveHomeworkEntry(e){
+    e.preventDefault();if(!['admin','teacher'].includes(STATE.currentRole))return;
+    const h={id:'HW-'+Date.now(),title:document.getElementById('hw-title').value.trim(),class:document.getElementById('hw-class').value,subject:document.getElementById('hw-subject').value.trim(),desc:document.getElementById('hw-desc').value.trim(),dueDate:document.getElementById('hw-due').value,author:STATE.currentRole==='admin'?'Admin':(STATE.registeredTeachers.find(t=>cleanPhone(t.phone)===cleanPhone(STATE.currentUserPhone))?.name||'Faculty'),createdAt:new Date().toISOString(),completedBy:[]};
+    STATE.homeworkDiary.unshift(h);localStorage.setItem('shiksha_homework',JSON.stringify(STATE.homeworkDiary));await postToCloud({action:'addHomework',homework:h});e.target.reset();renderHomeworkDiary();alert('Homework published.');
+}
+function renderHomeworkDiary(){
+    const box=document.getElementById('homework-list');if(!box)return;let list=STATE.homeworkDiary||[],filter=document.getElementById('hw-filter-class')?.value||'all';
+    if(STATE.currentRole==='parent'){const s=STATE.students.find(x=>String(x.id)===String(STATE.currentStudentId));list=s?list.filter(h=>String(h.class)===String(s.class)):[];}else if(filter!=='all')list=list.filter(h=>String(h.class)===String(filter));
+    box.innerHTML=[...list].sort((a,b)=>String(b.createdAt||b.id).localeCompare(String(a.createdAt||a.id))).map(h=>{const done=(h.completedBy||[]).map(String).includes(String(STATE.currentStudentId));return `<article class="border border-slate-200 rounded-xl p-3 bg-slate-50"><div class="flex justify-between gap-2"><div><span class="text-[10px] font-black bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">Class ${escapeFeeHtml(h.class)} • ${escapeFeeHtml(h.subject)}</span><h4 class="font-extrabold text-sm text-slate-950 mt-1">${escapeFeeHtml(h.title)}</h4></div><span class="text-[10px] font-bold text-slate-600">Due ${escapeFeeHtml(h.dueDate||'—')}</span></div><p class="text-xs text-slate-700 mt-2 whitespace-pre-wrap">${escapeFeeHtml(h.desc||'')}</p><div class="mt-2 flex justify-between gap-2"><span class="text-[10px] text-slate-600">By ${escapeFeeHtml(h.author||'Faculty')} ${STATE.currentRole!=='parent'?'• Completed: '+(h.completedBy||[]).length:''}</span>${STATE.currentRole==='parent'?`<button onclick="toggleHomeworkComplete('${String(h.id).replace(/'/g,"\\'")}')" class="text-xs px-3 py-1.5 rounded-lg font-bold ${done?'bg-emerald-100 text-emerald-800':'bg-indigo-600 text-white'}">${done?'Completed ✓':'Mark Completed'}</button>`:''}</div></article>`;}).join('')||'<p class="text-xs text-slate-600 p-3">No homework found.</p>';
+}
+async function toggleHomeworkComplete(id){
+    if(STATE.currentRole!=='parent')return;const h=STATE.homeworkDiary.find(x=>String(x.id)===String(id));if(!h)return;h.completedBy=h.completedBy||[];const sid=String(STATE.currentStudentId);h.completedBy=h.completedBy.map(String).includes(sid)?h.completedBy.filter(x=>String(x)!==sid):[...h.completedBy,sid];localStorage.setItem('shiksha_homework',JSON.stringify(STATE.homeworkDiary));await postToCloud({action:'updateHomework',homework:h});renderHomeworkDiary();
+}
+async function saveTimetableEntry(e){
+    e.preventDefault();if(STATE.currentRole!=='admin')return;const t={id:'TT-'+Date.now(),class:document.getElementById('tt-class').value,day:document.getElementById('tt-day').value,startTime:document.getElementById('tt-start').value,endTime:document.getElementById('tt-end').value,subject:document.getElementById('tt-subject').value.trim(),teacher:document.getElementById('tt-teacher').value};STATE.timetable.push(t);localStorage.setItem('shiksha_timetable',JSON.stringify(STATE.timetable));await postToCloud({action:'saveTimetableEntry',entry:t});e.target.reset();renderTimetable();
+}
+async function deleteTimetableEntry(id){if(STATE.currentRole!=='admin'||!confirm('Delete this timetable slot?'))return;STATE.timetable=STATE.timetable.filter(x=>String(x.id)!==String(id));localStorage.setItem('shiksha_timetable',JSON.stringify(STATE.timetable));await postToCloud({action:'deleteTimetableEntry',id});renderTimetable();}
+function renderTimetable(){
+    const box=document.getElementById('timetable-list');if(!box)return;let list=STATE.timetable||[],cls=document.getElementById('tt-filter-class')?.value||'all',day=document.getElementById('tt-filter-day')?.value||'all';
+    if(STATE.currentRole==='parent'){const s=STATE.students.find(x=>String(x.id)===String(STATE.currentStudentId));list=s?list.filter(x=>String(x.class)===String(s.class)):[];}else if(cls!=='all')list=list.filter(x=>String(x.class)===String(cls));if(day!=='all')list=list.filter(x=>x.day===day);
+    const days=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];list.sort((a,b)=>days.indexOf(a.day)-days.indexOf(b.day)||String(a.startTime).localeCompare(String(b.startTime)));
+    box.innerHTML=list.map(t=>`<div class="flex items-center justify-between gap-2 border border-slate-200 rounded-xl p-3 bg-slate-50"><div><div class="text-[10px] font-black text-indigo-700">${escapeFeeHtml(t.day)} • Class ${escapeFeeHtml(t.class)}</div><div class="text-sm font-extrabold text-slate-950">${escapeFeeHtml(t.subject)}</div><div class="text-xs text-slate-700">${escapeFeeHtml(t.startTime)}–${escapeFeeHtml(t.endTime)} • ${escapeFeeHtml(t.teacher||'Faculty TBA')}</div></div>${STATE.currentRole==='admin'?`<button onclick="deleteTimetableEntry('${String(t.id).replace(/'/g,"\\'") }')" class="text-rose-700 text-xs p-2"><i class="fa-solid fa-trash"></i></button>`:''}</div>`).join('')||'<p class="text-xs text-slate-600 p-3">No timetable entries found.</p>';
+}
+async function submitLeaveRequest(e){
+    e.preventDefault();if(STATE.currentRole!=='parent')return;const s=STATE.students.find(x=>String(x.id)===String(STATE.currentStudentId));if(!s)return;const from=document.getElementById('leave-from').value,to=document.getElementById('leave-to').value;if(to<from)return alert('To Date cannot be earlier than From Date.');
+    const l={id:'LV-'+Date.now(),studentId:String(s.id),studentName:s.name,class:s.class,fromDate:from,toDate:to,reason:document.getElementById('leave-reason').value.trim(),status:'Pending',submittedAt:new Date().toISOString()};STATE.leaveRequests.unshift(l);localStorage.setItem('shiksha_leave_requests',JSON.stringify(STATE.leaveRequests));await postToCloud({action:'addLeaveRequest',leave:l});e.target.reset();renderLeaveRequests();alert('Leave request submitted.');
+}
+async function updateLeaveStatus(id,status){
+    if(!['admin','teacher'].includes(STATE.currentRole))return;const l=STATE.leaveRequests.find(x=>String(x.id)===String(id));if(!l)return;l.status=status;l.reviewedAt=new Date().toISOString();l.reviewedBy=STATE.currentUserPhone||STATE.currentRole;
+    if(status==='Approved'){const log=STATE.attendanceLogs[l.studentId]||{daily:{}};log.daily=log.daily||{};let d=new Date(l.fromDate+'T12:00:00'),end=new Date(l.toDate+'T12:00:00');while(d<=end){const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(!isDateHolidayOrSunday(key))log.daily[key]='L';d.setDate(d.getDate()+1);}STATE.attendanceLogs[l.studentId]=log;localStorage.setItem('shiksha_att_logs',JSON.stringify(STATE.attendanceLogs));await postToCloud({action:'saveAttendance',logs:STATE.attendanceLogs});}
+    localStorage.setItem('shiksha_leave_requests',JSON.stringify(STATE.leaveRequests));await postToCloud({action:'updateLeaveRequest',leave:l});renderLeaveRequests();renderAttendanceList();
+}
+function renderLeaveRequests(){
+    const box=document.getElementById('leave-requests-list');if(!box)return;let list=STATE.leaveRequests||[];if(STATE.currentRole==='parent')list=list.filter(x=>String(x.studentId)===String(STATE.currentStudentId));
+    box.innerHTML=[...list].sort((a,b)=>String(b.submittedAt||b.id).localeCompare(String(a.submittedAt||a.id))).map(l=>`<article class="bg-white border border-slate-300 rounded-xl p-3"><div class="flex justify-between gap-2"><div><h4 class="text-sm font-extrabold text-slate-950">${escapeFeeHtml(l.studentName)} <span class="text-xs text-slate-600">Class ${escapeFeeHtml(l.class)}</span></h4><p class="text-xs text-slate-700 mt-1">${escapeFeeHtml(l.fromDate)} to ${escapeFeeHtml(l.toDate)}</p></div><span class="text-[10px] font-black px-2 py-1 rounded-full ${l.status==='Approved'?'bg-emerald-100 text-emerald-800':l.status==='Rejected'?'bg-rose-100 text-rose-800':'bg-amber-100 text-amber-900'}">${escapeFeeHtml(l.status)}</span></div><p class="text-xs text-slate-700 mt-2">${escapeFeeHtml(l.reason)}</p>${['admin','teacher'].includes(STATE.currentRole)&&l.status==='Pending'?`<div class="flex gap-2 mt-2"><button onclick="updateLeaveStatus('${String(l.id).replace(/'/g,"\\'")}','Approved')" class="bg-emerald-600 text-white rounded-lg px-3 py-1.5 text-xs font-bold">Approve</button><button onclick="updateLeaveStatus('${String(l.id).replace(/'/g,"\\'")}','Rejected')" class="bg-rose-600 text-white rounded-lg px-3 py-1.5 text-xs font-bold">Reject</button></div>`:''}</article>`).join('')||'<p class="text-xs text-slate-600 p-3 bg-white rounded-xl">No leave applications.</p>';
+}
+document.addEventListener('DOMContentLoaded',()=>{initializeNewErpModules();renderFeeAnalytics();renderFeeReport();});
+</script>
+
 </body>
 </html>
