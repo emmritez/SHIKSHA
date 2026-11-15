@@ -1134,7 +1134,7 @@
             </div>
         </div>
     </div>
-    <!-- ================= COMPLETE UNIFIED APPLICATION ENGINE SCRIPT ================= -->
+    <!-- ================= COMPLETE UNIFIED APPLICATION ENGINE SCRIPT (PART 2A) ================= -->
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxip1ha_ESMt3plLxHR8TWnt3RafngNlzoZQcl-ZgbjieapIUKy36MB3UMm-XB-gdDE/exec"; 
         const COACHING_UPI_ID = "shikshajhs@ptyes";
@@ -1417,9 +1417,8 @@
                         timeout: 60000
                     }
                 });
-                authorizeRole(savedBio.role, savedBio.phone, savedBio.studentId);
                 closeModal('modal-login-gateway');
-                openPortalView();
+                authorizeRole(savedBio.role, savedBio.phone, savedBio.studentId);
             } catch (err) {
                 alert("Fingerprint verification failed or cancelled.");
             }
@@ -1498,6 +1497,7 @@
 
         function openPortalView() {
             if (!STATE.currentRole) { openLoginGateway(); return; }
+            closeModal('modal-login-gateway');
             const mLogin = document.getElementById('mobile-login-screen');
             const pubView = document.getElementById('view-public');
             const facView = document.getElementById('view-public-faculty');
@@ -1576,8 +1576,8 @@
                 if (data && data.status === 'success') {
                     if (Array.isArray(data.students)) {
                         STATE.students = data.students.map(cloudS => {
-                            const localS = STATE.students.find(l => String(l.id) === String(cloudS.id)) || {};
-                            return { ...localS, ...cloudS };
+                            const localS = STATE.students.find(l => String(l.id).trim() === String(cloudS.id).trim()) || {};
+                            return { ...localS, ...cloudS, photo: cloudS.photo || localS.photo || '', gender: cloudS.gender || localS.gender || '' };
                         });
                         localStorage.setItem('shiksha_students', JSON.stringify(STATE.students));
                     }
@@ -1585,7 +1585,7 @@
                     if (Array.isArray(data.teachers)) {
                         STATE.registeredTeachers = data.teachers.map(cloudT => {
                             const localT = STATE.registeredTeachers.find(l => cleanPhone(l.phone) === cleanPhone(cloudT.phone)) || {};
-                            return { ...localT, ...cloudT, subjects: cloudT.subjects || cloudT.dept || localT.subjects || '' };
+                            return { ...localT, ...cloudT, subjects: cloudT.subjects || cloudT.dept || localT.subjects || '', photo: cloudT.photo || localT.photo || '', gender: cloudT.gender || localT.gender || '' };
                         });
                         localStorage.setItem('shiksha_teachers', JSON.stringify(STATE.registeredTeachers));
                     }
@@ -1698,7 +1698,7 @@
             } catch (e) { console.error("Cloud push failed:", e); }
         }
 
-        // ================= 3-COLUMN COLOR-CODED ATTENDANCE (GREEN P, RED A, YELLOW L + DOT CHECKMARK) =================
+        // ================= 3-COLUMN COLOR-CODED ATTENDANCE =================
         function calculateDynamicAttendance(studentId) {
             const currentMonth = getCurrentMonthKey();
             const studentLog = STATE.attendanceLogs[studentId] || { daily: {} };
@@ -1739,14 +1739,7 @@
             const totalMarked = totalPresent + totalLeave + totalAbsent;
             const percentage = totalMarked > 0 ? Math.round((totalPresent / totalMarked) * 100) : 0;
 
-            return {
-                workingDays: totalMarked,
-                holidays: monthHolidays,
-                present: totalPresent,
-                leave: totalLeave,
-                absent: totalAbsent,
-                percentage
-            };
+            return { workingDays: totalMarked, holidays: monthHolidays, present: totalPresent, leave: totalLeave, absent: totalAbsent, percentage };
         }
 
         async function resetCurrentMonthAttendance() {
@@ -1862,7 +1855,7 @@
 
             if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
                 if (classChips) classChips.classList.add('hidden');
-                list = STATE.students.filter(s => s.id === STATE.currentStudentId);
+                list = STATE.students.filter(s => String(s.id).trim().toLowerCase() === String(STATE.currentStudentId).trim().toLowerCase());
                 if (list[0]) {
                     summaryTitle.innerText = `${list[0].name} (${monthName})`;
                     updateAttendanceAnalyticsCard(list[0].id, null);
@@ -1937,7 +1930,7 @@
             document.getElementById('bar-absent').style.width = `${aRatio}%`;
         }
 
-        // ================= STUDENT BEHAVIOR TRACKING (RED & GREEN CHECKBOXES + REMARKS + COLUMN CHART) =================
+        // ================= STUDENT BEHAVIOR TRACKING =================
         function openBehaviorModal(studentId, studentName, flagType) {
             if (STATE.currentRole !== 'teacher' && STATE.currentRole !== 'admin') return;
 
@@ -1983,7 +1976,7 @@
 
             let teacherName = 'Admin';
             if (STATE.currentRole === 'teacher') {
-                const t = STATE.registeredTeachers.find(item => cleanPhone(item.phone) === cleanPhone(STATE.currentUserPhone));
+                const t = getValidUniqueTeachers().find(item => cleanPhone(item.phone) === cleanPhone(STATE.currentUserPhone));
                 teacherName = t ? t.name : 'Faculty';
             }
 
@@ -2005,11 +1998,10 @@
             await postToCloud({ action: 'addBehaviorLog', log: entry });
             alert(`${flag === 'green' ? 'Green' : 'Red'} behavior mark recorded for ${studentName}!`);
         }
-
         // ================= TEACHER-STUDENT ONLY CHAT + RED BADGE =================
         function getMyChatMessages() {
             if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
-                return STATE.chatMessages.filter(m => String(m.studentId) === String(STATE.currentStudentId));
+                return STATE.chatMessages.filter(m => String(m.studentId).trim() === String(STATE.currentStudentId).trim());
             }
             if (STATE.currentRole === 'teacher' && STATE.currentUserPhone) {
                 const tPhone = cleanPhone(STATE.currentUserPhone);
@@ -2068,7 +2060,7 @@
 
             if (STATE.currentRole === 'parent') {
                 heading.innerText = "Teachers";
-                threadsList.innerHTML = STATE.registeredTeachers.map(t => {
+                threadsList.innerHTML = getValidUniqueTeachers().map(t => {
                     const tPhone = cleanPhone(t.phone);
                     const threadKey = `${STATE.currentStudentId}_${tPhone}`;
                     const isActive = STATE.activeChatThread && STATE.activeChatThread.threadKey === threadKey;
@@ -2139,10 +2131,10 @@
 
             let senderName = 'User';
             if (STATE.currentRole === 'teacher') {
-                const t = STATE.registeredTeachers.find(item => cleanPhone(item.phone) === cleanPhone(STATE.currentUserPhone));
+                const t = getValidUniqueTeachers().find(item => cleanPhone(item.phone) === cleanPhone(STATE.currentUserPhone));
                 senderName = t ? t.name : 'Teacher';
             } else if (STATE.currentRole === 'parent') {
-                const s = STATE.students.find(item => item.id === STATE.currentStudentId);
+                const s = STATE.students.find(item => String(item.id).trim() === String(STATE.currentStudentId).trim());
                 senderName = s ? `${s.name} (Student)` : 'Student';
             }
 
@@ -2342,7 +2334,7 @@
             }
             section.classList.remove('hidden');
 
-            const student = STATE.students.find(s => s.id === STATE.currentStudentId);
+            const student = STATE.students.find(s => String(s.id).trim().toLowerCase() === String(STATE.currentStudentId).trim().toLowerCase());
             if (!student) return;
 
             document.getElementById('growth-student-title').innerText = `${student.name} (${student.id}) - Progressive Report`;
@@ -2351,7 +2343,7 @@
             const labels = ['Attendance %'];
             const scoresData = [attStats.percentage];
 
-            const myOnlineSubs = STATE.testSubmissions.filter(sub => String(sub.studentId) === String(student.id));
+            const myOnlineSubs = STATE.testSubmissions.filter(sub => String(sub.studentId).trim() === String(student.id).trim());
             myOnlineSubs.forEach(sub => {
                 const pct = sub.totalMarks > 0 ? Math.round((Number(sub.score) / Number(sub.totalMarks)) * 100) : 0;
                 labels.push(`${sub.testTitle}`);
@@ -2359,7 +2351,7 @@
             });
 
             STATE.examResults.forEach(exam => {
-                const entry = (exam.scores || []).find(sc => String(sc.studentId) === String(student.id));
+                const entry = (exam.scores || []).find(sc => String(sc.studentId).trim() === String(student.id).trim());
                 if (entry) {
                     const pct = exam.maxMarks > 0 ? Math.round((Number(entry.obtained) / Number(exam.maxMarks)) * 100) : 0;
                     labels.push(`${exam.type} (${exam.subject})`);
@@ -2388,7 +2380,7 @@
                 options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { legend: { display: false } } }
             });
 
-            const myBehaviors = STATE.behaviorLogs.filter(b => String(b.studentId) === String(student.id));
+            const myBehaviors = STATE.behaviorLogs.filter(b => String(b.studentId).trim().toLowerCase() === String(student.id).trim().toLowerCase());
             const greenCount = myBehaviors.filter(b => b.flag === 'green').length;
             const redCount = myBehaviors.filter(b => b.flag === 'red').length;
 
@@ -2856,7 +2848,7 @@
 
             const testId = document.getElementById('attempt-test-id').value;
             const test = STATE.onlineTests.find(t => String(t.id) === String(testId));
-            const student = STATE.students.find(s => s.id === STATE.currentStudentId);
+            const student = STATE.students.find(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
             if (!test || !student) return;
             let score = 0;
             (test.questions || []).forEach((q, idx) => {
@@ -2880,7 +2872,7 @@
             const grid = document.getElementById('test-submissions-grid');
             if (!grid) return;
             let subs = STATE.testSubmissions;
-            if (STATE.currentRole === 'parent' && STATE.currentStudentId) subs = subs.filter(s => String(s.studentId) === String(STATE.currentStudentId));
+            if (STATE.currentRole === 'parent' && STATE.currentStudentId) subs = subs.filter(s => String(s.studentId).trim() === String(STATE.currentStudentId).trim());
             grid.innerHTML = subs.map(s => `
                 <div class="bg-white p-3.5 rounded-2xl border border-slate-300 flex items-center justify-between shadow-sm">
                     <div><span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${s.studentId}</span><h4 class="text-sm font-extrabold text-slate-950 mt-0.5">${s.studentName}</h4><p class="text-xs font-semibold text-slate-700">${s.testTitle} &bull; ${s.date}</p></div>
@@ -2930,7 +2922,7 @@
             const stuId = STATE.currentRole === 'parent' ? STATE.currentStudentId : document.getElementById('pdf-student-select').value;
             const fromDate = document.getElementById('pdf-from-date').value;
             const toDate = document.getElementById('pdf-to-date').value;
-            const student = STATE.students.find(s => s.id === stuId);
+            const student = STATE.students.find(s => String(s.id).trim() === String(stuId).trim());
             if (!student) return;
 
             const { jsPDF } = window.jspdf;
@@ -2979,7 +2971,7 @@
             doc.text("2. Online & Periodic Test Performance", 14, yPos);
             yPos += 8;
             doc.setFontSize(10);
-            const subs = STATE.testSubmissions.filter(sub => String(sub.studentId) === String(student.id));
+            const subs = STATE.testSubmissions.filter(sub => String(sub.studentId).trim() === String(student.id).trim());
             if (subs.length > 0) {
                 subs.forEach(sub => { doc.text(`• ${sub.testTitle} (${sub.date}): Scored ${sub.score} / ${sub.totalMarks}`, 18, yPos); yPos += 7; });
             } else {
@@ -2992,7 +2984,7 @@
             doc.text("3. Behavior & Discipline Summary", 14, yPos);
             yPos += 8;
             doc.setFontSize(10);
-            const behs = STATE.behaviorLogs.filter(b => String(b.studentId) === String(student.id));
+            const behs = STATE.behaviorLogs.filter(b => String(b.studentId).trim() === String(student.id).trim());
             const gCount = behs.filter(b => b.flag === 'green').length;
             const rCount = behs.filter(b => b.flag === 'red').length;
             doc.text(`Green Marks (Positive): ${gCount}   |   Red Marks (Needs Improvement): ${rCount}`, 18, yPos);
@@ -3033,14 +3025,14 @@
                 await postToCloud({ action: 'updateAdmin', adminUser: STATE.adminUser });
                 alert("Admin credentials updated!");
             } else if (STATE.currentRole === 'teacher') {
-                const teacher = STATE.registeredTeachers.find(t => cleanPhone(t.phone) === cleanPhone(STATE.currentUserPhone));
+                const teacher = getValidUniqueTeachers().find(t => cleanPhone(t.phone) === cleanPhone(STATE.currentUserPhone));
                 if (!teacher || String(teacher.password).trim() !== currentPwdInput) return alert("Incorrect current password!");
                 teacher.password = newPwd;
                 localStorage.setItem('shiksha_teachers', JSON.stringify(STATE.registeredTeachers));
                 await postToCloud({ action: 'changeUserPassword', role: 'teacher', phone: teacher.phone, newPassword: newPwd });
                 alert("Teacher password updated!");
             } else if (STATE.currentRole === 'parent') {
-                const stu = STATE.students.find(s => s.id === STATE.currentStudentId);
+                const stu = STATE.students.find(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
                 if (!stu || String(stu.password).trim() !== currentPwdInput) return alert("Incorrect current password!");
                 stu.password = newPwd;
                 localStorage.setItem('shiksha_students', JSON.stringify(STATE.students));
@@ -3085,7 +3077,7 @@
             const container = document.getElementById('fees-list-container');
             if (!container) return;
             let list = STATE.students;
-            if (STATE.currentRole === 'parent' && STATE.currentStudentId) list = list.filter(s => s.id === STATE.currentStudentId);
+            if (STATE.currentRole === 'parent' && STATE.currentStudentId) list = list.filter(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
             container.innerHTML = list.map(s => {
                 const isPaid = Number(s.feePending) <= 0;
                 const lastRec = s.feeHistory ? s.feeHistory.split('|')[0].trim() : '';
@@ -3106,15 +3098,44 @@
         }
         function initiateDirectUpiPay(name, amount) { window.location.href = `upi://pay?pa=${COACHING_UPI_ID}&pn=SHIKSHA%20Coaching%20Institute&am=${amount}&cu=INR&tn=${encodeURIComponent('Fee - ' + name)}`; }
 
+        function previewProfileImage(input, previewId) {
+            const file = input.files && input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => { document.getElementById(previewId).src = e.target.result; };
+            reader.readAsDataURL(file);
+        }
+
+        function getValidUniqueTeachers() {
+            const seenPhones = new Set();
+            return STATE.registeredTeachers.filter(t => {
+                const nameStr = String(t.name || '').trim();
+                const phoneStr = cleanPhone(t.phone);
+                if (!nameStr || /^\d+$/.test(nameStr) || phoneStr.length !== 10) return false;
+                if (seenPhones.has(phoneStr)) return false;
+                seenPhones.add(phoneStr);
+                return true;
+            });
+        }
+
         function renderPublicOverview() {
             const active = STATE.students.filter(s => !s.leavingDate || s.leavingDate > getTodayDateKey());
             document.getElementById('pub-stat-students').innerText = active.length;
-            document.getElementById('pub-stat-teachers').innerText = STATE.registeredTeachers.length;
+            document.getElementById('pub-stat-teachers').innerText = getValidUniqueTeachers().length;
         }
         function renderPublicTeachers() {
             const container = document.getElementById('pub-teachers-grid');
             if (!container) return;
-            container.innerHTML = STATE.registeredTeachers.map(t => `<div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl flex items-start space-x-3"><div class="w-12 h-12 rounded-2xl bg-indigo-950 text-indigo-400 flex items-center justify-center font-bold text-base shrink-0">${(t.name||'T').charAt(0)}</div><div class="min-w-0"><h4 class="text-sm font-bold text-white truncate">${t.name}</h4><p class="text-xs text-amber-400 font-semibold">${t.qualifications || ''}</p><p class="text-xs text-indigo-400 mt-0.5 truncate">${t.subjects || t.dept || ''}</p></div></div>`).join('');
+            container.innerHTML = getValidUniqueTeachers().map(t => `
+                <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl flex items-start space-x-3">
+                    ${t.photo ? `<img src="${t.photo}" class="w-12 h-12 rounded-2xl object-cover border border-indigo-500/40 shrink-0">` : `<div class="w-12 h-12 rounded-2xl bg-indigo-950 text-indigo-400 flex items-center justify-center font-bold text-base shrink-0">${(t.name||'T').charAt(0)}</div>`}
+                    <div class="min-w-0">
+                        <h4 class="text-sm font-bold text-white truncate">${t.name}</h4>
+                        <p class="text-xs text-amber-400 font-semibold">${t.qualifications || ''} ${t.gender ? '&bull; ' + t.gender : ''}</p>
+                        <p class="text-xs text-indigo-400 mt-0.5 truncate">${t.subjects || t.dept || ''}</p>
+                    </div>
+                </div>
+            `).join('');
         }
         function setStudentStatusFilter(f) { STATE.studentStatusFilter = f; renderStudents(); }
 
@@ -3124,13 +3145,53 @@
             let list = STATE.students;
             const isStaff = (STATE.currentRole === 'admin' || STATE.currentRole === 'teacher');
 
-            if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
-                list = list.filter(s => s.id === STATE.currentStudentId);
-            } else {
-                const today = getTodayDateKey();
-                if (STATE.studentStatusFilter === 'active') list = list.filter(s => !s.leavingDate || s.leavingDate > today);
-                else if (STATE.studentStatusFilter === 'inactive') list = list.filter(s => s.leavingDate && s.leavingDate <= today);
+            if (STATE.currentRole === 'parent') {
+                const targetId = String(STATE.currentStudentId || localStorage.getItem('shiksha_auth_student_id') || '').trim().toLowerCase();
+                const targetPhone = cleanPhone(STATE.currentUserPhone || localStorage.getItem('shiksha_auth_phone') || '');
+                list = list.filter(s => String(s.id || '').trim().toLowerCase() === targetId || (targetId === '' && cleanPhone(s.phone) === targetPhone));
+
+                if (list.length === 0) {
+                    container.innerHTML = `<div class="col-span-full p-5 bg-white rounded-2xl border border-slate-300 text-xs font-bold text-slate-900">Student profile not synced yet. Tap the <b>Local / Synced</b> badge in the top bar to refresh.</div>`;
+                    return;
+                }
+
+                const s = list[0];
+                const sBeh = STATE.behaviorLogs.filter(b => String(b.studentId).trim().toLowerCase() === String(s.id).trim().toLowerCase());
+                const gCnt = sBeh.filter(b => b.flag === 'green').length;
+                const rCnt = sBeh.filter(b => b.flag === 'red').length;
+                const attStats = calculateDynamicAttendance(s.id);
+
+                container.innerHTML = `
+                    <div class="col-span-full bg-white p-5 rounded-3xl border border-slate-300 shadow-sm space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200">
+                            <div class="flex items-center gap-3">
+                                <img src="${s.photo || './logo.png'}" alt="${s.name}" class="w-16 h-16 rounded-2xl object-cover border-2 border-indigo-200 bg-slate-100 shrink-0">
+                                <div>
+                                    <span class="text-xs font-mono font-extrabold bg-indigo-100 text-indigo-900 px-2.5 py-0.5 rounded">${s.id}</span>
+                                    <h3 class="text-lg font-black text-slate-950 mt-1">${s.name}</h3>
+                                    <p class="text-xs font-bold text-slate-700">Class ${s.class} &bull; ${s.board} &bull; ${s.gender || 'Student'}</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-black px-3 py-1 rounded-full ${Number(s.feePending) <= 0 ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">
+                                ${Number(s.feePending) <= 0 ? 'Fees Paid' : 'Fee Due: ₹' + s.feePending}
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                            <div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Father's Name</span><b class="text-slate-950 text-sm">${s.fatherName || 'N/A'}</b></div>
+                            <div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Mother's Name</span><b class="text-slate-950 text-sm">${s.motherName || 'N/A'}</b></div>
+                            <div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Gender</span><b class="text-slate-950 text-sm">${s.gender || 'Not Specified'}</b></div>
+                            <div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Registered Mobile</span><b class="text-slate-950 text-sm">${s.phone}</b></div>
+                            <div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-200"><span class="text-emerald-800 font-bold block">Monthly Attendance</span><b class="text-emerald-950 text-sm">${attStats.percentage}% (${attStats.present}P / ${attStats.absent}A)</b></div>
+                            <div class="p-3 bg-indigo-50 rounded-2xl border border-indigo-200"><span class="text-indigo-800 font-bold block">Behavior Score</span><b class="text-emerald-700 text-sm">${gCnt} Green</b> &bull; <b class="text-rose-700 text-sm">${rCnt} Red</b></div>
+                        </div>
+                    </div>
+                `;
+                return;
             }
+
+            const today = getTodayDateKey();
+            if (STATE.studentStatusFilter === 'active') list = list.filter(s => !s.leavingDate || s.leavingDate > today);
+            else if (STATE.studentStatusFilter === 'inactive') list = list.filter(s => s.leavingDate && s.leavingDate <= today);
 
             container.innerHTML = list.map(s => {
                 const sBeh = STATE.behaviorLogs.filter(b => String(b.studentId) === String(s.id));
@@ -3140,10 +3201,13 @@
                 return `
                     <div class="bg-white p-4 rounded-2xl border border-slate-300 flex flex-col justify-between gap-2.5 shadow-sm hover:border-indigo-500 transition">
                         <div onclick="openMasterStudentForm('${s.id}')" class="flex items-center justify-between cursor-pointer gap-2">
-                            <div class="min-w-0">
-                                <span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${s.id}</span>
-                                <h4 class="text-sm font-extrabold text-slate-950 mt-0.5 truncate">${s.name}</h4>
-                                <p class="text-xs font-semibold text-slate-700 truncate">Class ${s.class} (${s.board}) &bull; ${s.phone}</p>
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <img src="${s.photo || './logo.png'}" class="w-11 h-11 rounded-xl object-cover border border-slate-300 bg-slate-100 shrink-0">
+                                <div class="min-w-0">
+                                    <span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${s.id}</span>
+                                    <h4 class="text-sm font-extrabold text-slate-950 mt-0.5 truncate">${s.name}</h4>
+                                    <p class="text-xs font-semibold text-slate-700 truncate">Class ${s.class} (${s.board}) &bull; ${s.gender || ''}</p>
+                                </div>
                             </div>
                             <span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full shrink-0 ${Number(s.feePending) <= 0 ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">${Number(s.feePending) <= 0 ? 'Paid' : '₹' + s.feePending}</span>
                         </div>
@@ -3180,7 +3244,7 @@
             }
             card.classList.remove('hidden');
 
-            let list = STATE.registeredTeachers;
+            let list = getValidUniqueTeachers();
             if (STATE.currentRole === 'teacher') {
                 heading.innerHTML = `<i class="fa-solid fa-user-tie text-indigo-700"></i> My Faculty Profile`;
                 list = list.filter(t => cleanPhone(t.phone) === cleanPhone(STATE.currentUserPhone));
@@ -3188,11 +3252,32 @@
                 heading.innerHTML = `<i class="fa-solid fa-chalkboard-user text-indigo-700"></i> Faculty Directory`;
             }
 
-            container.innerHTML = list.map(t => `<div onclick="openMasterTeacherForm('${t.phone}')" class="flex items-center justify-between p-3 bg-slate-100 border border-slate-300 rounded-2xl cursor-pointer hover:border-indigo-500 gap-2"><div class="min-w-0"><h4 class="text-sm font-extrabold text-slate-950 truncate">${t.name}</h4><p class="text-xs font-semibold text-slate-800 truncate">${t.subjects || t.dept} &bull; ${t.phone}</p></div><i class="fa-solid fa-pen-to-square text-sm text-indigo-700 shrink-0"></i></div>`).join('') || `<p class="text-xs font-bold text-slate-700">No faculty profile found.</p>`;
+            container.innerHTML = list.map(t => `
+                <div onclick="openMasterTeacherForm('${t.phone}')" class="flex items-center justify-between p-3 bg-slate-100 border border-slate-300 rounded-2xl cursor-pointer hover:border-indigo-500 gap-2">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <img src="${t.photo || './logo.png'}" class="w-10 h-10 rounded-xl object-cover border border-slate-300 bg-white shrink-0">
+                        <div class="min-w-0">
+                            <h4 class="text-sm font-extrabold text-slate-950 truncate">${t.name}</h4>
+                            <p class="text-xs font-semibold text-slate-800 truncate">${t.subjects || t.dept} &bull; ${t.gender || ''} &bull; ${t.phone}</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-pen-to-square text-sm text-indigo-700 shrink-0"></i>
+                </div>
+            `).join('') || `<p class="text-xs font-bold text-slate-700">No faculty profile found.</p>`;
         }
 
         function openAddTeacherModal() {
             if (STATE.currentRole !== 'admin') return;
+            document.getElementById('inp-teach-name').value = '';
+            document.getElementById('inp-teach-gender').value = 'Male';
+            document.getElementById('inp-teach-qual').value = '';
+            document.getElementById('inp-teach-phone').value = '';
+            document.getElementById('inp-teach-pwd').value = '';
+            document.getElementById('inp-teach-aadhaar').value = '';
+            document.getElementById('inp-teach-salary').value = '';
+            document.getElementById('inp-teach-photo').value = '';
+            document.getElementById('preview-teach-photo').src = './logo.png';
+            document.getElementById('btn-delete-teacher-modal').classList.add('hidden');
             document.getElementById('modal-teacher').classList.remove('hidden');
         }
 
@@ -3202,14 +3287,17 @@
                 alert("Access Denied: You can only view your own profile.");
                 return;
             }
-            const t = STATE.registeredTeachers.find(item => cleanPhone(item.phone) === cleanPhone(phone));
+            const t = getValidUniqueTeachers().find(item => cleanPhone(item.phone) === cleanPhone(phone));
             if (!t) return;
             document.getElementById('inp-teach-name').value = t.name || '';
+            document.getElementById('inp-teach-gender').value = t.gender || 'Male';
             document.getElementById('inp-teach-qual').value = t.qualifications || '';
             document.getElementById('inp-teach-phone').value = t.phone || '';
             document.getElementById('inp-teach-pwd').value = t.password || '';
             document.getElementById('inp-teach-aadhaar').value = t.aadhaar || '';
             document.getElementById('inp-teach-salary').value = t.salary || '';
+            document.getElementById('inp-teach-photo').value = '';
+            document.getElementById('preview-teach-photo').src = t.photo || './logo.png';
 
             const saveBtn = document.getElementById('btn-save-teacher-submit');
             const delBtn = document.getElementById('btn-delete-teacher-modal');
@@ -3230,7 +3318,23 @@
             const phone = cleanPhone(document.getElementById('inp-teach-phone').value);
             const checked = Array.from(document.querySelectorAll('#faculty-subjects-checkboxes input[name="teach-subj"]:checked')).map(c => c.value);
             const subjs = checked.length > 0 ? checked.join(', ') : 'All Subjects';
-            const obj = { name: document.getElementById('inp-teach-name').value.trim(), qualifications: document.getElementById('inp-teach-qual').value.trim(), dept: subjs, subjects: subjs, phone, password: document.getElementById('inp-teach-pwd').value.trim(), aadhaar: document.getElementById('inp-teach-aadhaar').value.trim(), salary: document.getElementById('inp-teach-salary').value || '0' };
+            const existing = STATE.registeredTeachers.find(t => cleanPhone(t.phone) === phone) || {};
+            const photoFile = document.getElementById('inp-teach-photo').files[0];
+            const photo = photoFile ? await compressImage(photoFile, 400, 0.75) : (existing.photo || '');
+
+            const obj = {
+                ...existing,
+                name: document.getElementById('inp-teach-name').value.trim(),
+                gender: document.getElementById('inp-teach-gender').value,
+                qualifications: document.getElementById('inp-teach-qual').value.trim(),
+                dept: subjs,
+                subjects: subjs,
+                phone,
+                password: document.getElementById('inp-teach-pwd').value.trim(),
+                aadhaar: document.getElementById('inp-teach-aadhaar').value.trim(),
+                salary: document.getElementById('inp-teach-salary').value || '0',
+                photo
+            };
             const idx = STATE.registeredTeachers.findIndex(t => cleanPhone(t.phone) === phone);
             if (idx > -1) STATE.registeredTeachers[idx] = obj; else STATE.registeredTeachers.push(obj);
             localStorage.setItem('shiksha_teachers', JSON.stringify(STATE.registeredTeachers));
@@ -3252,22 +3356,28 @@
             if (STATE.currentRole !== 'admin') return;
             document.getElementById('edit-stu-id').value = '';
             document.getElementById('inp-stu-name').value = '';
+            document.getElementById('inp-stu-gender').value = 'Male';
+            document.getElementById('inp-stu-father').value = '';
+            document.getElementById('inp-stu-mother').value = '';
             document.getElementById('inp-stu-phone').value = '';
             document.getElementById('inp-stu-pwd').value = '';
             document.getElementById('inp-stu-fee').value = '0';
+            document.getElementById('inp-stu-photo').value = '';
+            document.getElementById('preview-stu-photo').src = './logo.png';
             document.getElementById('btn-delete-student-modal').classList.add('hidden');
             document.getElementById('modal-student').classList.remove('hidden');
         }
 
         function openMasterStudentForm(id) {
-            if (STATE.currentRole === 'parent' && String(id) !== String(STATE.currentStudentId)) {
+            if (STATE.currentRole === 'parent' && String(id).trim().toLowerCase() !== String(STATE.currentStudentId).trim().toLowerCase()) {
                 alert("Access Denied: You can only view your own profile.");
                 return;
             }
-            const s = STATE.students.find(item => item.id === id);
+            const s = STATE.students.find(item => String(item.id).trim().toLowerCase() === String(id).trim().toLowerCase());
             if (!s) return;
             document.getElementById('edit-stu-id').value = s.id;
             document.getElementById('inp-stu-name').value = s.name || '';
+            document.getElementById('inp-stu-gender').value = s.gender || 'Male';
             document.getElementById('inp-stu-father').value = s.fatherName || '';
             document.getElementById('inp-stu-mother').value = s.motherName || '';
             document.getElementById('inp-stu-class').value = s.class || '10th';
@@ -3277,6 +3387,9 @@
             document.getElementById('inp-stu-adm-date').value = formatDateForInput(s.admissionDate);
             document.getElementById('inp-stu-leave-date').value = formatDateForInput(s.leavingDate);
             document.getElementById('inp-stu-fee').value = s.feePending || 0;
+            document.getElementById('inp-stu-photo').value = '';
+            document.getElementById('preview-stu-photo').src = s.photo || './logo.png';
+
             const saveBtn = document.getElementById('btn-save-student-submit');
             const delBtn = document.getElementById('btn-delete-student-modal');
             if (STATE.currentRole === 'admin') {
@@ -3295,7 +3408,25 @@
             if (STATE.currentRole !== 'admin') return;
             const id = document.getElementById('edit-stu-id').value || generateNextStudentId();
             const existing = STATE.students.find(s => s.id === id) || {};
-            const obj = { ...existing, id, name: document.getElementById('inp-stu-name').value.trim(), fatherName: document.getElementById('inp-stu-father').value.trim(), motherName: document.getElementById('inp-stu-mother').value.trim(), class: document.getElementById('inp-stu-class').value, board: document.getElementById('inp-stu-board').value, phone: cleanPhone(document.getElementById('inp-stu-phone').value), password: document.getElementById('inp-stu-pwd').value.trim(), admissionDate: document.getElementById('inp-stu-adm-date').value, leavingDate: document.getElementById('inp-stu-leave-date').value, feePending: parseFloat(document.getElementById('inp-stu-fee').value) || 0 };
+            const photoFile = document.getElementById('inp-stu-photo').files[0];
+            const photo = photoFile ? await compressImage(photoFile, 400, 0.75) : (existing.photo || '');
+
+            const obj = {
+                ...existing,
+                id,
+                name: document.getElementById('inp-stu-name').value.trim(),
+                gender: document.getElementById('inp-stu-gender').value,
+                fatherName: document.getElementById('inp-stu-father').value.trim(),
+                motherName: document.getElementById('inp-stu-mother').value.trim(),
+                class: document.getElementById('inp-stu-class').value,
+                board: document.getElementById('inp-stu-board').value,
+                phone: cleanPhone(document.getElementById('inp-stu-phone').value),
+                password: document.getElementById('inp-stu-pwd').value.trim(),
+                admissionDate: document.getElementById('inp-stu-adm-date').value,
+                leavingDate: document.getElementById('inp-stu-leave-date').value,
+                feePending: parseFloat(document.getElementById('inp-stu-fee').value) || 0,
+                photo
+            };
             const idx = STATE.students.findIndex(s => s.id === id);
             if (idx > -1) STATE.students[idx] = obj; else STATE.students.unshift(obj);
             localStorage.setItem('shiksha_students', JSON.stringify(STATE.students));
@@ -3363,7 +3494,7 @@
             let list = STATE.materials;
             const isStaff = (STATE.currentRole === 'admin' || STATE.currentRole === 'teacher');
             if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
-                const stu = STATE.students.find(s => s.id === STATE.currentStudentId);
+                const stu = STATE.students.find(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
                 if (stu) list = list.filter(m => m.class === stu.class);
             }
             container.innerHTML = list.map(m => `
@@ -3390,8 +3521,14 @@
             await postToCloud({ action: 'addHoliday', holiday: h });
         }
 
-        function openLoginGateway() { document.getElementById('modal-login-gateway').classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        function openLoginGateway() {
+            const m = document.getElementById('modal-login-gateway');
+            if (m) { m.classList.remove('hidden'); m.style.display = 'flex'; }
+        }
+        function closeModal(id) {
+            const m = document.getElementById(id);
+            if (m) { m.classList.add('hidden'); m.style.display = 'none'; }
+        }
         function setLoginRole(role) {
             STATE.loginRoleSelect = role;
             ['m-', 'd-'].forEach(prefix => {
@@ -3416,13 +3553,15 @@
                 if (cleanPhone(phone) !== cleanPhone(STATE.adminUser.phone) || password !== STATE.adminUser.password) {
                     errMsg.innerText = "Invalid Admin Mobile or Password!"; errBox.classList.remove('hidden'); return;
                 }
-                authorizeRole('admin'); closeModal('modal-login-gateway'); openPortalView();
+                closeModal('modal-login-gateway');
+                authorizeRole('admin');
             } else if (STATE.loginRoleSelect === 'teacher') {
-                const t = STATE.registeredTeachers.find(item => cleanPhone(item.phone) === cleanPhone(phone));
+                const t = getValidUniqueTeachers().find(item => cleanPhone(item.phone) === cleanPhone(phone));
                 if (!t || String(t.password).trim() !== password) {
                     errMsg.innerText = "Invalid Teacher Credentials!"; errBox.classList.remove('hidden'); return;
                 }
-                authorizeRole('teacher', phone); closeModal('modal-login-gateway'); openPortalView();
+                closeModal('modal-login-gateway');
+                authorizeRole('teacher', phone);
             } else {
                 const matches = STATE.students.filter(s => cleanPhone(s.phone) === cleanPhone(phone));
                 if (matches.length === 0) { errMsg.innerText = "No student found."; errBox.classList.remove('hidden'); return; }
@@ -3432,9 +3571,10 @@
                     document.getElementById(`${prefix}student-picker-box`).classList.remove('hidden');
                     errMsg.innerText = "Select child above & sign in."; errBox.classList.remove('hidden'); return;
                 }
-                const target = matches.length === 1 ? matches[0] : matches.find(s => s.id === selInput.value);
+                const target = matches.length === 1 ? matches[0] : matches.find(s => String(s.id).trim() === String(selInput.value).trim());
                 if (!target || String(target.password).trim() !== password) { errMsg.innerText = "Incorrect Password!"; errBox.classList.remove('hidden'); return; }
-                authorizeRole('parent', phone, target.id); closeModal('modal-login-gateway'); openPortalView();
+                closeModal('modal-login-gateway');
+                authorizeRole('parent', phone, String(target.id).trim());
             }
         }
 
@@ -3452,7 +3592,7 @@
 
             let roleLabel = role.toUpperCase();
             if (role === 'parent' && STATE.currentStudentId) {
-                const s = STATE.students.find(item => item.id === STATE.currentStudentId);
+                const s = STATE.students.find(item => String(item.id).trim() === String(STATE.currentStudentId).trim());
                 if (s) roleLabel = s.name.split(' ')[0].toUpperCase();
             }
             document.getElementById('header-role-pill').innerText = roleLabel;
