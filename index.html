@@ -46,7 +46,7 @@
             </div>
 
             <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
-<button onclick="fetchCloudDatabase(true)" id="global-sync-badge" title="Sync Now" class="flex text-[10px] font-bold text-emerald-400 items-center gap-1 bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-800">
+                <button onclick="fetchCloudDatabase(true)" id="global-sync-badge" title="Sync Now" class="flex text-[10px] font-bold text-emerald-400 items-center gap-1 bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-800">
                     <i class="fa-solid fa-circle-check text-[8px]"></i> <span>Synced</span>
                 </button>
 
@@ -257,9 +257,10 @@
     </div>
 
     <!-- ================= UNIFIED PORTAL VIEW ================= -->
-    <div id="view-portal" style="display:none" class="hidden flex-1 bg-slate-900 md:py-4 md:px-6 lg:px-8 w-full max-w-full overflow-x-hidden">
+    <div id="view-portal" class="hidden flex-1 bg-slate-900 md:py-4 md:px-6 lg:px-8 w-full max-w-full overflow-x-hidden">
         <div class="max-w-7xl mx-auto bg-slate-50 min-h-[calc(100vh-10rem)] md:rounded-3xl shadow-2xl flex flex-col md:flex-row overflow-hidden text-slate-950 md:border md:border-slate-800 w-full">
 
+            <!-- DESKTOP ROLE-ISOLATED SIDEBAR -->
             <aside class="hidden md:flex flex-col justify-between w-64 bg-slate-950 p-4 border-r border-slate-800 text-white shrink-0">
                 <div class="space-y-4">
                     <div class="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-between">
@@ -272,33 +273,8 @@
                         </button>
                     </div>
 
-                    <nav class="space-y-1.5 font-bold text-xs">
-                        <button onclick="switchPortalTab('home')" id="side-portal-home" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-indigo-600 text-white shadow-sm transition">
-                            <i class="fa-solid fa-house w-4"></i> <span>Home & Notices</span>
-                        </button>
-                        <button onclick="switchPortalTab('students')" id="side-portal-students" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition">
-                            <i class="fa-solid fa-users w-4"></i> <span id="side-students-label">Student Directory</span>
-                        </button>
-                        <button onclick="switchPortalTab('attendance')" id="side-portal-attendance" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition">
-                            <i class="fa-solid fa-calendar-check w-4"></i> <span>Attendance & PDF</span>
-                        </button>
-                        <button onclick="switchPortalTab('tests')" id="side-portal-tests" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition">
-                            <i class="fa-solid fa-brain w-4 text-amber-400"></i> <span>AI Online Tests</span>
-                        </button>
-                        <button onclick="switchPortalTab('chat')" id="side-portal-chat" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition">
-                            <span class="flex items-center gap-3"><i class="fa-solid fa-comments w-4 text-sky-400"></i> <span>Teacher-Student Chat</span></span>
-                            <span id="side-chat-badge" class="hidden bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full animate-pulse">0</span>
-                        </button>
-                        <button onclick="switchPortalTab('fees')" id="side-portal-fees" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition">
-                            <i class="fa-solid fa-indian-rupee-sign w-4"></i> <span>Fees & Slips</span>
-                        </button>
-                        <button onclick="switchPortalTab('homework')" id="side-portal-homework" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition"><i class="fa-solid fa-book-open w-4"></i><span>Homework Diary</span></button>
-                        <button onclick="switchPortalTab('timetable')" id="side-portal-timetable" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition"><i class="fa-solid fa-calendar-days w-4"></i><span>Timetable & PTM</span></button>
-                        <button onclick="switchPortalTab('leaves')" id="side-portal-leaves" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition"><i class="fa-solid fa-envelope-open-text w-4"></i><span>Leave Requests</span></button>
-                        <button onclick="switchPortalTab('notes')" id="side-portal-notes" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition">
-                            <i class="fa-solid fa-book-bookmark w-4"></i> <span>Study Notes</span>
-                        </button>
-                    </nav>
+                    <!-- Dynamic Role-Specific Sidebar Links -->
+                    <nav id="desktop-sidebar-nav" class="space-y-1.5 font-bold text-xs"></nav>
                 </div>
 
                 <div class="space-y-2 pt-4 border-t border-slate-800">
@@ -310,23 +286,6 @@
 
             <div class="flex-1 flex flex-col min-w-0 w-full max-w-full">
                 <div class="flex-1 p-3.5 sm:p-5 lg:p-6 overflow-y-auto overflow-x-hidden w-full">
-
-                    <!-- TAB: COMPLETE ROLE-BASED MENU PAGE -->
-                    <section id="portal-tab-menu" style="display:none" class="hidden space-y-4 w-full">
-                        <div class="rounded-2xl bg-slate-950 text-white p-4 border border-slate-800 shadow-sm">
-                            <span class="text-[10px] font-black uppercase tracking-[.18em] text-indigo-300">SHIKSHA ERP • QUICK ACCESS</span>
-                            <h2 class="text-xl font-black mt-1">All Options & Features</h2>
-                            <p class="text-xs text-slate-300 mt-1">Choose any section available in your account. Options are shown according to your login role.</p>
-                        </div>
-                        <div class="space-y-2">
-                            <h3 class="text-[11px] font-black uppercase tracking-wider text-slate-500 px-1">Portal Sections</h3>
-                            <div id="portal-menu-grid" class="space-y-2"></div>
-                        </div>
-                        <div class="space-y-2">
-                            <h3 class="text-[11px] font-black uppercase tracking-wider text-slate-500 px-1">Institute Resources</h3>
-                            <div id="portal-menu-resources" class="space-y-2"></div>
-                        </div>
-                    </section>
 
                     <!-- TAB: HOME -->
                     <section id="portal-tab-home" class="space-y-4 w-full">
@@ -362,11 +321,15 @@
                             <div id="portal-notices-container" class="space-y-2.5 max-h-64 overflow-y-auto pr-0.5"></div>
                         </div>
 
-                        <div class="grid grid-cols-3 gap-2">
-                            <button onclick="switchPortalTab('homework')" class="rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-900 p-2.5 text-xs font-extrabold"><i class="fa-solid fa-book-open block text-base mb-1"></i>Homework</button>
-                            <button onclick="switchPortalTab('timetable')" class="rounded-xl bg-sky-50 border border-sky-200 text-sky-900 p-2.5 text-xs font-extrabold"><i class="fa-solid fa-calendar-days block text-base mb-1"></i>Timetable</button>
-                            <button onclick="switchPortalTab('leaves')" class="rounded-xl bg-amber-50 border border-amber-200 text-amber-900 p-2.5 text-xs font-extrabold"><i class="fa-solid fa-envelope-open-text block text-base mb-1"></i>Leave</button>
+                        <!-- ROLE-ISOLATED QUICK ACCESS MENU GRID -->
+                        <div class="bg-white rounded-2xl border border-slate-300 p-4 shadow-sm w-full space-y-2.5">
+                            <div class="flex items-center justify-between">
+                                <span id="role-menu-heading" class="text-xs font-black uppercase text-slate-900 tracking-wider">Quick Access Modules</span>
+                                <span class="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">Role-Isolated</span>
+                            </div>
+                            <div id="role-quick-menu-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
                         </div>
+
                         <div id="portal-kpis-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full">
                             <div id="kpi-total-students-card" class="bg-white p-4 rounded-2xl border border-slate-300 shadow-sm flex items-center justify-between">
                                 <div>
@@ -579,24 +542,97 @@
                         </div>
                     </section>
 
-                    <!-- TAB: FEES & FINANCIAL REPORTS -->
-                    <section id="portal-tab-fees" class="hidden space-y-3.5 w-full">
-                        <div class="flex flex-wrap items-center justify-between gap-2"><h3 class="text-sm font-black text-slate-950 uppercase">Fees, Payments & Reports</h3><button onclick="openUpiQrModal()" class="text-xs bg-indigo-50 text-indigo-800 border border-indigo-300 font-bold px-3 py-1.5 rounded-xl"><i class="fa-solid fa-qrcode mr-1"></i> Scan QR</button></div>
-                        <div id="admin-fee-summary-banner" class="hidden bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-4 rounded-2xl"><span class="text-xs text-indigo-200 uppercase font-bold">Outstanding Fee Balance</span><h3 id="fee-total-due-large" class="text-2xl font-black mt-0.5">₹0</h3></div>
+                    <!-- TAB: FEES (REORDERED: 1. TOP STUDENT PENDING LIST -> 2. MIDDLE CHART -> 3. BOTTOM COLLAPSIBLE DETAILS) -->
+                    <section id="portal-tab-fees" class="hidden space-y-4 w-full">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <h3 class="text-sm font-black text-slate-950 uppercase">Fees, Payments & Reports</h3>
+                            <button onclick="openUpiQrModal()" class="text-xs bg-indigo-50 text-indigo-800 border border-indigo-300 font-bold px-3 py-1.5 rounded-xl">
+                                <i class="fa-solid fa-qrcode mr-1"></i> Scan QR
+                            </button>
+                        </div>
+
+                        <!-- 1. TOP: TOTAL DUE BANNER & STUDENT FEE PENDING CARDS -->
+                        <div id="admin-fee-summary-banner" class="hidden bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-4 rounded-2xl flex items-center justify-between">
+                            <div>
+                                <span class="text-xs text-indigo-200 uppercase font-bold">Total Outstanding Fee Balance</span>
+                                <h3 id="fee-total-due-large" class="text-2xl font-black mt-0.5">₹0</h3>
+                            </div>
+                            <i class="fa-solid fa-indian-rupee-sign text-3xl text-indigo-400/40"></i>
+                        </div>
+
+                        <div class="space-y-2">
+                            <h4 class="text-xs font-black uppercase text-slate-900 flex items-center gap-1.5">
+                                <i class="fa-solid fa-users-viewfinder text-indigo-700"></i> Student Fee Accounts & Pending Status
+                            </h4>
+                            <div id="fees-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+                        </div>
+
+                        <!-- 2. MIDDLE: MONTHLY FEE COLLECTION CHART -->
                         <div id="admin-fee-chart-panel" class="hidden bg-white rounded-2xl border border-slate-300 p-4 shadow-sm space-y-3">
-                            <div class="flex flex-wrap items-center justify-between gap-2"><div><h4 class="text-xs font-black uppercase text-slate-950">Monthly Fee Collection Status</h4><p class="text-[11px] text-slate-600">Paid students compared with unpaid students</p></div><input id="fee-chart-month" type="month" class="border border-slate-300 rounded-lg px-2 py-1.5 text-xs font-bold" onchange="renderFeeAnalytics()"></div>
-                            <div class="grid grid-cols-3 gap-2 text-center"><div class="rounded-xl bg-emerald-50 p-2"><div id="fee-chart-paid" class="text-xl font-black text-emerald-700">0</div><div class="text-[10px] font-bold text-emerald-900">Paid</div></div><div class="rounded-xl bg-rose-50 p-2"><div id="fee-chart-unpaid" class="text-xl font-black text-rose-700">0</div><div class="text-[10px] font-bold text-rose-900">Unpaid</div></div><div class="rounded-xl bg-indigo-50 p-2"><div id="fee-chart-total" class="text-xl font-black text-indigo-700">0</div><div class="text-[10px] font-bold text-indigo-900">Active</div></div></div>
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <div>
+                                    <h4 class="text-xs font-black uppercase text-slate-950"><i class="fa-solid fa-chart-pie text-indigo-700 mr-1"></i> Monthly Fee Collection Status</h4>
+                                    <p class="text-[11px] text-slate-600">Paid students compared with unpaid students</p>
+                                </div>
+                                <input id="fee-chart-month" type="month" class="border border-slate-300 rounded-lg px-2 py-1.5 text-xs font-bold" onchange="renderFeeAnalytics()">
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 text-center">
+                                <div class="rounded-xl bg-emerald-50 p-2"><div id="fee-chart-paid" class="text-xl font-black text-emerald-700">0</div><div class="text-[10px] font-bold text-emerald-900">Paid</div></div>
+                                <div class="rounded-xl bg-rose-50 p-2"><div id="fee-chart-unpaid" class="text-xl font-black text-rose-700">0</div><div class="text-[10px] font-bold text-rose-900">Unpaid</div></div>
+                                <div class="rounded-xl bg-indigo-50 p-2"><div id="fee-chart-total" class="text-xl font-black text-indigo-700">0</div><div class="text-[10px] font-bold text-indigo-900">Active</div></div>
+                            </div>
                             <canvas id="feeCollectionChart" height="125"></canvas>
                         </div>
+
+                        <!-- 3. BOTTOM: OPTIONAL FEE DETAILS BY MONTH RANGE (HIDDEN BY DEFAULT UNTIL USER CLICKS) -->
                         <div class="bg-white rounded-2xl border border-slate-300 p-4 shadow-sm space-y-3">
-                            <div><h4 class="text-xs font-black uppercase text-slate-950">Fee Details by Financial Period</h4><p class="text-[11px] text-slate-600">Select any month range within a financial year.</p></div>
-                            <div class="grid grid-cols-2 gap-2"><div><label class="block text-[11px] font-extrabold mb-1 text-slate-800">From Month</label><input id="fee-report-from" type="month" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-xs font-bold"></div><div><label class="block text-[11px] font-extrabold mb-1 text-slate-800">To Month</label><input id="fee-report-to" type="month" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-xs font-bold"></div></div>
-                            <div class="flex flex-wrap gap-2"><button onclick="renderFeeReport()" class="bg-indigo-600 text-white rounded-xl px-3 py-2 text-xs font-extrabold"><i class="fa-solid fa-filter mr-1"></i> Show Details</button><button onclick="downloadFeeReportPdf()" class="bg-rose-600 text-white rounded-xl px-3 py-2 text-xs font-extrabold"><i class="fa-solid fa-file-pdf mr-1"></i> Download PDF</button></div>
-                            <div id="fee-report-summary" class="text-xs font-bold text-slate-800"></div>
-                            <div class="overflow-x-auto"><table class="w-full text-left text-xs border-collapse min-w-[560px]"><thead><tr class="bg-slate-100 text-slate-900"><th class="p-2 border border-slate-200">Student</th><th class="p-2 border border-slate-200">Month</th><th class="p-2 border border-slate-200">Status</th><th class="p-2 border border-slate-200">Paid Date</th><th class="p-2 border border-slate-200">Amount</th><th class="p-2 border border-slate-200">Mode / Receipt</th></tr></thead><tbody id="fee-report-table-body"><tr><td colspan="6" class="p-3 text-slate-600 text-center">Choose a month range to view records.</td></tr></tbody></table></div>
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <div>
+                                    <h4 class="text-xs font-black uppercase text-slate-950"><i class="fa-solid fa-calendar-week text-indigo-700 mr-1"></i> Optional: Fee Details by Month Range</h4>
+                                    <p class="text-[11px] text-slate-600">Open only when you want to filter or download month-wise fee records</p>
+                                </div>
+                                <button type="button" id="btn-toggle-fee-details" onclick="toggleOptionalFeeReportBox()" class="bg-slate-900 hover:bg-slate-800 text-white rounded-xl px-3.5 py-2 text-xs font-extrabold transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-eye"></i> <span>View Month Details</span>
+                                </button>
+                            </div>
+
+                            <div id="optional-fee-report-wrapper" class="hidden space-y-3 pt-3 border-t border-slate-200">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[11px] font-extrabold mb-1 text-slate-800">From Month</label>
+                                        <input id="fee-report-from" type="month" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-xs font-bold">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-extrabold mb-1 text-slate-800">To Month</label>
+                                        <input id="fee-report-to" type="month" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-xs font-bold">
+                                    </div>
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    <button type="button" onclick="renderFeeReport()" class="bg-indigo-600 text-white rounded-xl px-3.5 py-2 text-xs font-extrabold"><i class="fa-solid fa-filter mr-1"></i> Show Details</button>
+                                    <button type="button" onclick="downloadFeeReportPdf()" class="bg-rose-600 text-white rounded-xl px-3.5 py-2 text-xs font-extrabold"><i class="fa-solid fa-file-pdf mr-1"></i> Download Range PDF</button>
+                                </div>
+                                <div id="fee-report-summary" class="text-xs font-bold text-slate-800"></div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left text-xs border-collapse min-w-[560px]">
+                                        <thead>
+                                            <tr class="bg-slate-100 text-slate-900">
+                                                <th class="p-2 border border-slate-200">Student</th>
+                                                <th class="p-2 border border-slate-200">Month</th>
+                                                <th class="p-2 border border-slate-200">Status</th>
+                                                <th class="p-2 border border-slate-200">Paid Date</th>
+                                                <th class="p-2 border border-slate-200">Amount</th>
+                                                <th class="p-2 border border-slate-200">Mode / Receipt</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="fee-report-table-body">
+                                            <tr><td colspan="6" class="p-3 text-slate-600 text-center">Select From & To Month and tap "Show Details".</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                        <div class="pt-1"><h4 class="text-xs font-black uppercase text-slate-900 mb-2">Student Fee Accounts</h4><div id="fees-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div></div>
                     </section>
+
                     <!-- TAB: HOMEWORK DIARY -->
                     <section id="portal-tab-homework" class="hidden space-y-3.5 w-full">
                         <div><h3 class="text-sm font-black uppercase text-slate-950">Daily Homework & Classwork Diary</h3><p class="text-xs text-slate-600">Class-wise assignments and completion tracking</p></div>
@@ -609,6 +645,7 @@
                         </form>
                         <div class="bg-white border border-slate-300 rounded-2xl p-3 space-y-2"><div class="flex gap-2 items-center"><select id="hw-filter-class" onchange="renderHomeworkDiary()" class="border rounded-lg p-2 text-xs font-bold"><option value="all">All Classes</option></select><button onclick="renderHomeworkDiary()" class="bg-slate-800 text-white rounded-lg px-3 py-2 text-xs font-bold">Refresh</button></div><div id="homework-list" class="space-y-2"></div></div>
                     </section>
+
                     <!-- TAB: TIMETABLE & PTM -->
                     <section id="portal-tab-timetable" class="hidden space-y-3.5 w-full">
                         <div><h3 class="text-sm font-black uppercase text-slate-950">Weekly Class Timetable & PTM Scheduler</h3><p class="text-xs text-slate-600">Class schedule for students, parents and faculty</p></div>
@@ -621,6 +658,7 @@
                         <div class="bg-white border border-slate-300 rounded-2xl p-3 space-y-2"><div class="flex flex-wrap gap-2"><select id="tt-filter-class" onchange="renderTimetable()" class="border rounded-lg p-2 text-xs font-bold"><option value="all">All Classes</option></select><select id="tt-filter-day" onchange="renderTimetable()" class="border rounded-lg p-2 text-xs font-bold"><option value="all">All Days</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></div><div id="timetable-list" class="space-y-2"></div></div>
                         <div class="bg-white border border-slate-300 rounded-2xl p-4 space-y-2"><h4 class="text-xs font-black uppercase">Parent–Teacher Meeting (PTM)</h4><p class="text-xs text-slate-600">PTM entries can be added as a timetable slot using “PTM” as the subject and the meeting time.</p></div>
                     </section>
+
                     <!-- TAB: LEAVE REQUESTS -->
                     <section id="portal-tab-leaves" class="hidden space-y-3.5 w-full">
                         <div><h3 class="text-sm font-black uppercase text-slate-950">Student Leave Application Portal</h3><p class="text-xs text-slate-600">Submit leave applications and review their status</p></div>
@@ -648,9 +686,9 @@
         </div>
     </div>
 
-    <!-- ================= ROLE-BASED MOBILE BOTTOM NAVIGATION ================= -->
+    <!-- ================= FROZEN MOBILE BOTTOM FOOTER BAR ================= -->
     <nav id="mobile-bottom-nav" class="hidden md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-300 h-14 shadow-lg">
-        <div id="mobile-nav-grid" class="flex h-full items-stretch"></div>
+        <div id="mobile-nav-grid" class="flex h-full items-center justify-around overflow-x-auto hide-scrollbar px-1"></div>
     </nav>
 
     <!-- ================= FROZEN DESKTOP FOOTER BAR ================= -->
@@ -1001,7 +1039,7 @@
         </div>
     </div>
 
-    <!-- 11. FACULTY MODAL (WITH PHOTO & GENDER) -->
+    <!-- 11. FACULTY MODAL -->
     <div id="modal-teacher" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl max-h-[90vh] overflow-y-auto text-slate-950">
             <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
@@ -1054,7 +1092,7 @@
         </div>
     </div>
 
-    <!-- 12. STUDENT MODAL (WITH PHOTO & GENDER) -->
+    <!-- 12. STUDENT MODAL -->
     <div id="modal-student" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl max-h-[90vh] overflow-y-auto text-slate-950">
             <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
@@ -1213,6 +1251,7 @@
         let currentEditingNoticeId = null;
         let growthChartInstance = null;
         let behaviorChartInstance = null;
+        let feeChartInstance = null;
         let previousSectionBeforeGallery = 'home';
         let chatPollingInterval = null;
         let lastToastActionTab = 'home';
@@ -1391,7 +1430,116 @@
             }
         }
 
-        // ================= ALWAYS LOGGED IN (PERSISTENT SESSION) =================
+        // ================= STRICT ROLE-ISOLATED NAVIGATION & QUICK MENU BUILDER =================
+        function getRoleAllowedMenuConfig(role) {
+            if (role === 'admin') {
+                return [
+                    { tab: 'home', label: 'Home & Notices', shortLabel: 'Home', icon: 'fa-house', color: 'indigo' },
+                    { tab: 'students', label: 'Student Directory', shortLabel: 'Students', icon: 'fa-users', color: 'sky' },
+                    { tab: 'attendance', label: 'Attendance & PDF', shortLabel: 'Attend', icon: 'fa-calendar-check', color: 'emerald' },
+                    { tab: 'fees', label: 'Fees & Analytics', shortLabel: 'Fees', icon: 'fa-indian-rupee-sign', color: 'rose' },
+                    { tab: 'tests', label: 'AI Online Tests', shortLabel: 'AI Tests', icon: 'fa-brain', color: 'amber' },
+                    { tab: 'homework', label: 'Homework Diary', shortLabel: 'Homework', icon: 'fa-book-open', color: 'purple' },
+                    { tab: 'timetable', label: 'Timetable & PTM', shortLabel: 'Schedule', icon: 'fa-calendar-days', color: 'cyan' },
+                    { tab: 'leaves', label: 'Approve Leaves', shortLabel: 'Leaves', icon: 'fa-envelope-open-text', color: 'orange' },
+                    { tab: 'notes', label: 'Study Notes', shortLabel: 'Notes', icon: 'fa-book-bookmark', color: 'teal' }
+                ];
+            } else if (role === 'teacher') {
+                return [
+                    { tab: 'home', label: 'Faculty Home', shortLabel: 'Home', icon: 'fa-house', color: 'indigo' },
+                    { tab: 'students', label: 'Students & Behavior', shortLabel: 'Students', icon: 'fa-users', color: 'sky' },
+                    { tab: 'attendance', label: 'Mark Attendance', shortLabel: 'Attend', icon: 'fa-calendar-check', color: 'emerald' },
+                    { tab: 'tests', label: 'Create AI Tests', shortLabel: 'Tests', icon: 'fa-brain', color: 'amber' },
+                    { tab: 'homework', label: 'Post Homework', shortLabel: 'Homework', icon: 'fa-book-open', color: 'purple' },
+                    { tab: 'chat', label: 'Student Chat', shortLabel: 'Chat', icon: 'fa-comments', color: 'sky', hasBadge: true },
+                    { tab: 'timetable', label: 'Class Schedule', shortLabel: 'Schedule', icon: 'fa-calendar-days', color: 'cyan' },
+                    { tab: 'leaves', label: 'Review Leaves', shortLabel: 'Leaves', icon: 'fa-envelope-open-text', color: 'orange' },
+                    { tab: 'notes', label: 'Upload Notes', shortLabel: 'Notes', icon: 'fa-book-bookmark', color: 'teal' }
+                ];
+            } else {
+                // Parent / Student Role
+                return [
+                    { tab: 'home', label: 'My Progress & Home', shortLabel: 'Home', icon: 'fa-house', color: 'indigo' },
+                    { tab: 'students', label: 'My Profile', shortLabel: 'Profile', icon: 'fa-id-card', color: 'sky' },
+                    { tab: 'attendance', label: 'My Attendance', shortLabel: 'Attend', icon: 'fa-calendar-check', color: 'emerald' },
+                    { tab: 'tests', label: 'Attempt Tests', shortLabel: 'Tests', icon: 'fa-brain', color: 'amber' },
+                    { tab: 'homework', label: 'My Homework', shortLabel: 'Homework', icon: 'fa-book-open', color: 'purple' },
+                    { tab: 'chat', label: 'Ask Teacher (Chat)', shortLabel: 'Chat', icon: 'fa-comments', color: 'sky', hasBadge: true },
+                    { tab: 'fees', label: 'My Fee Status & Pay', shortLabel: 'Fees', icon: 'fa-indian-rupee-sign', color: 'rose' },
+                    { tab: 'timetable', label: 'My Timetable', shortLabel: 'Schedule', icon: 'fa-calendar-days', color: 'cyan' },
+                    { tab: 'leaves', label: 'Apply for Leave', shortLabel: 'Leave', icon: 'fa-envelope-open-text', color: 'orange' },
+                    { tab: 'notes', label: 'Download Notes', shortLabel: 'Notes', icon: 'fa-book-bookmark', color: 'teal' }
+                ];
+            }
+        }
+
+        function buildRoleNavigation() {
+            const role = STATE.currentRole || 'parent';
+            const items = getRoleAllowedMenuConfig(role);
+
+            // 1. Desktop Sidebar
+            const sideNav = document.getElementById('desktop-sidebar-nav');
+            if (sideNav) {
+                sideNav.innerHTML = items.map(item => `
+                    <button onclick="switchPortalTab('${item.tab}')" id="side-portal-${item.tab}" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition">
+                        <span class="flex items-center gap-3"><i class="fa-solid ${item.icon} w-4"></i> <span>${item.label}</span></span>
+                        ${item.hasBadge ? `<span id="side-chat-badge" class="hidden bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full animate-pulse">0</span>` : ''}
+                    </button>
+                `).join('');
+            }
+
+            // 2. Mobile Bottom Footer Bar
+            const mGrid = document.getElementById('mobile-nav-grid');
+            if (mGrid) {
+                mGrid.innerHTML = items.map(item => `
+                    <button onclick="switchPortalTab('${item.tab}')" id="m-nav-${item.tab}" class="min-w-[60px] relative flex flex-col items-center justify-center text-slate-800 transition py-1">
+                        <i class="fa-solid ${item.icon} text-sm"></i>
+                        <span class="text-[10px] font-extrabold mt-0.5">${item.shortLabel}</span>
+                        ${item.hasBadge ? `<span id="m-chat-badge" class="hidden absolute top-1 right-2 bg-rose-600 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center animate-pulse">0</span>` : ''}
+                    </button>
+                `).join('');
+            }
+
+            // 3. Home Dashboard Quick Access Menu Grid (Role-Specific Features + Actions)
+            const quickGrid = document.getElementById('role-quick-menu-grid');
+            const heading = document.getElementById('role-menu-heading');
+            if (heading) {
+                heading.innerText = role === 'admin'
+                    ? 'Admin Control Panel & Modules'
+                    : (role === 'teacher' ? 'Faculty Teaching Modules' : 'Student Learning Portal');
+            }
+            if (quickGrid) {
+                const actionButtons = items.filter(i => i.tab !== 'home').map(item => `
+                    <button onclick="switchPortalTab('${item.tab}')" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 text-slate-900 transition shadow-sm group">
+                        <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 group-hover:bg-indigo-600 group-hover:text-white flex items-center justify-center text-sm mb-1.5 transition">
+                            <i class="fa-solid ${item.icon}"></i>
+                        </div>
+                        <span class="text-xs font-extrabold text-center leading-tight">${item.label}</span>
+                    </button>
+                `);
+
+                // Role-exclusive quick action buttons
+                if (role === 'admin') {
+                    actionButtons.push(`
+                        <button onclick="openAddStudentModal()" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-950 transition shadow-sm">
+                            <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-sm mb-1.5"><i class="fa-solid fa-user-plus"></i></div>
+                            <span class="text-xs font-extrabold text-center leading-tight">Add New Student</span>
+                        </button>
+                        <button onclick="openAddTeacherModal()" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-950 transition shadow-sm">
+                            <div class="w-9 h-9 rounded-xl bg-amber-600 text-white flex items-center justify-center text-sm mb-1.5"><i class="fa-solid fa-chalkboard-user"></i></div>
+                            <span class="text-xs font-extrabold text-center leading-tight">Add Faculty</span>
+                        </button>
+                        <button onclick="openHolidayModal()" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-950 transition shadow-sm">
+                            <div class="w-9 h-9 rounded-xl bg-rose-600 text-white flex items-center justify-center text-sm mb-1.5"><i class="fa-solid fa-calendar-xmark"></i></div>
+                            <span class="text-xs font-extrabold text-center leading-tight">Declare Holiday</span>
+                        </button>
+                    `);
+                }
+                quickGrid.innerHTML = actionButtons.join('');
+            }
+        }
+
+        // ================= VALIDATED SESSION INITIALIZATION =================
         window.addEventListener('DOMContentLoaded', () => {
             enforceMonthlyAttendanceReset();
 
@@ -1403,9 +1551,16 @@
             const savedPhone = localStorage.getItem('shiksha_auth_phone');
             const savedStudentId = localStorage.getItem('shiksha_auth_student_id');
             
-            if (savedSession) {
-                authorizeRole(savedSession, savedPhone, savedStudentId);
+            if (savedSession === 'admin') {
+                authorizeRole('admin');
+            } else if (savedSession === 'teacher' && savedPhone) {
+                authorizeRole('teacher', savedPhone);
+            } else if (savedSession === 'parent' && savedStudentId) {
+                authorizeRole('parent', savedPhone, savedStudentId);
             } else {
+                localStorage.removeItem('shiksha_auth_role');
+                localStorage.removeItem('shiksha_auth_phone');
+                localStorage.removeItem('shiksha_auth_student_id');
                 setLoginRole('admin');
                 showPublicSection('home');
             }
@@ -1424,7 +1579,6 @@
                 return;
             }
             if (!STATE.currentRole) return;
-
             try {
                 const challenge = new Uint8Array(32);
                 window.crypto.getRandomValues(challenge);
@@ -1442,14 +1596,13 @@
                         timeout: 60000
                     }
                 });
-
                 const bioProfile = {
                     role: STATE.currentRole,
                     phone: STATE.currentUserPhone || STATE.adminUser.phone,
                     studentId: STATE.currentStudentId || ''
                 };
                 localStorage.setItem('shiksha_biometric_profile', JSON.stringify(bioProfile));
-                alert("Fingerprint / Face Lock registered on this device! Next time you can log in with a single touch.");
+                alert("Fingerprint / Face Lock registered on this device!");
             } catch (err) {
                 alert("Biometric setup cancelled or not supported on this browser.");
             }
@@ -1499,7 +1652,11 @@
             renderNotices();
             renderNotes();
             renderFees();
-            renderFeeAnalytics(); renderFeeReport(); renderHomeworkDiary(); renderTimetable(); renderLeaveRequests();
+            renderFeeAnalytics();
+            renderFeeReport();
+            renderHomeworkDiary();
+            renderTimetable();
+            renderLeaveRequests();
             renderGallery();
             renderOnlineTests();
             renderTestSubmissions();
@@ -1511,28 +1668,8 @@
             }
         }
 
-        // ================= MOBILE HEADER MENU =================
-        function toggleMobileMenu(forceState) {
-            const menu = document.getElementById('mobile-menu-dropdown');
-            const button = document.getElementById('btn-mobile-menu');
-            if (!menu) return;
-            const shouldOpen = (typeof forceState === 'boolean') ? forceState : menu.classList.contains('hidden');
-            menu.classList.toggle('hidden', !shouldOpen);
-            if (button) button.setAttribute('aria-expanded', String(shouldOpen));
-            const chatItem = document.getElementById('mobile-menu-chat');
-            if (chatItem) chatItem.classList.toggle('hidden', STATE.currentRole === 'admin');
-        }
-
-        function mobileMenuGo(tab) {
-            toggleMobileMenu(false);
-            if (!STATE.currentRole) { openLoginGateway(); return; }
-            switchPortalTab(tab);
-        }
-
         // ================= DESKTOP & MOBILE VIEW ROUTING =================
         function showPublicSection(section) {
-            toggleMobileMenu(false);
-
             if (section === 'faculty' && STATE.currentRole && STATE.currentRole !== 'admin') {
                 alert("Faculty directory is restricted. You can view your own profile in the portal.");
                 return;
@@ -1554,7 +1691,6 @@
             facView.classList.add('hidden');
             galView.classList.add('hidden');
             portalView.classList.add('hidden');
-            portalView.style.display = 'none';
             if (mBottomNav && !STATE.currentRole) mBottomNav.classList.add('hidden');
 
             if (section === 'gallery') {
@@ -1581,7 +1717,6 @@
         }
 
         function openPortalView() {
-            toggleMobileMenu(false);
             if (!STATE.currentRole) { openLoginGateway(); return; }
             closeModal('modal-login-gateway');
             const mLogin = document.getElementById('mobile-login-screen');
@@ -1597,147 +1732,46 @@
             facView.classList.add('hidden');
             galView.classList.add('hidden');
             portalView.classList.remove('hidden');
-            portalView.style.display = 'flex';
             if (mBottomNav) mBottomNav.classList.remove('hidden');
-            configureMobileBottomNav();
 
             window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
-        // ================= ROLE-BASED MOBILE NAVIGATION & MENU PAGE =================
-        function configureMobileBottomNav() {
-            const grid = document.getElementById('mobile-nav-grid');
-            if (!grid || !STATE.currentRole) return;
-            const role = STATE.currentRole;
-            const items = role === 'admin'
-                ? [
-                    ['home', 'Home', 'fa-house'],
-                    ['students', 'Students', 'fa-users'],
-                    ['attendance', 'Attendance', 'fa-calendar-check'],
-                    ['fees', 'Fees', 'fa-indian-rupee-sign'],
-                    ['menu', 'Menu', 'fa-grid-2']
-                  ]
-                : role === 'teacher'
-                ? [
-                    ['home', 'Home', 'fa-house'],
-                    ['attendance', 'Attendance', 'fa-calendar-check'],
-                    ['tests', 'Test', 'fa-brain'],
-                    ['fees', 'Fees', 'fa-indian-rupee-sign'],
-                    ['menu', 'Menu', 'fa-grid-2']
-                  ]
-                : [
-                    ['home', 'Home', 'fa-house'],
-                    ['attendance', 'Attendance', 'fa-calendar-check'],
-                    ['chat', 'Chat', 'fa-comments'],
-                    ['fees', 'Fees', 'fa-indian-rupee-sign'],
-                    ['menu', 'Menu', 'fa-grid-2']
-                  ];
-            grid.innerHTML = items.map(([tab, label, icon]) => `
-                <button onclick="switchPortalTab('${tab}')" id="m-nav-${tab}" class="flex-1 min-w-0 ${tab === 'chat' ? 'relative' : ''} flex flex-col items-center justify-center text-slate-700 transition" aria-label="${label}">
-                    <i class="fa-solid ${icon} text-base"></i>
-                    <span class="text-[10px] font-extrabold mt-0.5">${label}</span>
-                    ${tab === 'chat' ? '<span id="m-chat-badge" class="hidden absolute top-1 right-[28%] bg-rose-600 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center animate-pulse">0</span>' : ''}
-                </button>`).join('');
-            renderPortalMenuPage();
-            updateUnreadChatBadges();
-        }
-
-        function renderPortalMenuPage() {
-            const list = document.getElementById('portal-menu-grid');
-            const resources = document.getElementById('portal-menu-resources');
-            if (!list || !resources || !STATE.currentRole) return;
-            const role = STATE.currentRole;
-
-            // Every portal tab is listed here; only role-restricted options are filtered.
-            const entries = [
-                ['home', 'Home & Notices', 'Notices, updates and dashboard overview', 'fa-house', 'indigo'],
-                ['students', role === 'parent' ? 'My Profile' : 'Students', role === 'parent' ? 'View your linked student profile and records' : 'Student directory, records and profile management', 'fa-users', 'sky'],
-                ['attendance', 'Attendance & PDF', 'Daily attendance, monthly summaries and reports', 'fa-calendar-check', 'emerald'],
-                ['tests', 'Online Tests', 'Available tests, test creation and result review', 'fa-brain', 'amber'],
-                ...(role !== 'admin' ? [['chat', 'Chat', 'Messages and communication', 'fa-comments', 'blue']] : []),
-                ['fees', 'Fees & Slips', 'Fee status, payments, reminders and downloadable receipts', 'fa-indian-rupee-sign', 'emerald'],
-                ['homework', 'Homework Diary', 'Daily homework, classwork and completion status', 'fa-book-open', 'violet'],
-                ['timetable', 'Timetable & PTM', 'Weekly class timetable and PTM schedule', 'fa-calendar-days', 'cyan'],
-                ['leaves', 'Leave Requests', 'Submit, review and track leave applications', 'fa-envelope-open-text', 'rose'],
-                ['notes', 'Study Notes', 'Learning materials and shared study resources', 'fa-book-bookmark', 'amber']
-            ];
-            const toneClasses = {
-                indigo: 'bg-indigo-100 text-indigo-700', sky: 'bg-sky-100 text-sky-700',
-                emerald: 'bg-emerald-100 text-emerald-700', amber: 'bg-amber-100 text-amber-700',
-                blue: 'bg-blue-100 text-blue-700', violet: 'bg-violet-100 text-violet-700',
-                cyan: 'bg-cyan-100 text-cyan-700', rose: 'bg-rose-100 text-rose-700'
-            };
-            list.innerHTML = entries.map(([tab, label, description, icon, tone]) => `
-                <button type="button" onclick="switchPortalTab('${tab}')" class="w-full flex items-center gap-3 rounded-xl border border-slate-200 bg-white hover:bg-indigo-50 active:bg-indigo-100 px-3 py-3 text-left shadow-sm transition min-h-[68px]">
-                    <span class="w-10 h-10 shrink-0 rounded-xl ${toneClasses[tone] || toneClasses.indigo} flex items-center justify-center text-base"><i class="fa-solid ${icon}"></i></span>
-                    <span class="min-w-0 flex-1"><span class="block text-xs font-black text-slate-900">${label}</span><span class="block text-[10px] leading-4 text-slate-500 mt-0.5">${description}</span></span>
-                    <i class="fa-solid fa-chevron-right text-slate-400 text-xs shrink-0"></i>
-                </button>`).join('');
-
-            const resourceEntries = [
-                ['gallery', 'Photo & Video Gallery', 'Institute photos, videos and event collections', 'fa-images', 'emerald', "showPublicSection('gallery')"],
-                ...(role === 'admin' ? [['faculty', 'Faculty Directory', 'View the institute faculty directory', 'fa-chalkboard-user', 'amber', "showPublicSection('faculty')"]] : [])
-            ];
-            resources.innerHTML = resourceEntries.map(([key, label, description, icon, tone, action]) => `
-                <button type="button" onclick="${action}" class="w-full flex items-center gap-3 rounded-xl border border-slate-200 bg-white hover:bg-indigo-50 active:bg-indigo-100 px-3 py-3 text-left shadow-sm transition min-h-[68px]">
-                    <span class="w-10 h-10 shrink-0 rounded-xl ${toneClasses[tone] || toneClasses.indigo} flex items-center justify-center text-base"><i class="fa-solid ${icon}"></i></span>
-                    <span class="min-w-0 flex-1"><span class="block text-xs font-black text-slate-900">${label}</span><span class="block text-[10px] leading-4 text-slate-500 mt-0.5">${description}</span></span>
-                    <i class="fa-solid fa-chevron-right text-slate-400 text-xs shrink-0"></i>
-                </button>`).join('');
-        }
-
         function switchPortalTab(tab) {
-            if (tab === 'chat' && STATE.currentRole === 'admin') return;
+            const allowedTabs = getRoleAllowedMenuConfig(STATE.currentRole || 'parent').map(i => i.tab);
+            if (!allowedTabs.includes(tab)) {
+                alert("This section is not enabled for your account role.");
+                return;
+            }
 
             STATE.activePortalTab = tab;
-            ['home', 'students', 'attendance', 'tests', 'chat', 'fees', 'homework', 'timetable', 'leaves', 'notes', 'menu'].forEach(t => {
+            ['home', 'students', 'attendance', 'tests', 'chat', 'fees', 'homework', 'timetable', 'leaves', 'notes'].forEach(t => {
                 const page = document.getElementById(`portal-tab-${t}`);
-                if (page) {
-                    page.classList.add('hidden');
-                    page.style.display = 'none';
-                }
+                if (page) page.classList.add('hidden');
                 
                 const sideBtn = document.getElementById(`side-portal-${t}`);
                 if (sideBtn) {
-                    if (t === 'chat') {
-                        if (STATE.currentRole === 'admin') {
-                            sideBtn.classList.add('hidden');
-                        } else {
-                            sideBtn.className = (t === tab)
-                                ? "w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-indigo-600 text-white shadow-sm transition"
-                                : "w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition";
-                        }
-                    } else {
-                        sideBtn.className = (t === tab)
-                            ? "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-indigo-600 text-white shadow-sm transition"
-                            : "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition";
-                    }
+                    sideBtn.className = (t === tab)
+                        ? "w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-indigo-600 text-white shadow-sm transition"
+                        : "w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 transition";
                 }
 
                 const mNavBtn = document.getElementById(`m-nav-${t}`);
                 if (mNavBtn) {
-                    if (t === 'chat' && STATE.currentRole === 'admin') {
-                        mNavBtn.classList.add('hidden');
-                    } else {
-                        const relClass = (t === 'chat') ? 'relative ' : '';
-                        mNavBtn.className = (t === tab)
-                            ? `${relClass}flex-1 min-w-0 flex flex-col items-center justify-center text-indigo-700 transition`
-                            : `${relClass}flex-1 min-w-0 flex flex-col items-center justify-center text-slate-800 transition`;
-                    }
+                    mNavBtn.className = (t === tab)
+                        ? "min-w-[60px] relative flex flex-col items-center justify-center text-indigo-700 transition py-1"
+                        : "min-w-[60px] relative flex flex-col items-center justify-center text-slate-800 transition py-1";
                 }
             });
+
             const activePage = document.getElementById(`portal-tab-${tab}`);
-            if (activePage) {
-                activePage.classList.remove('hidden');
-                activePage.style.display = 'block';
-            }
+            if (activePage) activePage.classList.remove('hidden');
 
             if (tab === 'chat') renderChatInterface();
-            if (tab === 'fees') { initializeNewErpModules(); renderFeeAnalytics(); renderFeeReport(); }
+            if (tab === 'fees') { initializeNewErpModules(); renderFees(); renderFeeAnalytics(); }
             if (tab === 'homework') { initializeNewErpModules(); renderHomeworkDiary(); }
             if (tab === 'timetable') { initializeNewErpModules(); renderTimetable(); }
             if (tab === 'leaves') { initializeNewErpModules(); renderLeaveRequests(); }
-            if (tab === 'menu') renderPortalMenuPage();
             window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
@@ -2152,7 +2186,7 @@
             document.getElementById('bar-absent').style.width = `${aRatio}%`;
         }
 
-        // ================= STUDENT BEHAVIOR TRACKING (PERSISTENT CHECKBOXES) =================
+        // ================= STUDENT BEHAVIOR TRACKING =================
         function openBehaviorModal(studentId, studentName, flagType) {
             if (STATE.currentRole !== 'teacher' && STATE.currentRole !== 'admin') return;
             isEditingBehavior = true;
@@ -2210,12 +2244,7 @@
             STATE.behaviorLogs = STATE.behaviorLogs.filter(b => !(String(b.studentId) === String(studentId) && b.dateKey === todayKey && b.flag === flag));
 
             const entry = {
-                id: Date.now(),
-                studentId,
-                studentName,
-                flag,
-                reason,
-                teacherName,
+                id: Date.now(), studentId, studentName, flag, reason, teacherName,
                 date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
                 dateKey: todayKey
             };
@@ -2227,6 +2256,9 @@
             renderStudents();
             await postToCloud({ action: 'addBehaviorLog', log: entry });
         }
+    </script>
+    <!-- ================= COMPLETE UNIFIED APPLICATION ENGINE SCRIPT (PART 3 OF 3) ================= -->
+    <script>
         // ================= TEACHER-STUDENT ONLY CHAT + RED BADGE =================
         function getMyChatMessages() {
             if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
@@ -2242,21 +2274,7 @@
         function updateUnreadChatBadges() {
             const sideBadge = document.getElementById('side-chat-badge');
             const mBadge = document.getElementById('m-chat-badge');
-            const sideBtn = document.getElementById('side-portal-chat');
-            const mBtn = document.getElementById('m-nav-chat');
-            const isAdmin = (STATE.currentRole === 'admin');
-            if (sideBtn) {
-                if (isAdmin) sideBtn.classList.add('hidden');
-                else sideBtn.classList.remove('hidden');
-            }
-            if (mBtn) {
-                if (isAdmin) mBtn.classList.add('hidden');
-                else mBtn.classList.remove('hidden');
-            }
-            const menuChat = document.getElementById('mobile-menu-chat');
-            if (menuChat && isAdmin) menuChat.classList.add('hidden');
-            else if (menuChat) menuChat.classList.remove('hidden');
-            if (isAdmin) return;
+            if (STATE.currentRole === 'admin') return;
 
             const key = `shiksha_seen_chats_${STATE.currentRole}_${STATE.currentStudentId || STATE.currentUserPhone}`;
             const seenCount = parseInt(localStorage.getItem(key) || '0', 10);
@@ -2554,7 +2572,7 @@
             }
         }
 
-        // ================= STUDENT PROGRESSIVE REPORT (GROWTH CHART + BEHAVIOR COLUMN CHART) =================
+        // ================= STUDENT PROGRESSIVE REPORT =================
         function renderParentGrowthAndRemarks() {
             const section = document.getElementById('parent-growth-analytics-section');
             if (!section || STATE.currentRole !== 'parent' || !STATE.currentStudentId) {
@@ -2678,7 +2696,7 @@
             tipsList.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
         }
 
-        // ================= PRECISE FULL-DOCUMENT PDF & IMAGE MCQ EXTRACTOR =================
+        // ================= AI & PDF MCQ EXTRACTOR =================
         function openCreateAiTestModal(prefillData = null) {
             document.getElementById('ai-test-title').value = prefillData?.title ? `${prefillData.title} - Online Test` : '';
             document.getElementById('ai-topic-prompt').value = prefillData?.title || '';
@@ -2740,11 +2758,8 @@
 
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
-
                 const ansMatch = line.match(ansRegex);
-                if (ansMatch && currentQ) {
-                    currentQ.ans = ansMatch[1].toUpperCase();
-                }
+                if (ansMatch && currentQ) currentQ.ans = ansMatch[1].toUpperCase();
 
                 const qMatch = line.match(qStartRegex);
                 if (qMatch && !/^\(?[a-dA-D][\)\.]/.test(line)) {
@@ -2754,44 +2769,33 @@
                     }
                     let qBody = qMatch[1].trim();
                     currentQ = { q: qBody, A: '', B: '', C: '', D: '', ans: 'A' };
-
                     let m;
                     optInlineRegex.lastIndex = 0;
                     while ((m = optInlineRegex.exec(qBody)) !== null) {
-                        const key = m[1].toUpperCase();
-                        currentQ[key] = m[2].trim();
+                        currentQ[m[1].toUpperCase()] = m[2].trim();
                     }
-                    if (currentQ.A) {
-                        currentQ.q = qBody.split(/\(?[aA][\)\.]\s*/)[0].trim();
-                    }
+                    if (currentQ.A) currentQ.q = qBody.split(/\(?[aA][\)\.]\s*/)[0].trim();
                     continue;
                 }
 
                 if (currentQ) {
                     const sOpt = line.match(singleOptRegex);
                     if (sOpt) {
-                        const key = sOpt[1].toUpperCase();
-                        currentQ[key] = sOpt[2].replace(ansRegex, '').trim();
+                        currentQ[sOpt[1].toUpperCase()] = sOpt[2].replace(ansRegex, '').trim();
                         continue;
                     }
-
                     let foundAnyOpt = false;
                     let m;
                     optInlineRegex.lastIndex = 0;
                     while ((m = optInlineRegex.exec(line)) !== null) {
                         foundAnyOpt = true;
-                        const key = m[1].toUpperCase();
-                        currentQ[key] = m[2].trim();
+                        currentQ[m[1].toUpperCase()] = m[2].trim();
                     }
-                    if (!foundAnyOpt && !ansMatch && !currentQ.A) {
-                        currentQ.q += ' ' + line;
-                    }
+                    if (!foundAnyOpt && !ansMatch && !currentQ.A) currentQ.q += ' ' + line;
                 }
             }
 
-            if (currentQ && currentQ.q && extracted.length < maxLimit) {
-                extracted.push(currentQ);
-            }
+            if (currentQ && currentQ.q && extracted.length < maxLimit) extracted.push(currentQ);
 
             return extracted.slice(0, maxLimit).map(item => ({
                 q: item.q,
@@ -2810,8 +2814,7 @@
             for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
                 const page = await pdf.getPage(pageNum);
                 const textContent = await page.getTextContent();
-                const pageText = textContent.items.map(item => item.str).join(' ');
-                fullText += pageText + '\n';
+                fullText += textContent.items.map(item => item.str).join(' ') + '\n';
             }
             return fullText;
         }
@@ -2831,126 +2834,84 @@
             const apiKey = (document.getElementById('gemini-api-key-inp')?.value || '').trim();
             if (apiKey) localStorage.setItem('shiksha_gemini_api_key', apiKey);
 
-            // CASE 1: PDF UPLOADED
             if (file && (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))) {
                 if (apiKey) {
-                    statusEl.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> AI Extracting ALL Questions & Options from PDF...`;
+                    statusEl.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> AI Extracting Questions from PDF...`;
                     try {
                         const pdfDataUrl = await readFileAsBase64(file);
                         const base64Pdf = pdfDataUrl.split(',')[1];
-                        const promptText = `Carefully read the entire uploaded PDF document for Class ${cls} ${subj}. Extract EVERY SINGLE multiple choice question (all questions present in the PDF, up to 50) along with their exact 4 options and correct answer key. Do NOT stop at 10 if there are more questions in the PDF. Return ONLY a valid JSON array of objects with exact keys: "q", "A", "B", "C", "D", "ans" ("A", "B", "C", or "D"). No markdown.`;
-
+                        const promptText = `Carefully read the uploaded PDF for Class ${cls} ${subj}. Extract all MCQs (up to 50) with their 4 options and answer key. Return ONLY a valid JSON array with keys: "q", "A", "B", "C", "D", "ans". No markdown.`;
                         const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                contents: [{ parts: [{ text: promptText }, { inline_data: { mime_type: 'application/pdf', data: base64Pdf } }] }]
-                            })
+                            body: JSON.stringify({ contents: [{ parts: [{ text: promptText }, { inline_data: { mime_type: 'application/pdf', data: base64Pdf } }] }] })
                         });
                         const resJson = await resp.json();
-                        let rawText = resJson?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                        rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+                        let rawText = (resJson?.candidates?.[0]?.content?.parts?.[0]?.text || '').replace(/```json/gi, '').replace(/```/g, '').trim();
                         const generatedQs = JSON.parse(rawText).slice(0, 50);
                         if (Array.isArray(generatedQs) && generatedQs.length > 0) {
                             document.getElementById('ai-questions-container').innerHTML = '';
                             generatedQs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans || 'A'));
-                            statusEl.innerHTML = `<span class="text-emerald-700">Extracted All ${generatedQs.length} Questions & Options from PDF!</span>`;
+                            statusEl.innerHTML = `<span class="text-emerald-700">Extracted ${generatedQs.length} Questions!</span>`;
                             return;
                         }
-                    } catch (err) { console.warn("Gemini PDF fallback:", err); }
+                    } catch (err) {}
                 }
 
-                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Parsing All Questions & Options from PDF...';
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Parsing PDF Text...';
                 try {
-                    const arrayBuffer = await file.arrayBuffer();
-                    const pdfText = await extractTextFromPdfArrayBuffer(arrayBuffer);
+                    const pdfText = await extractTextFromPdfArrayBuffer(await file.arrayBuffer());
                     const exactQs = parseExactMcqsFromRawText(pdfText, subj, 50);
                     if (exactQs.length > 0) {
                         document.getElementById('ai-questions-container').innerHTML = '';
                         exactQs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans));
-                        statusEl.innerHTML = `<span class="text-emerald-700">Extracted ${exactQs.length} Questions & Options from PDF!</span>`;
+                        statusEl.innerHTML = `<span class="text-emerald-700">Extracted ${exactQs.length} Questions!</span>`;
                         return;
                     }
                 } catch (err) {
-                    statusEl.innerText = 'Scanned PDF: Please enter Gemini API Key above for full OCR.';
+                    statusEl.innerText = 'Scanned PDF requires Gemini API Key.';
                     return;
                 }
             }
 
-            // CASE 2: JPEG / IMAGE UPLOADED
             if (file && file.type.startsWith('image/')) {
-                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Reading Image High-Res...';
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Reading Image...';
                 const compressedDataUrl = await compressImage(file, 1400, 0.9);
-                if (!compressedDataUrl) { statusEl.innerText = 'Could not read image.'; return; }
-
-                if (apiKey) {
-                    statusEl.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> AI Extracting ALL Questions & Options from Image...`;
+                if (apiKey && compressedDataUrl) {
                     try {
                         const base64Data = compressedDataUrl.split(',')[1];
-                        const promptText = `Carefully read the entire image for Class ${cls} ${subj}. Extract EVERY SINGLE question visible in the image (do NOT limit to 10; include all questions up to 50) with their exact 4 options and correct answer. Return ONLY a valid JSON array of objects with exact keys: "q", "A", "B", "C", "D", "ans" ("A", "B", "C", or "D"). No markdown.`;
+                        const promptText = `Extract all MCQs visible in this image for Class ${cls} ${subj} (up to 50). Return ONLY a valid JSON array with keys: "q", "A", "B", "C", "D", "ans". No markdown.`;
                         const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                contents: [{ parts: [{ text: promptText }, { inline_data: { mime_type: 'image/jpeg', data: base64Data } }] }]
-                            })
+                            body: JSON.stringify({ contents: [{ parts: [{ text: promptText }, { inline_data: { mime_type: 'image/jpeg', data: base64Data } }] }] })
                         });
                         const resJson = await resp.json();
-                        let rawText = resJson?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                        rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+                        let rawText = (resJson?.candidates?.[0]?.content?.parts?.[0]?.text || '').replace(/```json/gi, '').replace(/```/g, '').trim();
                         const generatedQs = JSON.parse(rawText).slice(0, 50);
                         if (Array.isArray(generatedQs) && generatedQs.length > 0) {
                             document.getElementById('ai-questions-container').innerHTML = '';
                             generatedQs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans || 'A'));
-                            statusEl.innerHTML = `<span class="text-emerald-700">Extracted All ${generatedQs.length} Questions & Options!</span>`;
+                            statusEl.innerHTML = `<span class="text-emerald-700">Extracted ${generatedQs.length} Questions!</span>`;
                             return;
                         }
-                    } catch (err) { console.warn("Gemini Vision fallback:", err); }
+                    } catch (err) {}
                 }
-
-                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cloud Vision Extracting All Questions...';
-                try {
-                    const formData = new FormData();
-                    formData.append("base64Image", compressedDataUrl);
-                    formData.append("language", "eng");
-                    formData.append("isOverlayRequired", "false");
-                    formData.append("OCREngine", "2");
-
-                    const ocrResp = await fetch("https://api.ocr.space/parse/image", {
-                        method: "POST",
-                        headers: { "apikey": "helloworld" },
-                        body: formData
-                    });
-                    const ocrData = await ocrResp.json();
-                    const extractedText = ocrData?.ParsedResults?.[0]?.ParsedText || '';
-
-                    if (extractedText && extractedText.trim().length > 10) {
-                        const exactQs = parseExactMcqsFromRawText(extractedText, subj, 50);
-                        if (exactQs.length > 0) {
-                            document.getElementById('ai-questions-container').innerHTML = '';
-                            exactQs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans));
-                            statusEl.innerHTML = `<span class="text-emerald-700">Extracted ${exactQs.length} Questions & Options!</span>`;
-                            return;
-                        }
-                    }
-                } catch (err) { console.warn("Cloud OCR fallback:", err); }
             }
 
-            // CASE 3: TOPIC PROMPT ONLY
             const requestedCount = Math.min(50, Math.max(1, parseInt(document.getElementById('ai-num-questions')?.value || '10', 10)));
             const effectiveTopic = topic || `${subj} Chapter Assessment`;
             if (apiKey) {
                 statusEl.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> Generating ${requestedCount} MCQs...`;
                 try {
-                    const promptText = `Create ${requestedCount} multiple choice questions (MCQs) (strictly maximum 50) for Class ${cls} ${subj} on the topic "${effectiveTopic}". Return ONLY a valid JSON array of objects with exact keys: "q", "A", "B", "C", "D", "ans" ("A", "B", "C", or "D"). No markdown.`;
+                    const promptText = `Create ${requestedCount} MCQs for Class ${cls} ${subj} on "${effectiveTopic}". Return ONLY a valid JSON array with keys: "q", "A", "B", "C", "D", "ans". No markdown.`;
                     const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
                     });
                     const resJson = await resp.json();
-                    let rawText = resJson?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                    rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+                    let rawText = (resJson?.candidates?.[0]?.content?.parts?.[0]?.text || '').replace(/```json/gi, '').replace(/```/g, '').trim();
                     const generatedQs = JSON.parse(rawText).slice(0, 50);
                     if (Array.isArray(generatedQs) && generatedQs.length > 0) {
                         document.getElementById('ai-questions-container').innerHTML = '';
@@ -2961,16 +2922,13 @@
                 } catch (e) {}
             }
 
-            alert("Could not auto-detect structured questions. If uploading a scanned/handwritten file, please enter your free Gemini API Key in the box above.");
+            alert("Could not auto-detect structured questions. Please enter your Gemini API Key in the box above.");
             statusEl.innerText = 'Ready';
         }
 
         function addQuestionBlock(qText = '', optA = '', optB = '', optC = '', optD = '', ans = 'A') {
             const container = document.getElementById('ai-questions-container');
-            if (container.children.length >= 50) {
-                alert("Maximum limit of 50 questions per test reached!");
-                return;
-            }
+            if (container.children.length >= 50) { alert("Maximum limit of 50 questions reached!"); return; }
             const idx = container.children.length + 1;
             const div = document.createElement('div');
             div.className = "ai-q-block bg-slate-100 p-3 rounded-2xl border border-slate-300 space-y-2";
@@ -3022,7 +2980,7 @@
             localStorage.setItem('shiksha_online_tests', JSON.stringify(STATE.onlineTests));
             renderOnlineTests(); closeModal('modal-create-ai-test');
             await postToCloud({ action: 'saveOnlineTest', test: newTest });
-            alert(`Test (${duration} mins, ${questions.length} MCQs) published to ${assignedStudents.length} students!`);
+            alert(`Test published to ${assignedStudents.length} students!`);
         }
 
         function formatDurationLabel(mins) {
@@ -3042,13 +3000,12 @@
             }
             grid.innerHTML = tests.map(t => {
                 const sub = STATE.currentRole === 'parent' ? STATE.testSubmissions.find(s => String(s.testId) === String(t.id) && String(s.studentId) === String(STATE.currentStudentId)) : null;
-                const durLabel = formatDurationLabel(t.duration);
                 return `
                     <div class="bg-white p-4 rounded-2xl border border-slate-300 flex flex-col justify-between gap-2.5 shadow-sm">
                         <div>
                             <div class="flex items-center justify-between gap-1">
                                 <span class="text-[10px] font-extrabold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">Class ${t.class} &bull; ${t.subject}</span>
-                                <span class="text-[10px] font-extrabold bg-amber-100 text-amber-900 px-2 py-0.5 rounded"><i class="fa-regular fa-clock mr-1"></i>${durLabel}</span>
+                                <span class="text-[10px] font-extrabold bg-amber-100 text-amber-900 px-2 py-0.5 rounded"><i class="fa-regular fa-clock mr-1"></i>${formatDurationLabel(t.duration)}</span>
                             </div>
                             <h4 class="text-sm font-extrabold text-slate-950 mt-1.5">${t.title}</h4>
                             <p class="text-xs font-semibold text-slate-700">${(t.questions || []).length} Questions</p>
@@ -3080,39 +3037,25 @@
             if (testCountdownInterval) clearInterval(testCountdownInterval);
             let remainingSeconds = (parseInt(test.duration || 30, 10)) * 60;
             const timerEl = document.getElementById('attempt-timer-display');
-            const updateTimerText = () => {
-                const hrs = Math.floor(remainingSeconds / 3600);
-                const mins = Math.floor((remainingSeconds % 3600) / 60);
-                const secs = remainingSeconds % 60;
-                timerEl.innerText = hrs > 0
-                    ? `${hrs}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
-                    : `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-            };
-            updateTimerText();
-
             testCountdownInterval = setInterval(() => {
                 remainingSeconds--;
                 if (remainingSeconds <= 0) {
                     clearInterval(testCountdownInterval);
-                    alert("Time is up! Your test is being auto-submitted.");
+                    alert("Time is up! Submitting test.");
                     handleStudentSubmitTest(null);
                 } else {
-                    updateTimerText();
+                    const m = Math.floor(remainingSeconds / 60), s = remainingSeconds % 60;
+                    timerEl.innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
                 }
             }, 1000);
-
             document.getElementById('modal-attempt-test').classList.remove('hidden');
         }
 
-        function closeAttemptTestModal() {
-            if (testCountdownInterval) clearInterval(testCountdownInterval);
-            closeModal('modal-attempt-test');
-        }
+        function closeAttemptTestModal() { if (testCountdownInterval) clearInterval(testCountdownInterval); closeModal('modal-attempt-test'); }
 
         async function handleStudentSubmitTest(e) {
             if (e) e.preventDefault();
             if (testCountdownInterval) clearInterval(testCountdownInterval);
-
             const testId = document.getElementById('attempt-test-id').value;
             const test = STATE.onlineTests.find(t => String(t.id) === String(testId));
             const student = STATE.students.find(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
@@ -3208,105 +3151,34 @@
             doc.text(`Student ID: ${student.id}`, 14, 51);
             doc.text(`Class & Board: ${student.class} (${student.board})`, 14, 58);
             doc.text(`Report Period: ${fromDate} to ${toDate}`, 120, 44);
-            doc.text(`Father's Name: ${student.fatherName || 'N/A'}`, 120, 51);
 
             const stuLog = STATE.attendanceLogs[student.id] || { daily: {} };
-            const dailyEntries = Object.entries(stuLog.daily || {}).filter(([dt]) => dt >= fromDate && dt <= toDate && !isDateHolidayOrSunday(dt)).sort((a, b) => a[0].localeCompare(b[0]));
             let pCount = 0, aCount = 0, lCount = 0;
-            dailyEntries.forEach(([, st]) => { if (st === 'P') pCount++; else if (st === 'A') aCount++; else if (st === 'L') lCount++; });
+            Object.entries(stuLog.daily || {}).forEach(([dt, st]) => {
+                if (dt >= fromDate && dt <= toDate && !isDateHolidayOrSunday(dt)) {
+                    if (st === 'P') pCount++; else if (st === 'A') aCount++; else if (st === 'L') lCount++;
+                }
+            });
 
             doc.setFontSize(12);
-            doc.text("1. Attendance Summary (Selected Date Range)", 14, 72);
+            doc.text("1. Attendance Summary", 14, 72);
             doc.setFontSize(10);
             doc.text(`Present Days: ${pCount}   |   Absent Days: ${aCount}   |   Leave Days: ${lCount}`, 14, 80);
-
-            let yPos = 90;
-            if (dailyEntries.length > 0) {
-                doc.setFontSize(9);
-                dailyEntries.slice(0, 15).forEach(([dt, st]) => {
-                    const label = st === 'P' ? 'Present' : (st === 'A' ? 'Absent' : 'On Leave');
-                    doc.text(`• ${dt}: ${label}`, 18, yPos);
-                    yPos += 6;
-                });
-            } else {
-                doc.text("• No attendance records marked in this selected date range.", 18, yPos);
-                yPos += 10;
-            }
-
-            yPos += 6;
-            doc.setFontSize(12);
-            doc.text("2. Online & Periodic Test Performance", 14, yPos);
-            yPos += 8;
-            doc.setFontSize(10);
-            const subs = STATE.testSubmissions.filter(sub => String(sub.studentId).trim() === String(student.id).trim());
-            if (subs.length > 0) {
-                subs.forEach(sub => { doc.text(`• ${sub.testTitle} (${sub.date}): Scored ${sub.score} / ${sub.totalMarks}`, 18, yPos); yPos += 7; });
-            } else {
-                doc.text("• No test submissions recorded yet.", 18, yPos);
-                yPos += 7;
-            }
-
-            yPos += 6;
-            doc.setFontSize(12);
-            doc.text("3. Behavior & Discipline Summary", 14, yPos);
-            yPos += 8;
-            doc.setFontSize(10);
-            const behs = STATE.behaviorLogs.filter(b => String(b.studentId).trim() === String(student.id).trim());
-            const gCount = behs.filter(b => b.flag === 'green').length;
-            const rCount = behs.filter(b => b.flag === 'red').length;
-            doc.text(`Green Marks (Positive): ${gCount}   |   Red Marks (Needs Improvement): ${rCount}`, 18, yPos);
-
             doc.save(`${student.name}_${student.id}_Progress_Report.pdf`);
             closeModal('modal-pdf-report');
         }
 
-        // ================= PASSWORD, FEES, PHOTO+GENDER PROFILES, NOTICES & AUTH =================
-        function openChangePasswordModal() {
-            if (!STATE.currentRole) return;
-            const titleEl = document.getElementById('modal-pwd-title');
-            const adminPhoneGroup = document.getElementById('admin-phone-edit-group');
-            const currentPwdGroup = document.getElementById('current-pwd-group');
-            document.getElementById('upd-current-pwd').value = '';
-            document.getElementById('upd-new-pwd').value = '';
-            if (STATE.currentRole === 'admin') {
-                titleEl.innerHTML = '<i class="fa-solid fa-key text-indigo-700 mr-1.5"></i> Update Admin Credentials';
-                adminPhoneGroup.classList.remove('hidden'); currentPwdGroup.classList.add('hidden');
-                document.getElementById('upd-admin-phone').value = STATE.adminUser.phone || '';
-                document.getElementById('upd-new-pwd').value = STATE.adminUser.password || '';
-            } else {
-                titleEl.innerHTML = '<i class="fa-solid fa-key text-indigo-700 mr-1.5"></i> Change Password';
-                adminPhoneGroup.classList.add('hidden'); currentPwdGroup.classList.remove('hidden');
-            }
-            document.getElementById('modal-change-password').classList.remove('hidden');
-        }
-
-        async function handleUniversalPasswordChange(e) {
-            e.preventDefault();
-            const currentPwdInput = document.getElementById('upd-current-pwd').value.trim();
-            const newPwd = document.getElementById('upd-new-pwd').value.trim();
-            if (STATE.currentRole === 'admin') {
-                const newPhone = cleanPhone(document.getElementById('upd-admin-phone').value.trim());
-                if (newPhone.length !== 10) return alert("Enter valid 10-digit mobile.");
-                STATE.adminUser = { phone: newPhone, password: newPwd };
-                localStorage.setItem('shiksha_admin_user', JSON.stringify(STATE.adminUser));
-                await postToCloud({ action: 'updateAdmin', adminUser: STATE.adminUser });
-                alert("Admin credentials updated!");
-            } else if (STATE.currentRole === 'teacher') {
-                const teacher = getValidUniqueTeachers().find(t => cleanPhone(t.phone) === cleanPhone(STATE.currentUserPhone));
-                if (!teacher || String(teacher.password).trim() !== currentPwdInput) return alert("Incorrect current password!");
-                teacher.password = newPwd;
-                localStorage.setItem('shiksha_teachers', JSON.stringify(STATE.registeredTeachers));
-                await postToCloud({ action: 'changeUserPassword', role: 'teacher', phone: teacher.phone, newPassword: newPwd });
-                alert("Teacher password updated!");
-            } else if (STATE.currentRole === 'parent') {
-                const stu = STATE.students.find(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
-                if (!stu || String(stu.password).trim() !== currentPwdInput) return alert("Incorrect current password!");
-                stu.password = newPwd;
-                localStorage.setItem('shiksha_students', JSON.stringify(STATE.students));
-                await postToCloud({ action: 'changeUserPassword', role: 'parent', studentId: stu.id, newPassword: newPwd });
-                alert("Student password updated!");
-            }
-            closeModal('modal-change-password');
+        // ================= FEES (1. TOP PENDING LIST -> 2. MIDDLE CHART -> 3. BOTTOM COLLAPSIBLE DETAILS) =================
+        function toggleOptionalFeeReportBox() {
+            const box = document.getElementById('optional-fee-report-wrapper');
+            const btn = document.getElementById('btn-toggle-fee-details');
+            if (!box || !btn) return;
+            const isHidden = box.classList.contains('hidden');
+            box.classList.toggle('hidden');
+            btn.innerHTML = isHidden
+                ? `<i class="fa-solid fa-eye-slash"></i> <span>Hide Month Details</span>`
+                : `<i class="fa-solid fa-eye"></i> <span>View Month Details</span>`;
+            if (isHidden) renderFeeReport();
         }
 
         function openCollectFeeModal(studentId) {
@@ -3359,6 +3231,7 @@
             downloadSingleFeeReceipt(payment);
             alert(`Payment recorded. Receipt: ${payment.receiptNo}`);
         }
+
         function escapeFeeHtml(value) {
             return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
         }
@@ -3370,7 +3243,20 @@
         function getPaymentsForStudentMonth(studentId, monthKey) {
             return STATE.feePayments.filter(p => String(p.studentId) === String(studentId) && String(p.monthKey) === String(monthKey));
         }
-        function isStudentMonthPaid(studentId, monthKey) { return getPaymentsForStudentMonth(studentId, monthKey).length > 0; }
+
+        // Checks BOTH new FeePayments sheet AND yesterday's legacy Students.feeHistory / feePending
+        function isStudentMonthPaid(studentId, monthKey) {
+            if (getPaymentsForStudentMonth(studentId, monthKey).length > 0) return true;
+            const stu = STATE.students.find(s => String(s.id) === String(studentId));
+            if (!stu) return false;
+            if (stu.feeHistory) {
+                const monthName = new Date(monthKey + '-01T00:00:00').toLocaleDateString('en-US', { month: 'long' }).toLowerCase();
+                const hist = String(stu.feeHistory).toLowerCase();
+                if (hist.includes(`(${monthName}`) || hist.includes(`(${monthKey}`)) return true;
+            }
+            return (Number(stu.feePending) || 0) <= 0 && String(stu.feeHistory || '').trim().length > 0;
+        }
+
         function renderFees() {
             const container = document.getElementById('fees-list-container');
             if (!container) return;
@@ -3378,85 +3264,166 @@
             if (STATE.currentRole === 'parent' && STATE.currentStudentId) list = list.filter(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
             container.innerHTML = list.map(s => {
                 const isAdmin = STATE.currentRole === 'admin';
-                const isPaid = isStudentMonthPaid(s.id, new Date().toISOString().slice(0,7));
+                const due = Number(s.feePending) || 0;
+                const isPaid = isStudentMonthPaid(s.id, new Date().toISOString().slice(0,7)) && due <= 0;
                 const recent = STATE.feePayments.filter(p => String(p.studentId) === String(s.id)).slice(0,2);
                 const legacy = s.feeHistory ? String(s.feeHistory).split('|')[0].trim() : '';
-                return `<div class="bg-white p-4 rounded-2xl border border-slate-300 flex flex-col gap-2 shadow-sm">
-                    <div class="flex items-start justify-between gap-2"><div class="min-w-0"><span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${escapeFeeHtml(s.id)}</span><h4 class="text-sm font-extrabold text-slate-950 mt-1">${escapeFeeHtml(s.name)} (Class ${escapeFeeHtml(s.class)})</h4></div><span class="text-[10px] font-black px-2 py-1 rounded-full ${isPaid?'bg-emerald-100 text-emerald-900':'bg-rose-100 text-rose-900'}">${isPaid?'PAID THIS MONTH':'DUE THIS MONTH'}</span></div>
-                    ${STATE.currentRole==='teacher'?'':`<p class="text-xs font-bold text-slate-700">Outstanding balance: ₹${Number(s.feePending)||0}</p>`}
-                    ${legacy?`<p class="text-[11px] text-emerald-800">${escapeFeeHtml(legacy)}</p>`:''}
-                    ${(STATE.currentRole==='admin'||STATE.currentRole==='parent')&&recent.length?`<div class="text-[11px] text-slate-700">${recent.map(p=>`<div>${escapeFeeHtml(getMonthLabel(p.monthKey))}: ₹${Number(p.amount)||0} • ${new Date(p.paymentDate).toLocaleDateString('en-IN')}</div>`).join('')}</div>`:''}
+                return `<div class="bg-white p-4 rounded-2xl border border-slate-300 flex flex-col justify-between gap-2 shadow-sm">
+                    <div>
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="min-w-0">
+                                <span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${escapeFeeHtml(s.id)}</span>
+                                <h4 class="text-sm font-extrabold text-slate-950 mt-1 truncate">${escapeFeeHtml(s.name)} (Class ${escapeFeeHtml(s.class)})</h4>
+                            </div>
+                            <span class="text-[10px] font-black px-2.5 py-1 rounded-full shrink-0 ${isPaid ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">
+                                ${isPaid ? 'PAID' : 'Pending: ₹' + due}
+                            </span>
+                        </div>
+                        <p class="text-xs font-extrabold ${due > 0 ? 'text-rose-700' : 'text-emerald-700'} mt-1">Pending Fee Due: ₹${due}</p>
+                        ${legacy ? `<p class="text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-lg mt-1.5">${escapeFeeHtml(legacy)}</p>` : ''}
+                        ${(STATE.currentRole==='admin'||STATE.currentRole==='parent') && recent.length ? `<div class="text-[11px] text-slate-700 mt-1.5">${recent.map(p=>`<div>• ${escapeFeeHtml(getMonthLabel(p.monthKey))}: ₹${Number(p.amount)||0} (${new Date(p.paymentDate).toLocaleDateString('en-IN')})</div>`).join('')}</div>` : ''}
+                    </div>
                     <div class="flex flex-wrap justify-end gap-1.5 pt-2 border-t border-slate-200">
-                    ${isAdmin?`<button onclick="openCollectFeeModal('${String(s.id).replace(/'/g,"\\'")}')" class="text-xs bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-xl">Record Payment</button><button onclick="sendFeeReminder('${String(s.id).replace(/'/g,"\\'")}')" class="text-xs bg-green-600 text-white font-bold px-3 py-1.5 rounded-xl"><i class="fa-brands fa-whatsapp mr-1"></i>Reminder</button>`:''}
-                    ${STATE.currentRole==='parent'?`<button onclick="downloadStudentFeeHistoryPdf('${String(s.id).replace(/'/g,"\\'")}')" class="text-xs bg-rose-600 text-white font-bold px-3 py-1.5 rounded-xl">Fee PDF</button>`:''}
-                    ${STATE.currentRole==='parent'&&!isPaid?`<button onclick="initiateDirectUpiPay('${String(s.name).replace(/'/g,"\\'")}','${Number(s.feePending)||0}')" class="text-xs bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-xl">Pay UPI</button>`:''}
-                    </div></div>`;
+                        ${isAdmin ? `<button onclick="openCollectFeeModal('${String(s.id).replace(/'/g,"\\'")}')" class="text-xs bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-xl">Record Payment</button><button onclick="sendFeeReminder('${String(s.id).replace(/'/g,"\\'")}')" class="text-xs bg-green-600 text-white font-bold px-3 py-1.5 rounded-xl"><i class="fa-brands fa-whatsapp mr-1"></i>Reminder</button>` : ''}
+                        ${STATE.currentRole==='parent' ? `<button onclick="downloadStudentFeeHistoryPdf('${String(s.id).replace(/'/g,"\\'")}')" class="text-xs bg-rose-600 text-white font-bold px-3 py-1.5 rounded-xl">Fee PDF</button>` : ''}
+                        ${STATE.currentRole==='parent' && due > 0 ? `<button onclick="initiateDirectUpiPay('${String(s.name).replace(/'/g,"\\'")}','${due}')" class="text-xs bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-xl">Pay UPI</button>` : ''}
+                    </div>
+                </div>`;
             }).join('') || '<p class="text-xs font-bold text-slate-800">No fee records.</p>';
         }
+
         function getFeeRangeRows() {
-            const from=document.getElementById('fee-report-from')?.value||'', to=document.getElementById('fee-report-to')?.value||'';
-            if(!from||!to||from>to)return [];
-            let students=STATE.students;
-            if(STATE.currentRole==='parent')students=students.filter(s=>String(s.id)===String(STATE.currentStudentId));
-            const months=[];let cursor=new Date(from+'-01T12:00:00'),end=new Date(to+'-01T12:00:00');
-            while(cursor<=end&&months.length<36){months.push(cursor.getFullYear()+'-'+String(cursor.getMonth()+1).padStart(2,'0'));cursor.setMonth(cursor.getMonth()+1);}
-            const rows=[];
-            students.forEach(student=>months.forEach(monthKey=>{
-                const payments=getPaymentsForStudentMonth(student.id,monthKey);
-                rows.push({student,monthKey,paid:payments.length>0,paymentDate:payments.length?payments.map(p=>p.paymentDate).sort().slice(-1)[0]:'',amount:payments.reduce((a,p)=>a+(Number(p.amount)||0),0),payments});
+            const from = document.getElementById('fee-report-from')?.value || '', to = document.getElementById('fee-report-to')?.value || '';
+            if (!from || !to || from > to) return [];
+            let students = STATE.students;
+            if (STATE.currentRole === 'parent') students = students.filter(s => String(s.id) === String(STATE.currentStudentId));
+            const months = []; let cursor = new Date(from + '-01T12:00:00'), end = new Date(to + '-01T12:00:00');
+            while (cursor <= end && months.length < 36) { months.push(cursor.getFullYear() + '-' + String(cursor.getMonth() + 1).padStart(2, '0')); cursor.setMonth(cursor.getMonth() + 1); }
+            const rows = [];
+            students.forEach(student => months.forEach(monthKey => {
+                const payments = getPaymentsForStudentMonth(student.id, monthKey);
+                let paid = payments.length > 0;
+                let amount = payments.reduce((a, p) => a + (Number(p.amount) || 0), 0);
+                let paymentDate = payments.length ? payments.map(p => p.paymentDate).sort().slice(-1)[0] : '';
+                let mergedPayments = [...payments];
+
+                if (!paid && student.feeHistory) {
+                    const monthName = new Date(monthKey + '-01T00:00:00').toLocaleDateString('en-US', { month: 'long' }).toLowerCase();
+                    const entries = String(student.feeHistory).split('|').map(e => e.trim());
+                    const matched = entries.find(e => e.toLowerCase().includes(`(${monthName}`) || e.toLowerCase().includes(`(${monthKey}`));
+                    if (matched) {
+                        paid = true;
+                        const amtMatch = matched.match(/₹\s*(\d+)/);
+                        amount = amtMatch ? Number(amtMatch[1]) : 0;
+                        paymentDate = 'Recorded';
+                        mergedPayments.push({ mode: matched, receiptNo: 'Verified' });
+                    }
+                }
+                rows.push({ student, monthKey, paid, paymentDate, amount, payments: mergedPayments });
             }));
             return rows;
         }
+
         function renderFeeReport() {
-            const body=document.getElementById('fee-report-table-body');if(!body)return;
-            const from=document.getElementById('fee-report-from')?.value||'',to=document.getElementById('fee-report-to')?.value||'';
-            if(!from||!to)return;
-            if(from>to){body.innerHTML='<tr><td colspan="6" class="p-3 text-center text-rose-700">From month must be earlier than To month.</td></tr>';return;}
-            const rows=getFeeRangeRows(),paid=rows.filter(r=>r.paid).length,due=rows.length-paid,total=rows.reduce((a,r)=>a+r.amount,0);
-            const summary=document.getElementById('fee-report-summary');
-            if(summary)summary.innerText=STATE.currentRole==='teacher'?`${getMonthLabel(from)} to ${getMonthLabel(to)} • ${paid} paid month-records • ${due} due month-records`:`${getMonthLabel(from)} to ${getMonthLabel(to)} • ${paid} paid month-records • ${due} due month-records • Collected ₹${total.toLocaleString('en-IN')}`;
-            body.innerHTML=rows.map(r=>{
-                const date=r.paymentDate?new Date(r.paymentDate).toLocaleDateString('en-IN'):'—';
-                const details=r.payments.map(p=>`${p.mode||''} / ${p.receiptNo||p.id||''}`).join(', ');
-                const amount=STATE.currentRole==='teacher'?(r.paid?'Paid':'Due'):(r.paid?'₹'+r.amount.toLocaleString('en-IN'):'—');
-                return `<tr class="text-slate-800"><td class="p-2 border border-slate-200 font-bold">${escapeFeeHtml(r.student.name)}<div class="text-[10px]">${escapeFeeHtml(r.student.id)} • ${escapeFeeHtml(r.student.class)}</div></td><td class="p-2 border border-slate-200">${escapeFeeHtml(getMonthLabel(r.monthKey))}</td><td class="p-2 border border-slate-200"><b class="${r.paid?'text-emerald-700':'text-rose-700'}">${r.paid?'PAID':'DUE'}</b></td><td class="p-2 border border-slate-200">${date}</td><td class="p-2 border border-slate-200">${amount}</td><td class="p-2 border border-slate-200">${STATE.currentRole==='teacher'?'—':escapeFeeHtml(details)}</td></tr>`;
-            }).join('')||'<tr><td colspan="6" class="p-3 text-center">No records in selected period.</td></tr>';
+            const body = document.getElementById('fee-report-table-body'); if (!body) return;
+            const from = document.getElementById('fee-report-from')?.value || '', to = document.getElementById('fee-report-to')?.value || '';
+            if (!from || !to) return;
+            if (from > to) { body.innerHTML = '<tr><td colspan="6" class="p-3 text-center text-rose-700">From month must be earlier than To month.</td></tr>'; return; }
+            const rows = getFeeRangeRows(), paid = rows.filter(r => r.paid).length, due = rows.length - paid, total = rows.reduce((a, r) => a + r.amount, 0);
+            const summary = document.getElementById('fee-report-summary');
+            if (summary) summary.innerText = `${getMonthLabel(from)} to ${getMonthLabel(to)} • ${paid} paid • ${due} due • Collected ₹${total.toLocaleString('en-IN')}`;
+            body.innerHTML = rows.map(r => {
+                const date = r.paymentDate === 'Recorded' ? 'Recorded' : (r.paymentDate ? new Date(r.paymentDate).toLocaleDateString('en-IN') : '—');
+                const details = r.payments.map(p => `${p.mode || ''} / ${p.receiptNo || p.id || ''}`).join(', ');
+                const amount = r.paid ? '₹' + r.amount.toLocaleString('en-IN') : '—';
+                return `<tr class="text-slate-800"><td class="p-2 border border-slate-200 font-bold">${escapeFeeHtml(r.student.name)}<div class="text-[10px]">${escapeFeeHtml(r.student.id)} • ${escapeFeeHtml(r.student.class)}</div></td><td class="p-2 border border-slate-200">${escapeFeeHtml(getMonthLabel(r.monthKey))}</td><td class="p-2 border border-slate-200"><b class="${r.paid ? 'text-emerald-700' : 'text-rose-700'}">${r.paid ? 'PAID' : 'DUE'}</b></td><td class="p-2 border border-slate-200">${date}</td><td class="p-2 border border-slate-200">${amount}</td><td class="p-2 border border-slate-200">${escapeFeeHtml(details)}</td></tr>`;
+            }).join('') || '<tr><td colspan="6" class="p-3 text-center">No records in selected period.</td></tr>';
         }
-        let feeChartInstance=null;
+
         function renderFeeAnalytics() {
-            const input=document.getElementById('fee-chart-month'),canvas=document.getElementById('feeCollectionChart');
-            if(!input||!canvas||STATE.currentRole!=='admin')return;
-            if(!input.value)input.value=new Date().toISOString().slice(0,7);
-            const month=input.value;
-            const active=STATE.students.filter(s=>!s.leavingDate||String(s.leavingDate)>month+'-31');
-            const paid=active.filter(s=>isStudentMonthPaid(s.id,month)).length,unpaid=active.length-paid;
-            document.getElementById('fee-chart-paid').innerText=paid;document.getElementById('fee-chart-unpaid').innerText=unpaid;document.getElementById('fee-chart-total').innerText=active.length;
-            if(typeof Chart==='undefined')return;
-            if(feeChartInstance)feeChartInstance.destroy();
-            feeChartInstance=new Chart(canvas,{type:'doughnut',data:{labels:['Paid','Unpaid'],datasets:[{data:[paid,unpaid]}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+            const input = document.getElementById('fee-chart-month'), canvas = document.getElementById('feeCollectionChart');
+            if (!input || !canvas || STATE.currentRole !== 'admin') return;
+            if (!input.value) input.value = new Date().toISOString().slice(0, 7);
+            const month = input.value;
+            const active = STATE.students.filter(s => !s.leavingDate || String(s.leavingDate) > month + '-31');
+            const paid = active.filter(s => isStudentMonthPaid(s.id, month) && (Number(s.feePending) || 0) <= 0).length;
+            const unpaid = active.length - paid;
+            document.getElementById('fee-chart-paid').innerText = paid;
+            document.getElementById('fee-chart-unpaid').innerText = unpaid;
+            document.getElementById('fee-chart-total').innerText = active.length;
+            if (typeof Chart === 'undefined') return;
+            if (feeChartInstance) feeChartInstance.destroy();
+            feeChartInstance = new Chart(canvas, { type: 'doughnut', data: { labels: ['Paid', 'Unpaid'], datasets: [{ data: [paid, unpaid], backgroundColor: ['#10b981', '#ef4444'] }] }, options: { responsive: true, plugins: { legend: { position: 'bottom' } } } });
         }
-        function buildFeePdf(title,rows,fileName) {
-            if(!window.jspdf?.jsPDF)return alert('PDF library is not loaded. Refresh the page.');
-            const {jsPDF}=window.jspdf,doc=new jsPDF({orientation:'landscape'});
-            doc.setFontSize(16);doc.text('SHIKSHA COACHING INSTITUTE',14,15);doc.setFontSize(11);doc.text(title,14,23);doc.setFontSize(8);doc.text('Generated: '+new Date().toLocaleString('en-IN'),14,29);
-            let y=38;const heads=['Student / ID','Class','Month','Status','Paid Date','Amount','Payment Details'],widths=[45,18,28,20,25,24,85];let x=14;
-            heads.forEach((h,i)=>{doc.setFont(undefined,'bold');doc.text(h,x,y);x+=widths[i];});y+=9;doc.line(14,y,doc.internal.pageSize.getWidth()-14,y);y+=6;
-            rows.forEach(r=>{if(y>185){doc.addPage();y=18;}const detail=(r.payments||[]).map(p=>`${p.mode||''} ${p.receiptNo||''} ${p.transactionId||''}`).join('; ');const vals=[r.student.name+' / '+r.student.id,String(r.student.class||''),getMonthLabel(r.monthKey),r.paid?'PAID':'DUE',r.paymentDate?new Date(r.paymentDate).toLocaleDateString('en-IN'):'-',(STATE.currentRole==='teacher'?'—':(r.paid?'Rs '+r.amount:'-')), (STATE.currentRole==='teacher'?'—':detail)];x=14;vals.forEach((v,i)=>{doc.setFont(undefined,'normal');doc.text(doc.splitTextToSize(String(v),widths[i]-2)[0]||'-',x,y);x+=widths[i];});y+=7;});
+
+        function buildFeePdf(title, rows, fileName) {
+            if (!window.jspdf?.jsPDF) return alert('PDF library is not loaded. Refresh the page.');
+            const { jsPDF } = window.jspdf, doc = new jsPDF({ orientation: 'landscape' });
+            doc.setFontSize(16); doc.text('SHIKSHA COACHING INSTITUTE', 14, 15); doc.setFontSize(11); doc.text(title, 14, 23); doc.setFontSize(8); doc.text('Generated: ' + new Date().toLocaleString('en-IN'), 14, 29);
+            let y = 38; const heads = ['Student / ID', 'Class', 'Month', 'Status', 'Paid Date', 'Amount', 'Payment Details'], widths = [45, 18, 28, 20, 25, 24, 85]; let x = 14;
+            heads.forEach((h, i) => { doc.setFont(undefined, 'bold'); doc.text(h, x, y); x += widths[i]; }); y += 9; doc.line(14, y, doc.internal.pageSize.getWidth() - 14, y); y += 6;
+            rows.forEach(r => { if (y > 185) { doc.addPage(); y = 18; } const detail = (r.payments || []).map(p => `${p.mode || ''} ${p.receiptNo || ''} ${p.transactionId || ''}`).join('; '); const dtStr = r.paymentDate === 'Recorded' ? 'Recorded' : (r.paymentDate ? new Date(r.paymentDate).toLocaleDateString('en-IN') : '-'); const vals = [r.student.name + ' / ' + r.student.id, String(r.student.class || ''), getMonthLabel(r.monthKey), r.paid ? 'PAID' : 'DUE', dtStr, r.paid ? 'Rs ' + r.amount : '-', detail]; x = 14; vals.forEach((v, i) => { doc.setFont(undefined, 'normal'); doc.text(doc.splitTextToSize(String(v), widths[i] - 2)[0] || '-', x, y); x += widths[i]; }); y += 7; });
             doc.save(fileName);
         }
-        function downloadFeeReportPdf(){const rows=getFeeRangeRows(),from=document.getElementById('fee-report-from').value,to=document.getElementById('fee-report-to').value;if(!rows.length||from>to)return alert('Select a valid month range.');buildFeePdf(`Fee Report: ${getMonthLabel(from)} to ${getMonthLabel(to)}`,rows,`SHIKSHA_Fee_Report_${from}_to_${to}.pdf`);}
-        function downloadStudentFeeHistoryPdf(studentId){const rows=getFeeRangeRows().filter(r=>String(r.student.id)===String(studentId));if(!rows.length)return alert('Select a valid month range first.');buildFeePdf(`Student Fee History: ${rows[0].student.name}`,rows,`SHIKSHA_Fee_History_${studentId}.pdf`);}
-        function downloadSingleFeeReceipt(payment){const s=STATE.students.find(x=>String(x.id)===String(payment.studentId))||{name:payment.studentName,id:payment.studentId,class:payment.class};buildFeePdf(`Fee Receipt: ${payment.receiptNo}`,[{student:s,monthKey:payment.monthKey,paid:true,paymentDate:payment.paymentDate,amount:Number(payment.amount)||0,payments:[payment]}],`${payment.receiptNo}.pdf`);}
-        function sendFeeReminder(studentId){
-            if(STATE.currentRole!=='admin')return;const s=STATE.students.find(x=>String(x.id)===String(studentId));if(!s||!s.phone)return alert('Parent mobile number is not available.');
-            const month=document.getElementById('fee-chart-month')?.value||new Date().toISOString().slice(0,7);
-            const dueAmount=Number(s.feePending)||0;
-            const upiLink=`upi://pay?pa=${COACHING_UPI_ID}&pn=${encodeURIComponent('SHIKSHA Coaching Institute')}&am=${dueAmount}&cu=INR&tn=${encodeURIComponent('Fee - '+s.name)}`;
-            const qrLink=`https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(upiLink)}`;
-            const message=`Namaste ${s.fatherName||'Parent'} ji. SHIKSHA Coaching Institute fee reminder for ${s.name}, Class ${s.class}. Outstanding balance: Rs ${dueAmount}. Month: ${getMonthLabel(month)}. UPI ID: ${COACHING_UPI_ID}. UPI QR: ${qrLink}. Payment ke baad receipt institute se prapt karein.`;
-            window.open(`https://wa.me/91${String(s.phone).replace(/\\D/g,'')}?text=${encodeURIComponent(message)}`,'_blank');
+        function downloadFeeReportPdf() { const rows = getFeeRangeRows(), from = document.getElementById('fee-report-from').value, to = document.getElementById('fee-report-to').value; if (!rows.length || from > to) return alert('Select a valid month range.'); buildFeePdf(`Fee Report: ${getMonthLabel(from)} to ${getMonthLabel(to)}`, rows, `SHIKSHA_Fee_Report_${from}_to_${to}.pdf`); }
+        function downloadStudentFeeHistoryPdf(studentId) { const rows = getFeeRangeRows().filter(r => String(r.student.id) === String(studentId)); if (!rows.length) return alert('Open Month Details and select a valid month range first.'); buildFeePdf(`Student Fee History: ${rows[0].student.name}`, rows, `SHIKSHA_Fee_History_${studentId}.pdf`); }
+        function downloadSingleFeeReceipt(payment) { const s = STATE.students.find(x => String(x.id) === String(payment.studentId)) || { name: payment.studentName, id: payment.studentId, class: payment.class }; buildFeePdf(`Fee Receipt: ${payment.receiptNo}`, [{ student: s, monthKey: payment.monthKey, paid: true, paymentDate: payment.paymentDate, amount: Number(payment.amount) || 0, payments: [payment] }], `${payment.receiptNo}.pdf`); }
+        function sendFeeReminder(studentId) {
+            if (STATE.currentRole !== 'admin') return; const s = STATE.students.find(x => String(x.id) === String(studentId)); if (!s || !s.phone) return alert('Parent mobile number is not available.');
+            const month = document.getElementById('fee-chart-month')?.value || new Date().toISOString().slice(0, 7);
+            const dueAmount = Number(s.feePending) || 0;
+            const upiLink = `upi://pay?pa=${COACHING_UPI_ID}&pn=${encodeURIComponent('SHIKSHA Coaching Institute')}&am=${dueAmount}&cu=INR&tn=${encodeURIComponent('Fee - ' + s.name)}`;
+            const qrLink = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(upiLink)}`;
+            const message = `Namaste ${s.fatherName || 'Parent'} ji. SHIKSHA Coaching Institute fee reminder for ${s.name}, Class ${s.class}. Outstanding balance: Rs ${dueAmount}. Month: ${getMonthLabel(month)}. UPI ID: ${COACHING_UPI_ID}. UPI QR: ${qrLink}. Payment ke baad receipt institute se prapt karein.`;
+            window.open(`https://wa.me/91${String(s.phone).replace(/\D/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
         }
-        function initiateDirectUpiPay(name,amount){window.location.href=`upi://pay?pa=${COACHING_UPI_ID}&pn=SHIKSHA%20Coaching%20Institute&am=${amount}&cu=INR&tn=${encodeURIComponent('Fee - '+name)}`;}
+        function initiateDirectUpiPay(name, amount) { window.location.href = `upi://pay?pa=${COACHING_UPI_ID}&pn=SHIKSHA%20Coaching%20Institute&am=${amount}&cu=INR&tn=${encodeURIComponent('Fee - ' + name)}`; }
+
+        // ================= PROFILES, NOTICES, AUTH & NEW MODULES =================
+        function openChangePasswordModal() {
+            if (!STATE.currentRole) return;
+            const titleEl = document.getElementById('modal-pwd-title');
+            const adminPhoneGroup = document.getElementById('admin-phone-edit-group');
+            const currentPwdGroup = document.getElementById('current-pwd-group');
+            document.getElementById('upd-current-pwd').value = ''; document.getElementById('upd-new-pwd').value = '';
+            if (STATE.currentRole === 'admin') {
+                titleEl.innerHTML = 'Update Admin Credentials'; adminPhoneGroup.classList.remove('hidden'); currentPwdGroup.classList.add('hidden');
+                document.getElementById('upd-admin-phone').value = STATE.adminUser.phone || '';
+                document.getElementById('upd-new-pwd').value = STATE.adminUser.password || '';
+            } else {
+                titleEl.innerHTML = 'Change Password'; adminPhoneGroup.classList.add('hidden'); currentPwdGroup.classList.remove('hidden');
+            }
+            document.getElementById('modal-change-password').classList.remove('hidden');
+        }
+
+        async function handleUniversalPasswordChange(e) {
+            e.preventDefault();
+            const currentPwdInput = document.getElementById('upd-current-pwd').value.trim();
+            const newPwd = document.getElementById('upd-new-pwd').value.trim();
+            if (STATE.currentRole === 'admin') {
+                const newPhone = cleanPhone(document.getElementById('upd-admin-phone').value.trim());
+                if (newPhone.length !== 10) return alert("Enter valid 10-digit mobile.");
+                STATE.adminUser = { phone: newPhone, password: newPwd };
+                localStorage.setItem('shiksha_admin_user', JSON.stringify(STATE.adminUser));
+                await postToCloud({ action: 'updateAdmin', adminUser: STATE.adminUser });
+                alert("Admin credentials updated!");
+            } else if (STATE.currentRole === 'teacher') {
+                const teacher = getValidUniqueTeachers().find(t => cleanPhone(t.phone) === cleanPhone(STATE.currentUserPhone));
+                if (!teacher || String(teacher.password).trim() !== currentPwdInput) return alert("Incorrect current password!");
+                teacher.password = newPwd;
+                localStorage.setItem('shiksha_teachers', JSON.stringify(STATE.registeredTeachers));
+                await postToCloud({ action: 'changeUserPassword', role: 'teacher', phone: teacher.phone, newPassword: newPwd });
+                alert("Teacher password updated!");
+            } else if (STATE.currentRole === 'parent') {
+                const stu = STATE.students.find(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
+                if (!stu || String(stu.password).trim() !== currentPwdInput) return alert("Incorrect current password!");
+                stu.password = newPwd;
+                localStorage.setItem('shiksha_students', JSON.stringify(STATE.students));
+                await postToCloud({ action: 'changeUserPassword', role: 'parent', studentId: stu.id, newPassword: newPwd });
+                alert("Student password updated!");
+            }
+            closeModal('modal-change-password');
+        }
 
         function previewProfileImage(input, previewId) {
             const file = input.files && input.files[0];
@@ -3486,16 +3453,7 @@
         function renderPublicTeachers() {
             const container = document.getElementById('pub-teachers-grid');
             if (!container) return;
-            container.innerHTML = getValidUniqueTeachers().map(t => `
-                <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl flex items-start space-x-3">
-                    ${t.photo ? `<img src="${t.photo}" class="w-12 h-12 rounded-2xl object-cover border border-indigo-500/40 shrink-0">` : `<div class="w-12 h-12 rounded-2xl bg-indigo-950 text-indigo-400 flex items-center justify-center font-bold text-base shrink-0">${(t.name||'T').charAt(0)}</div>`}
-                    <div class="min-w-0">
-                        <h4 class="text-sm font-bold text-white truncate">${t.name}</h4>
-                        <p class="text-xs text-amber-400 font-semibold">${t.qualifications || ''} ${t.gender ? '&bull; ' + t.gender : ''}</p>
-                        <p class="text-xs text-indigo-400 mt-0.5 truncate">${t.subjects || t.dept || ''}</p>
-                    </div>
-                </div>
-            `).join('');
+            container.innerHTML = getValidUniqueTeachers().map(t => `<div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl flex items-start space-x-3">${t.photo ? `<img src="${t.photo}" class="w-12 h-12 rounded-2xl object-cover border border-indigo-500/40 shrink-0">` : `<div class="w-12 h-12 rounded-2xl bg-indigo-950 text-indigo-400 flex items-center justify-center font-bold text-base shrink-0">${(t.name||'T').charAt(0)}</div>`}<div class="min-w-0"><h4 class="text-sm font-bold text-white truncate">${t.name}</h4><p class="text-xs text-amber-400 font-semibold">${t.qualifications || ''} ${t.gender ? '&bull; ' + t.gender : ''}</p><p class="text-xs text-indigo-400 mt-0.5 truncate">${t.subjects || t.dept || ''}</p></div></div>`).join('');
         }
         function setStudentStatusFilter(f) { STATE.studentStatusFilter = f; renderStudents(); }
 
@@ -3509,43 +3467,16 @@
                 const targetId = String(STATE.currentStudentId || localStorage.getItem('shiksha_auth_student_id') || '').trim().toLowerCase();
                 const targetPhone = cleanPhone(STATE.currentUserPhone || localStorage.getItem('shiksha_auth_phone') || '');
                 list = list.filter(s => String(s.id || '').trim().toLowerCase() === targetId || (targetId === '' && cleanPhone(s.phone) === targetPhone));
-
                 if (list.length === 0) {
-                    container.innerHTML = `<div class="col-span-full p-5 bg-white rounded-2xl border border-slate-300 text-xs font-bold text-slate-900">Student profile not synced yet. Tap the <b>Local / Synced</b> badge in the top bar to refresh.</div>`;
+                    container.innerHTML = `<div class="col-span-full p-5 bg-white rounded-2xl border border-slate-300 text-xs font-bold text-slate-900">Student profile not synced yet. Tap the <b>Synced</b> badge in the top bar to refresh.</div>`;
                     return;
                 }
-
                 const s = list[0];
                 const sBeh = STATE.behaviorLogs.filter(b => String(b.studentId).trim().toLowerCase() === String(s.id).trim().toLowerCase());
                 const gCnt = sBeh.filter(b => b.flag === 'green').length;
                 const rCnt = sBeh.filter(b => b.flag === 'red').length;
                 const attStats = calculateDynamicAttendance(s.id);
-
-                container.innerHTML = `
-                    <div class="col-span-full bg-white p-5 rounded-3xl border border-slate-300 shadow-sm space-y-4">
-                        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200">
-                            <div class="flex items-center gap-3">
-                                <img src="${s.photo || './logo.png'}" alt="${s.name}" class="w-16 h-16 rounded-2xl object-cover border-2 border-indigo-200 bg-slate-100 shrink-0">
-                                <div>
-                                    <span class="text-xs font-mono font-extrabold bg-indigo-100 text-indigo-900 px-2.5 py-0.5 rounded">${s.id}</span>
-                                    <h3 class="text-lg font-black text-slate-950 mt-1">${s.name}</h3>
-                                    <p class="text-xs font-bold text-slate-700">Class ${s.class} &bull; ${s.board} &bull; ${s.gender || 'Student'}</p>
-                                </div>
-                            </div>
-                            <span class="text-xs font-black px-3 py-1 rounded-full ${Number(s.feePending) <= 0 ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">
-                                ${Number(s.feePending) <= 0 ? 'Fees Paid' : 'Fee Due: ₹' + s.feePending}
-                            </span>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
-                            <div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Father's Name</span><b class="text-slate-950 text-sm">${s.fatherName || 'N/A'}</b></div>
-                            <div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Mother's Name</span><b class="text-slate-950 text-sm">${s.motherName || 'N/A'}</b></div>
-                            <div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Gender</span><b class="text-slate-950 text-sm">${s.gender || 'Not Specified'}</b></div>
-                            <div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Registered Mobile</span><b class="text-slate-950 text-sm">${s.phone}</b></div>
-                            <div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-200"><span class="text-emerald-800 font-bold block">Monthly Attendance</span><b class="text-emerald-950 text-sm">${attStats.percentage}% (${attStats.present}P / ${attStats.absent}A)</b></div>
-                            <div class="p-3 bg-indigo-50 rounded-2xl border border-indigo-200"><span class="text-indigo-800 font-bold block">Behavior Score</span><b class="text-emerald-700 text-sm">${gCnt} Green</b> &bull; <b class="text-rose-700 text-sm">${rCnt} Red</b></div>
-                        </div>
-                    </div>
-                `;
+                container.innerHTML = `<div class="col-span-full bg-white p-5 rounded-3xl border border-slate-300 shadow-sm space-y-4"><div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200"><div class="flex items-center gap-3"><img src="${s.photo || './logo.png'}" class="w-16 h-16 rounded-2xl object-cover border-2 border-indigo-200 bg-slate-100 shrink-0"><div><span class="text-xs font-mono font-extrabold bg-indigo-100 text-indigo-900 px-2.5 py-0.5 rounded">${s.id}</span><h3 class="text-lg font-black text-slate-950 mt-1">${s.name}</h3><p class="text-xs font-bold text-slate-700">Class ${s.class} &bull; ${s.board} &bull; ${s.gender || 'Student'}</p></div></div><span class="text-xs font-black px-3 py-1 rounded-full ${Number(s.feePending) <= 0 ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">${Number(s.feePending) <= 0 ? 'Fees Paid' : 'Fee Due: ₹' + s.feePending}</span></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs"><div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Father's Name</span><b class="text-slate-950 text-sm">${s.fatherName || 'N/A'}</b></div><div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Mother's Name</span><b class="text-slate-950 text-sm">${s.motherName || 'N/A'}</b></div><div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Gender</span><b class="text-slate-950 text-sm">${s.gender || 'Not Specified'}</b></div><div class="p-3 bg-slate-100 rounded-2xl border border-slate-200"><span class="text-slate-600 font-bold block">Registered Mobile</span><b class="text-slate-950 text-sm">${s.phone}</b></div><div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-200"><span class="text-emerald-800 font-bold block">Monthly Attendance</span><b class="text-emerald-950 text-sm">${attStats.percentage}% (${attStats.present}P / ${attStats.absent}A)</b></div><div class="p-3 bg-indigo-50 rounded-2xl border border-indigo-200"><span class="text-indigo-800 font-bold block">Behavior Score</span><b class="text-emerald-700 text-sm">${gCnt} Green</b> &bull; <b class="text-rose-700 text-sm">${rCnt} Red</b></div></div></div>`;
                 return;
             }
 
@@ -3559,38 +3490,7 @@
                 const rCnt = sBeh.filter(b => b.flag === 'red').length;
                 const todayRed = sBeh.some(b => b.dateKey === today && b.flag === 'red');
                 const todayGreen = sBeh.some(b => b.dateKey === today && b.flag === 'green');
-
-                return `
-                    <div class="bg-white p-4 rounded-2xl border border-slate-300 flex flex-col justify-between gap-2.5 shadow-sm hover:border-indigo-500 transition">
-                        <div onclick="openMasterStudentForm('${s.id}')" class="flex items-center justify-between cursor-pointer gap-2">
-                            <div class="flex items-center gap-2.5 min-w-0">
-                                <img src="${s.photo || './logo.png'}" class="w-11 h-11 rounded-xl object-cover border border-slate-300 bg-slate-100 shrink-0">
-                                <div class="min-w-0">
-                                    <span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${s.id}</span>
-                                    <h4 class="text-sm font-extrabold text-slate-950 mt-0.5 truncate">${s.name}</h4>
-                                    <p class="text-xs font-semibold text-slate-700 truncate">Class ${s.class} (${s.board}) &bull; ${s.gender || ''}</p>
-                                </div>
-                            </div>
-                            <span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full shrink-0 ${Number(s.feePending) <= 0 ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">${Number(s.feePending) <= 0 ? 'Paid' : '₹' + s.feePending}</span>
-                        </div>
-
-                        <div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs">
-                            <span class="font-extrabold text-slate-800">Behavior: <b class="text-emerald-700">${gCnt}G</b> / <b class="text-rose-700">${rCnt}R</b></span>
-                            ${isStaff ? `
-                                <div class="flex items-center gap-3">
-                                    <label class="flex items-center gap-1 cursor-pointer font-extrabold text-rose-700 bg-rose-50 px-2 py-1 rounded-lg border border-rose-300">
-                                        <input type="checkbox" ${todayRed ? 'checked' : ''} onchange="openBehaviorModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', 'red')" class="accent-rose-600 w-3.5 h-3.5">
-                                        <span>Red</span>
-                                    </label>
-                                    <label class="flex items-center gap-1 cursor-pointer font-extrabold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-300">
-                                        <input type="checkbox" ${todayGreen ? 'checked' : ''} onchange="openBehaviorModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', 'green')" class="accent-emerald-600 w-3.5 h-3.5">
-                                        <span>Green</span>
-                                    </label>
-                                </div>
-                            ` : `<button onclick="switchPortalTab('home')" class="text-indigo-700 font-extrabold hover:underline">View Chart &rarr;</button>`}
-                        </div>
-                    </div>
-                `;
+                return `<div class="bg-white p-4 rounded-2xl border border-slate-300 flex flex-col justify-between gap-2.5 shadow-sm hover:border-indigo-500 transition"><div onclick="openMasterStudentForm('${s.id}')" class="flex items-center justify-between cursor-pointer gap-2"><div class="flex items-center gap-2.5 min-w-0"><img src="${s.photo || './logo.png'}" class="w-11 h-11 rounded-xl object-cover border border-slate-300 bg-slate-100 shrink-0"><div class="min-w-0"><span class="text-[10px] font-mono font-extrabold bg-slate-200 text-slate-950 px-1.5 rounded">${s.id}</span><h4 class="text-sm font-extrabold text-slate-950 mt-0.5 truncate">${s.name}</h4><p class="text-xs font-semibold text-slate-700 truncate">Class ${s.class} (${s.board}) &bull; ${s.gender || ''}</p></div></div><span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full shrink-0 ${Number(s.feePending) <= 0 ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}">${Number(s.feePending) <= 0 ? 'Paid' : '₹' + s.feePending}</span></div><div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs"><span class="font-extrabold text-slate-800">Behavior: <b class="text-emerald-700">${gCnt}G</b> / <b class="text-rose-700">${rCnt}R</b></span>${isStaff ? `<div class="flex items-center gap-3"><label class="flex items-center gap-1 cursor-pointer font-extrabold text-rose-700 bg-rose-50 px-2 py-1 rounded-lg border border-rose-300"><input type="checkbox" ${todayRed ? 'checked' : ''} onchange="openBehaviorModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', 'red')" class="accent-rose-600 w-3.5 h-3.5"><span>Red</span></label><label class="flex items-center gap-1 cursor-pointer font-extrabold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-300"><input type="checkbox" ${todayGreen ? 'checked' : ''} onchange="openBehaviorModal('${s.id}', '${s.name.replace(/'/g, "\\'")}', 'green')" class="accent-emerald-600 w-3.5 h-3.5"><span>Green</span></label></div>` : `<button onclick="switchPortalTab('home')" class="text-indigo-700 font-extrabold hover:underline">View Chart &rarr;</button>`}</div></div>`;
             }).join('') || `<p class="text-xs font-bold text-slate-800">No students found.</p>`;
         }
 
@@ -3599,111 +3499,48 @@
             const heading = document.getElementById('faculty-card-heading');
             const container = document.getElementById('teachers-list-container');
             if (!container || !card) return;
-
-            if (STATE.currentRole === 'parent') {
-                card.classList.add('hidden');
-                return;
-            }
+            if (STATE.currentRole === 'parent') { card.classList.add('hidden'); return; }
             card.classList.remove('hidden');
-
             let list = getValidUniqueTeachers();
             if (STATE.currentRole === 'teacher') {
                 heading.innerHTML = `<i class="fa-solid fa-user-tie text-indigo-700"></i> My Faculty Profile`;
                 list = list.filter(t => cleanPhone(t.phone) === cleanPhone(STATE.currentUserPhone));
-            } else {
-                heading.innerHTML = `<i class="fa-solid fa-chalkboard-user text-indigo-700"></i> Faculty Directory`;
-            }
-
-            container.innerHTML = list.map(t => `
-                <div onclick="openMasterTeacherForm('${t.phone}')" class="flex items-center justify-between p-3 bg-slate-100 border border-slate-300 rounded-2xl cursor-pointer hover:border-indigo-500 gap-2">
-                    <div class="flex items-center gap-2.5 min-w-0">
-                        <img src="${t.photo || './logo.png'}" class="w-10 h-10 rounded-xl object-cover border border-slate-300 bg-white shrink-0">
-                        <div class="min-w-0">
-                            <h4 class="text-sm font-extrabold text-slate-950 truncate">${t.name}</h4>
-                            <p class="text-xs font-semibold text-slate-800 truncate">${t.subjects || t.dept} &bull; ${t.gender || ''} &bull; ${t.phone}</p>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-pen-to-square text-sm text-indigo-700 shrink-0"></i>
-                </div>
-            `).join('') || `<p class="text-xs font-bold text-slate-700">No faculty profile found.</p>`;
+            } else { heading.innerHTML = `<i class="fa-solid fa-chalkboard-user text-indigo-700"></i> Faculty Directory`; }
+            container.innerHTML = list.map(t => `<div onclick="openMasterTeacherForm('${t.phone}')" class="flex items-center justify-between p-3 bg-slate-100 border border-slate-300 rounded-2xl cursor-pointer hover:border-indigo-500 gap-2"><div class="flex items-center gap-2.5 min-w-0"><img src="${t.photo || './logo.png'}" class="w-10 h-10 rounded-xl object-cover border border-slate-300 bg-white shrink-0"><div class="min-w-0"><h4 class="text-sm font-extrabold text-slate-950 truncate">${t.name}</h4><p class="text-xs font-semibold text-slate-800 truncate">${t.subjects || t.dept} &bull; ${t.gender || ''} &bull; ${t.phone}</p></div></div><i class="fa-solid fa-pen-to-square text-sm text-indigo-700 shrink-0"></i></div>`).join('') || `<p class="text-xs font-bold text-slate-700">No faculty profile found.</p>`;
         }
 
         function openAddTeacherModal() {
             if (STATE.currentRole !== 'admin') return;
-            document.getElementById('inp-teach-name').value = '';
-            document.getElementById('inp-teach-gender').value = 'Male';
-            document.getElementById('inp-teach-qual').value = '';
-            document.getElementById('inp-teach-phone').value = '';
-            document.getElementById('inp-teach-pwd').value = '';
-            document.getElementById('inp-teach-aadhaar').value = '';
-            document.getElementById('inp-teach-salary').value = '';
-            document.getElementById('inp-teach-photo').value = '';
-            document.getElementById('preview-teach-photo').src = './logo.png';
+            document.getElementById('inp-teach-name').value = ''; document.getElementById('inp-teach-gender').value = 'Male'; document.getElementById('inp-teach-qual').value = ''; document.getElementById('inp-teach-phone').value = ''; document.getElementById('inp-teach-pwd').value = ''; document.getElementById('inp-teach-aadhaar').value = ''; document.getElementById('inp-teach-salary').value = ''; document.getElementById('inp-teach-photo').value = ''; document.getElementById('preview-teach-photo').src = './logo.png';
             document.getElementById('btn-delete-teacher-modal').classList.add('hidden');
             document.getElementById('modal-teacher').classList.remove('hidden');
         }
-
         function openMasterTeacherForm(phone) {
             if (STATE.currentRole === 'parent') return;
-            if (STATE.currentRole === 'teacher' && cleanPhone(phone) !== cleanPhone(STATE.currentUserPhone)) {
-                alert("Access Denied: You can only view your own profile.");
-                return;
-            }
+            if (STATE.currentRole === 'teacher' && cleanPhone(phone) !== cleanPhone(STATE.currentUserPhone)) { alert("Access Denied."); return; }
             const t = getValidUniqueTeachers().find(item => cleanPhone(item.phone) === cleanPhone(phone));
             if (!t) return;
-            document.getElementById('inp-teach-name').value = t.name || '';
-            document.getElementById('inp-teach-gender').value = t.gender || 'Male';
-            document.getElementById('inp-teach-qual').value = t.qualifications || '';
-            document.getElementById('inp-teach-phone').value = t.phone || '';
-            document.getElementById('inp-teach-pwd').value = t.password || '';
-            document.getElementById('inp-teach-aadhaar').value = t.aadhaar || '';
-            document.getElementById('inp-teach-salary').value = t.salary || '';
-            document.getElementById('inp-teach-photo').value = '';
-            document.getElementById('preview-teach-photo').src = t.photo || './logo.png';
-
-            const saveBtn = document.getElementById('btn-save-teacher-submit');
-            const delBtn = document.getElementById('btn-delete-teacher-modal');
-            if (STATE.currentRole === 'admin') {
-                saveBtn.classList.remove('hidden');
-                delBtn.classList.remove('hidden');
-                delBtn.onclick = () => deleteTeacher(t.phone);
-            } else {
-                saveBtn.classList.add('hidden');
-                delBtn.classList.add('hidden');
-            }
+            document.getElementById('inp-teach-name').value = t.name || ''; document.getElementById('inp-teach-gender').value = t.gender || 'Male'; document.getElementById('inp-teach-qual').value = t.qualifications || ''; document.getElementById('inp-teach-phone').value = t.phone || ''; document.getElementById('inp-teach-pwd').value = t.password || ''; document.getElementById('inp-teach-aadhaar').value = t.aadhaar || ''; document.getElementById('inp-teach-salary').value = t.salary || ''; document.getElementById('preview-teach-photo').src = t.photo || './logo.png';
+            const saveBtn = document.getElementById('btn-save-teacher-submit'), delBtn = document.getElementById('btn-delete-teacher-modal');
+            if (STATE.currentRole === 'admin') { saveBtn.classList.remove('hidden'); delBtn.classList.remove('hidden'); delBtn.onclick = () => deleteTeacher(t.phone); }
+            else { saveBtn.classList.add('hidden'); delBtn.classList.add('hidden'); }
             document.getElementById('modal-teacher').classList.remove('hidden');
         }
-
         async function handleSaveTeacher(e) {
-            e.preventDefault();
-            if (STATE.currentRole !== 'admin') return;
+            e.preventDefault(); if (STATE.currentRole !== 'admin') return;
             const phone = cleanPhone(document.getElementById('inp-teach-phone').value);
             const checked = Array.from(document.querySelectorAll('#faculty-subjects-checkboxes input[name="teach-subj"]:checked')).map(c => c.value);
             const subjs = checked.length > 0 ? checked.join(', ') : 'All Subjects';
             const existing = STATE.registeredTeachers.find(t => cleanPhone(t.phone) === phone) || {};
             const photoFile = document.getElementById('inp-teach-photo').files[0];
             const photo = photoFile ? await compressImage(photoFile, 400, 0.75) : (existing.photo || '');
-
-            const obj = {
-                ...existing,
-                name: document.getElementById('inp-teach-name').value.trim(),
-                gender: document.getElementById('inp-teach-gender').value,
-                qualifications: document.getElementById('inp-teach-qual').value.trim(),
-                dept: subjs,
-                subjects: subjs,
-                phone,
-                password: document.getElementById('inp-teach-pwd').value.trim(),
-                aadhaar: document.getElementById('inp-teach-aadhaar').value.trim(),
-                salary: document.getElementById('inp-teach-salary').value || '0',
-                photo
-            };
+            const obj = { ...existing, name: document.getElementById('inp-teach-name').value.trim(), gender: document.getElementById('inp-teach-gender').value, qualifications: document.getElementById('inp-teach-qual').value.trim(), dept: subjs, subjects: subjs, phone, password: document.getElementById('inp-teach-pwd').value.trim(), aadhaar: document.getElementById('inp-teach-aadhaar').value.trim(), salary: document.getElementById('inp-teach-salary').value || '0', photo };
             const idx = STATE.registeredTeachers.findIndex(t => cleanPhone(t.phone) === phone);
             if (idx > -1) STATE.registeredTeachers[idx] = obj; else STATE.registeredTeachers.push(obj);
             localStorage.setItem('shiksha_teachers', JSON.stringify(STATE.registeredTeachers));
             renderTeachers(); renderPublicTeachers(); renderPublicOverview(); closeModal('modal-teacher');
             await postToCloud({ action: 'addTeacher', teacher: obj });
         }
-
         async function deleteTeacher(phone) {
             if (STATE.currentRole !== 'admin') return;
             if (confirm("Delete faculty member?")) {
@@ -3716,86 +3553,33 @@
 
         function openAddStudentModal() {
             if (STATE.currentRole !== 'admin') return;
-            document.getElementById('edit-stu-id').value = '';
-            document.getElementById('inp-stu-name').value = '';
-            document.getElementById('inp-stu-gender').value = 'Male';
-            document.getElementById('inp-stu-father').value = '';
-            document.getElementById('inp-stu-mother').value = '';
-            document.getElementById('inp-stu-phone').value = '';
-            document.getElementById('inp-stu-pwd').value = '';
-            document.getElementById('inp-stu-fee').value = '0';
-            document.getElementById('inp-stu-photo').value = '';
-            document.getElementById('preview-stu-photo').src = './logo.png';
+            document.getElementById('edit-stu-id').value = ''; document.getElementById('inp-stu-name').value = ''; document.getElementById('inp-stu-gender').value = 'Male'; document.getElementById('inp-stu-father').value = ''; document.getElementById('inp-stu-mother').value = ''; document.getElementById('inp-stu-phone').value = ''; document.getElementById('inp-stu-pwd').value = ''; document.getElementById('inp-stu-fee').value = '0'; document.getElementById('preview-stu-photo').src = './logo.png';
             document.getElementById('btn-delete-student-modal').classList.add('hidden');
             document.getElementById('modal-student').classList.remove('hidden');
         }
-
         function openMasterStudentForm(id) {
-            if (STATE.currentRole === 'parent' && String(id).trim().toLowerCase() !== String(STATE.currentStudentId).trim().toLowerCase()) {
-                alert("Access Denied: You can only view your own profile.");
-                return;
-            }
+            if (STATE.currentRole === 'parent' && String(id).trim().toLowerCase() !== String(STATE.currentStudentId).trim().toLowerCase()) { alert("Access Denied."); return; }
             const s = STATE.students.find(item => String(item.id).trim().toLowerCase() === String(id).trim().toLowerCase());
             if (!s) return;
-            document.getElementById('edit-stu-id').value = s.id;
-            document.getElementById('inp-stu-name').value = s.name || '';
-            document.getElementById('inp-stu-gender').value = s.gender || 'Male';
-            document.getElementById('inp-stu-father').value = s.fatherName || '';
-            document.getElementById('inp-stu-mother').value = s.motherName || '';
-            document.getElementById('inp-stu-class').value = s.class || '10th';
-            document.getElementById('inp-stu-board').value = s.board || 'CBSE';
-            document.getElementById('inp-stu-phone').value = s.phone || '';
-            document.getElementById('inp-stu-pwd').value = STATE.currentRole === 'admin' ? (s.password || '') : '••••••••';
-            document.getElementById('inp-stu-adm-date').value = formatDateForInput(s.admissionDate);
-            document.getElementById('inp-stu-leave-date').value = formatDateForInput(s.leavingDate);
-            document.getElementById('inp-stu-fee').value = s.feePending || 0;
-            document.getElementById('inp-stu-photo').value = '';
-            document.getElementById('preview-stu-photo').src = s.photo || './logo.png';
-
-            const saveBtn = document.getElementById('btn-save-student-submit');
-            const delBtn = document.getElementById('btn-delete-student-modal');
-            if (STATE.currentRole === 'admin') {
-                saveBtn.classList.remove('hidden');
-                delBtn.classList.remove('hidden');
-                delBtn.onclick = () => deleteStudent(s.id);
-            } else {
-                saveBtn.classList.add('hidden');
-                delBtn.classList.add('hidden');
-            }
+            document.getElementById('edit-stu-id').value = s.id; document.getElementById('inp-stu-name').value = s.name || ''; document.getElementById('inp-stu-gender').value = s.gender || 'Male'; document.getElementById('inp-stu-father').value = s.fatherName || ''; document.getElementById('inp-stu-mother').value = s.motherName || ''; document.getElementById('inp-stu-class').value = s.class || '10th'; document.getElementById('inp-stu-board').value = s.board || 'CBSE'; document.getElementById('inp-stu-phone').value = s.phone || ''; document.getElementById('inp-stu-pwd').value = STATE.currentRole === 'admin' ? (s.password || '') : '••••••••'; document.getElementById('inp-stu-adm-date').value = formatDateForInput(s.admissionDate); document.getElementById('inp-stu-leave-date').value = formatDateForInput(s.leavingDate); document.getElementById('inp-stu-fee').value = s.feePending || 0; document.getElementById('preview-stu-photo').src = s.photo || './logo.png';
+            const saveBtn = document.getElementById('btn-save-student-submit'), delBtn = document.getElementById('btn-delete-student-modal');
+            if (STATE.currentRole === 'admin') { saveBtn.classList.remove('hidden'); delBtn.classList.remove('hidden'); delBtn.onclick = () => deleteStudent(s.id); }
+            else { saveBtn.classList.add('hidden'); delBtn.classList.add('hidden'); }
             document.getElementById('modal-student').classList.remove('hidden');
         }
-
         async function handleSaveStudent(e) {
-            e.preventDefault();
-            if (STATE.currentRole !== 'admin') return;
+            e.preventDefault(); if (STATE.currentRole !== 'admin') return;
             const id = document.getElementById('edit-stu-id').value || generateNextStudentId();
             const existing = STATE.students.find(s => s.id === id) || {};
             const photoFile = document.getElementById('inp-stu-photo').files[0];
             const photo = photoFile ? await compressImage(photoFile, 400, 0.75) : (existing.photo || '');
-
-            const obj = {
-                ...existing,
-                id,
-                name: document.getElementById('inp-stu-name').value.trim(),
-                gender: document.getElementById('inp-stu-gender').value,
-                fatherName: document.getElementById('inp-stu-father').value.trim(),
-                motherName: document.getElementById('inp-stu-mother').value.trim(),
-                class: document.getElementById('inp-stu-class').value,
-                board: document.getElementById('inp-stu-board').value,
-                phone: cleanPhone(document.getElementById('inp-stu-phone').value),
-                password: document.getElementById('inp-stu-pwd').value.trim(),
-                admissionDate: document.getElementById('inp-stu-adm-date').value,
-                leavingDate: document.getElementById('inp-stu-leave-date').value,
-                feePending: parseFloat(document.getElementById('inp-stu-fee').value) || 0,
-                photo
-            };
+            const obj = { ...existing, id, name: document.getElementById('inp-stu-name').value.trim(), gender: document.getElementById('inp-stu-gender').value, fatherName: document.getElementById('inp-stu-father').value.trim(), motherName: document.getElementById('inp-stu-mother').value.trim(), class: document.getElementById('inp-stu-class').value, board: document.getElementById('inp-stu-board').value, phone: cleanPhone(document.getElementById('inp-stu-phone').value), password: document.getElementById('inp-stu-pwd').value.trim(), admissionDate: document.getElementById('inp-stu-adm-date').value, leavingDate: document.getElementById('inp-stu-leave-date').value, feePending: parseFloat(document.getElementById('inp-stu-fee').value) || 0, photo };
             const idx = STATE.students.findIndex(s => s.id === id);
             if (idx > -1) STATE.students[idx] = obj; else STATE.students.unshift(obj);
             localStorage.setItem('shiksha_students', JSON.stringify(STATE.students));
             renderStudents(); renderFees(); updateKpis(); renderPublicOverview(); closeModal('modal-student');
             await postToCloud({ action: 'addStudent', student: obj });
         }
-
         async function deleteStudent(id) {
             if (STATE.currentRole !== 'admin') return;
             if (confirm("Delete student record?")) {
@@ -3807,28 +3591,16 @@
         }
 
         function openAddNoticeModal() { currentEditingNoticeId = null; document.getElementById('inp-notice-title').value = ''; document.getElementById('inp-notice-desc').value = ''; document.getElementById('modal-add-notice').classList.remove('hidden'); }
-        function editNoticeModal(id) {
-            const n = STATE.notices.find(item => item.id == id);
-            if (!n) return;
-            currentEditingNoticeId = n.id;
-            document.getElementById('inp-notice-title').value = n.title;
-            document.getElementById('inp-notice-desc').value = n.desc;
-            document.getElementById('modal-add-notice').classList.remove('hidden');
-        }
+        function editNoticeModal(id) { const n = STATE.notices.find(item => item.id == id); if (!n) return; currentEditingNoticeId = n.id; document.getElementById('inp-notice-title').value = n.title; document.getElementById('inp-notice-desc').value = n.desc; document.getElementById('modal-add-notice').classList.remove('hidden'); }
         async function handleSaveNotice(e) {
             e.preventDefault();
-            const title = document.getElementById('inp-notice-title').value.trim();
-            const tag = document.getElementById('inp-notice-tag').value;
-            const desc = document.getElementById('inp-notice-desc').value.trim();
-            const payload = { id: currentEditingNoticeId || Date.now(), title, tag, desc, date: new Date().toLocaleDateString('en-IN'), author: STATE.currentRole === 'teacher' ? 'Faculty' : 'Admin' };
+            const payload = { id: currentEditingNoticeId || Date.now(), title: document.getElementById('inp-notice-title').value.trim(), tag: document.getElementById('inp-notice-tag').value, desc: document.getElementById('inp-notice-desc').value.trim(), date: new Date().toLocaleDateString('en-IN'), author: STATE.currentRole === 'teacher' ? 'Faculty' : 'Admin' };
             const idx = STATE.notices.findIndex(n => n.id == payload.id);
             if (idx > -1) STATE.notices[idx] = payload; else STATE.notices.unshift(payload);
             localStorage.setItem('shiksha_notices', JSON.stringify(STATE.notices));
-            renderNotices(); closeModal('modal-add-notice');
-            playNotificationChime();
+            renderNotices(); closeModal('modal-add-notice'); playNotificationChime();
             await postToCloud({ action: 'addNotice', notice: payload });
         }
-
         function renderNotices() {
             const canEdit = (STATE.currentRole === 'admin' || STATE.currentRole === 'teacher');
             const pubHtml = STATE.notices.map(n => `<div class="p-3.5 bg-slate-900 border border-slate-800 rounded-2xl"><div class="flex justify-between items-center mb-1"><span class="text-xs font-bold px-2 py-0.5 rounded bg-indigo-950 text-indigo-300">${n.tag}</span><span class="text-xs text-slate-300">${n.date}</span></div><h4 class="text-sm font-bold text-white">${n.title}</h4><p class="text-xs text-slate-200 mt-1 whitespace-pre-line leading-relaxed">${n.desc}</p></div>`).join('');
@@ -3849,7 +3621,6 @@
             renderNotes(); closeModal('modal-add-note');
             await postToCloud({ action: 'addNote', note });
         }
-
         function renderNotes() {
             const container = document.getElementById('portal-notes-grid');
             if (!container) return;
@@ -3859,18 +3630,7 @@
                 const stu = STATE.students.find(s => String(s.id).trim() === String(STATE.currentStudentId).trim());
                 if (stu) list = list.filter(m => m.class === stu.class);
             }
-            container.innerHTML = list.map(m => `
-                <div class="p-4 bg-white border border-slate-300 rounded-2xl flex items-center justify-between gap-2 shadow-sm">
-                    <div class="min-w-0">
-                        <span class="text-xs font-extrabold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">Class ${m.class} &bull; ${m.subject}</span>
-                        <h4 class="text-sm font-extrabold text-slate-950 mt-1 truncate">${m.title}</h4>
-                    </div>
-                    <div class="flex items-center gap-1.5 shrink-0">
-                        ${isStaff ? `<button onclick="createTestFromStudyNote('${m.id}')" title="Generate AI Test from Note" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 font-extrabold px-2.5 py-2 rounded-xl"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>AI Test</button>` : ''}
-                        <a href="${m.link}" target="_blank" title="Download Note" class="text-xs bg-indigo-600 text-white font-bold px-3 py-2 rounded-xl"><i class="fa-solid fa-download"></i></a>
-                    </div>
-                </div>
-            `).join('') || `<p class="text-xs font-bold text-slate-800">No notes available.</p>`;
+            container.innerHTML = list.map(m => `<div class="p-4 bg-white border border-slate-300 rounded-2xl flex items-center justify-between gap-2 shadow-sm"><div class="min-w-0"><span class="text-xs font-extrabold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">Class ${m.class} &bull; ${m.subject}</span><h4 class="text-sm font-extrabold text-slate-950 mt-1 truncate">${m.title}</h4></div><div class="flex items-center gap-1.5 shrink-0">${isStaff ? `<button onclick="createTestFromStudyNote('${m.id}')" title="Generate AI Test" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 font-extrabold px-2.5 py-2 rounded-xl"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>AI Test</button>` : ''}<a href="${m.link}" target="_blank" class="text-xs bg-indigo-600 text-white font-bold px-3 py-2 rounded-xl"><i class="fa-solid fa-download"></i></a></div></div>`).join('') || `<p class="text-xs font-bold text-slate-800">No notes available.</p>`;
         }
 
         function openHolidayModal() { document.getElementById('inp-holiday-date').value = getTodayDateKey(); document.getElementById('modal-holiday').classList.remove('hidden'); }
@@ -3879,32 +3639,16 @@
             const dateVal = formatDateForInput(document.getElementById('inp-holiday-date').value);
             const titleVal = document.getElementById('inp-holiday-title').value.trim();
             if (!dateVal || !titleVal) return;
-
             const existingIdx = STATE.holidays.findIndex(h => formatDateForInput(h.date) === dateVal);
             const h = { date: dateVal, title: titleVal };
-
-            if (existingIdx > -1) {
-                STATE.holidays[existingIdx] = h;
-                alert(`Holiday on ${dateVal} updated to "${titleVal}" (Total holidays count unchanged).`);
-            } else {
-                STATE.holidays.push(h);
-                alert(`Holiday "${titleVal}" declared for ${dateVal}. Attendance is disabled on this date.`);
-            }
-
+            if (existingIdx > -1) STATE.holidays[existingIdx] = h; else STATE.holidays.push(h);
             localStorage.setItem('shiksha_holidays', JSON.stringify(STATE.holidays));
-            closeModal('modal-holiday');
-            renderAttendanceList();
+            closeModal('modal-holiday'); renderAttendanceList();
             await postToCloud({ action: 'addHoliday', holiday: h });
         }
 
-        function openLoginGateway() {
-            const m = document.getElementById('modal-login-gateway');
-            if (m) { m.classList.remove('hidden'); m.style.display = 'flex'; }
-        }
-        function closeModal(id) {
-            const m = document.getElementById(id);
-            if (m) { m.classList.add('hidden'); m.style.display = 'none'; }
-        }
+        function openLoginGateway() { const m = document.getElementById('modal-login-gateway'); if (m) { m.classList.remove('hidden'); m.style.display = 'flex'; } }
+        function closeModal(id) { const m = document.getElementById(id); if (m) { m.classList.add('hidden'); m.style.display = 'none'; } }
         function setLoginRole(role) {
             STATE.loginRoleSelect = role;
             ['m-', 'd-'].forEach(prefix => {
@@ -3922,22 +3666,19 @@
             const errBox = document.getElementById(`${prefix}auth-error-box`);
             const errMsg = document.getElementById(`${prefix}auth-error-msg`);
             errBox.classList.add('hidden');
-
             await fetchCloudDatabase();
 
             if (STATE.loginRoleSelect === 'admin') {
                 if (cleanPhone(phone) !== cleanPhone(STATE.adminUser.phone) || password !== STATE.adminUser.password) {
                     errMsg.innerText = "Invalid Admin Mobile or Password!"; errBox.classList.remove('hidden'); return;
                 }
-                closeModal('modal-login-gateway');
-                authorizeRole('admin');
+                closeModal('modal-login-gateway'); authorizeRole('admin');
             } else if (STATE.loginRoleSelect === 'teacher') {
                 const t = getValidUniqueTeachers().find(item => cleanPhone(item.phone) === cleanPhone(phone));
                 if (!t || String(t.password).trim() !== password) {
                     errMsg.innerText = "Invalid Teacher Credentials!"; errBox.classList.remove('hidden'); return;
                 }
-                closeModal('modal-login-gateway');
-                authorizeRole('teacher', phone);
+                closeModal('modal-login-gateway'); authorizeRole('teacher', phone);
             } else {
                 const matches = STATE.students.filter(s => cleanPhone(s.phone) === cleanPhone(phone));
                 if (matches.length === 0) { errMsg.innerText = "No student found."; errBox.classList.remove('hidden'); return; }
@@ -3963,7 +3704,6 @@
             if (studentId) localStorage.setItem('shiksha_auth_student_id', studentId);
 
             document.getElementById('btn-header-login').classList.add('hidden');
-            document.getElementById('btn-mobile-menu')?.classList.add('hidden');
             document.getElementById('portal-user-badge').classList.remove('hidden');
             document.getElementById('portal-user-badge').classList.add('flex');
 
@@ -3975,17 +3715,14 @@
             document.getElementById('header-role-pill').innerText = roleLabel;
             document.getElementById('portal-role-pill-side').innerText = roleLabel;
 
-            const isAdmin = (role === 'admin');
-            const isStaff = (role === 'admin' || role === 'teacher');
-            const isStudent = (role === 'parent');
+            buildRoleNavigation();
+
+            const isAdmin = (role === 'admin'), isStaff = (role === 'admin' || role === 'teacher'), isStudent = (role === 'parent');
             setTimeout(initializeNewErpModules, 0);
 
             document.getElementById('kpi-total-students-card').classList.toggle('hidden', isStudent);
             document.getElementById('kpi-present-label').innerText = isStudent ? 'My Attendance %' : 'Present Today';
             document.getElementById('nav-btn-faculty-dir').classList.toggle('hidden', !isAdmin && !!role);
-
-            document.getElementById('side-students-label').innerText = isStudent ? 'My Profile' : 'Student Directory';
-            document.getElementById('m-students-label').innerText = isStudent ? 'Profile' : 'Students';
             document.getElementById('students-tab-heading').innerText = isStudent ? 'My Student Profile' : 'Student Records';
 
             document.getElementById('kpi-due-fees-card').classList.toggle('hidden', !isAdmin);
@@ -4003,9 +3740,7 @@
             document.getElementById('btn-manual-marks-entry').classList.toggle('hidden', !isStaff);
 
             if (chatPollingInterval) clearInterval(chatPollingInterval);
-            chatPollingInterval = setInterval(() => {
-                fetchCloudDatabase(false);
-            }, 5000);
+            chatPollingInterval = setInterval(() => { fetchCloudDatabase(false); }, 5000);
 
             openPortalView();
             switchPortalTab('home');
@@ -4019,8 +3754,6 @@
             localStorage.removeItem('shiksha_auth_student_id');
             STATE.currentRole = null; STATE.currentUserPhone = null; STATE.currentStudentId = null;
             document.getElementById('btn-header-login').classList.remove('hidden');
-            document.getElementById('btn-mobile-menu')?.classList.add('hidden');
-            toggleMobileMenu(false);
             document.getElementById('portal-user-badge').classList.add('hidden');
             document.getElementById('nav-btn-faculty-dir').classList.remove('hidden');
             showPublicSection('home');
@@ -4033,10 +3766,8 @@
                 document.getElementById('kpi-present-count').innerText = `${stats.percentage}%`;
                 return;
             }
-
             const active = STATE.students.filter(s => !s.leavingDate || s.leavingDate > todayKey);
             document.getElementById('kpi-total-students').innerText = active.length;
-
             let presentToday = 0;
             if (!isDateHolidayOrSunday(todayKey)) {
                 active.forEach(s => {
@@ -4045,7 +3776,6 @@
                 });
             }
             document.getElementById('kpi-present-count').innerText = presentToday;
-
             if (STATE.currentRole === 'admin') {
                 const due = active.reduce((acc, s) => acc + (parseFloat(s.feePending) || 0), 0);
                 document.getElementById('kpi-due-fees').innerText = '₹' + due;
@@ -4056,65 +3786,59 @@
         function openUpiQrModal() { document.getElementById('modal-upi-qr').classList.remove('hidden'); }
         function copyUpiId() { navigator.clipboard.writeText(COACHING_UPI_ID); alert("UPI ID Copied: " + COACHING_UPI_ID); }
 
+        function setSelectOptions(id, values, includeAll = false) { const el = document.getElementById(id); if (!el) return; el.innerHTML = (includeAll ? '<option value="all">All Classes</option>' : '') + values.map(v => `<option value="${escapeFeeHtml(v)}">${escapeFeeHtml(v)}</option>`).join(''); }
+        function initializeNewErpModules() {
+            ['hw-class', 'tt-class'].forEach(id => setSelectOptions(id, ALL_CLASSES));
+            ['hw-filter-class', 'tt-filter-class'].forEach(id => setSelectOptions(id, ALL_CLASSES, true));
+            const teach = document.getElementById('tt-teacher'); if (teach) teach.innerHTML = '<option value="">Select Faculty</option>' + getValidUniqueTeachers().map(t => `<option value="${escapeFeeHtml(t.name)}">${escapeFeeHtml(t.name)}</option>`).join('');
+            const staff = ['admin', 'teacher'].includes(STATE.currentRole);
+            const a = document.getElementById('homework-create-form'), b = document.getElementById('timetable-create-form'), c = document.getElementById('leave-request-form'), d = document.getElementById('admin-fee-chart-panel');
+            if (a) a.classList.toggle('hidden', !staff); if (b) b.classList.toggle('hidden', STATE.currentRole !== 'admin'); if (c) c.classList.toggle('hidden', STATE.currentRole !== 'parent'); if (d) d.classList.toggle('hidden', STATE.currentRole !== 'admin');
+            const from = document.getElementById('fee-report-from'), to = document.getElementById('fee-report-to');
+            if (from && !from.value) { const n = new Date(), y = n.getMonth() >= 3 ? n.getFullYear() : n.getFullYear() - 1; from.value = `${y}-04`; }
+            if (to && !to.value) to.value = new Date().toISOString().slice(0, 7);
+            const cm = document.getElementById('fee-chart-month'); if (cm && !cm.value) cm.value = new Date().toISOString().slice(0, 7);
+        }
+        async function saveHomeworkEntry(e) {
+            e.preventDefault(); if (!['admin', 'teacher'].includes(STATE.currentRole)) return;
+            const h = { id: 'HW-' + Date.now(), title: document.getElementById('hw-title').value.trim(), class: document.getElementById('hw-class').value, subject: document.getElementById('hw-subject').value.trim(), desc: document.getElementById('hw-desc').value.trim(), dueDate: document.getElementById('hw-due').value, author: STATE.currentRole === 'admin' ? 'Admin' : (STATE.registeredTeachers.find(t => cleanPhone(t.phone) === cleanPhone(STATE.currentUserPhone))?.name || 'Faculty'), createdAt: new Date().toISOString(), completedBy: [] };
+            STATE.homeworkDiary.unshift(h); localStorage.setItem('shiksha_homework', JSON.stringify(STATE.homeworkDiary)); await postToCloud({ action: 'addHomework', homework: h }); e.target.reset(); renderHomeworkDiary(); alert('Homework published.');
+        }
+        function renderHomeworkDiary() {
+            const box = document.getElementById('homework-list'); if (!box) return; let list = STATE.homeworkDiary || [], filter = document.getElementById('hw-filter-class')?.value || 'all';
+            if (STATE.currentRole === 'parent') { const s = STATE.students.find(x => String(x.id) === String(STATE.currentStudentId)); list = s ? list.filter(h => String(h.class) === String(s.class)) : []; } else if (filter !== 'all') list = list.filter(h => String(h.class) === String(filter));
+            box.innerHTML = [...list].sort((a, b) => String(b.createdAt || b.id).localeCompare(String(a.createdAt || a.id))).map(h => { const done = (h.completedBy || []).map(String).includes(String(STATE.currentStudentId)); return `<article class="border border-slate-200 rounded-xl p-3 bg-slate-50"><div class="flex justify-between gap-2"><div><span class="text-[10px] font-black bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">Class ${escapeFeeHtml(h.class)} • ${escapeFeeHtml(h.subject)}</span><h4 class="font-extrabold text-sm text-slate-950 mt-1">${escapeFeeHtml(h.title)}</h4></div><span class="text-[10px] font-bold text-slate-600">Due ${escapeFeeHtml(h.dueDate || '—')}</span></div><p class="text-xs text-slate-700 mt-2 whitespace-pre-wrap">${escapeFeeHtml(h.desc || '')}</p><div class="mt-2 flex justify-between gap-2"><span class="text-[10px] text-slate-600">By ${escapeFeeHtml(h.author || 'Faculty')} ${STATE.currentRole !== 'parent' ? '• Completed: ' + (h.completedBy || []).length : ''}</span>${STATE.currentRole === 'parent' ? `<button onclick="toggleHomeworkComplete('${String(h.id).replace(/'/g, "\\'")}')" class="text-xs px-3 py-1.5 rounded-lg font-bold ${done ? 'bg-emerald-100 text-emerald-800' : 'bg-indigo-600 text-white'}">${done ? 'Completed ✓' : 'Mark Completed'}</button>` : ''}</div></article>`; }).join('') || '<p class="text-xs text-slate-600 p-3">No homework found.</p>';
+        }
+        async function toggleHomeworkComplete(id) {
+            if (STATE.currentRole !== 'parent') return; const h = STATE.homeworkDiary.find(x => String(x.id) === String(id)); if (!h) return; h.completedBy = h.completedBy || []; const sid = String(STATE.currentStudentId); h.completedBy = h.completedBy.map(String).includes(sid) ? h.completedBy.filter(x => String(x) !== sid) : [...h.completedBy, sid]; localStorage.setItem('shiksha_homework', JSON.stringify(STATE.homeworkDiary)); await postToCloud({ action: 'updateHomework', homework: h }); renderHomeworkDiary();
+        }
+        async function saveTimetableEntry(e) {
+            e.preventDefault(); if (STATE.currentRole !== 'admin') return; const t = { id: 'TT-' + Date.now(), class: document.getElementById('tt-class').value, day: document.getElementById('tt-day').value, startTime: document.getElementById('tt-start').value, endTime: document.getElementById('tt-end').value, subject: document.getElementById('tt-subject').value.trim(), teacher: document.getElementById('tt-teacher').value }; STATE.timetable.push(t); localStorage.setItem('shiksha_timetable', JSON.stringify(STATE.timetable)); await postToCloud({ action: 'saveTimetableEntry', entry: t }); e.target.reset(); renderTimetable();
+        }
+        async function deleteTimetableEntry(id) { if (STATE.currentRole !== 'admin' || !confirm('Delete this timetable slot?')) return; STATE.timetable = STATE.timetable.filter(x => String(x.id) !== String(id)); localStorage.setItem('shiksha_timetable', JSON.stringify(STATE.timetable)); await postToCloud({ action: 'deleteTimetableEntry', id }); renderTimetable(); }
+        function renderTimetable() {
+            const box = document.getElementById('timetable-list'); if (!box) return; let list = STATE.timetable || [], cls = document.getElementById('tt-filter-class')?.value || 'all', day = document.getElementById('tt-filter-day')?.value || 'all';
+            if (STATE.currentRole === 'parent') { const s = STATE.students.find(x => String(x.id) === String(STATE.currentStudentId)); list = s ? list.filter(x => String(x.class) === String(s.class)) : []; } else if (cls !== 'all') list = list.filter(x => String(x.class) === String(cls)); if (day !== 'all') list = list.filter(x => x.day === day);
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']; list.sort((a, b) => days.indexOf(a.day) - days.indexOf(b.day) || String(a.startTime).localeCompare(String(b.startTime)));
+            box.innerHTML = list.map(t => `<div class="flex items-center justify-between gap-2 border border-slate-200 rounded-xl p-3 bg-slate-50"><div><div class="text-[10px] font-black text-indigo-700">${escapeFeeHtml(t.day)} • Class ${escapeFeeHtml(t.class)}</div><div class="text-sm font-extrabold text-slate-950">${escapeFeeHtml(t.subject)}</div><div class="text-xs text-slate-700">${escapeFeeHtml(t.startTime)}–${escapeFeeHtml(t.endTime)} • ${escapeFeeHtml(t.teacher || 'Faculty TBA')}</div></div>${STATE.currentRole === 'admin' ? `<button onclick="deleteTimetableEntry('${String(t.id).replace(/'/g, "\\'")}')" class="text-rose-700 text-xs p-2"><i class="fa-solid fa-trash"></i></button>` : ''}</div>`).join('') || '<p class="text-xs text-slate-600 p-3">No timetable entries found.</p>';
+        }
+        async function submitLeaveRequest(e) {
+            e.preventDefault(); if (STATE.currentRole !== 'parent') return; const s = STATE.students.find(x => String(x.id) === String(STATE.currentStudentId)); if (!s) return; const from = document.getElementById('leave-from').value, to = document.getElementById('leave-to').value; if (to < from) return alert('To Date cannot be earlier than From Date.');
+            const l = { id: 'LV-' + Date.now(), studentId: String(s.id), studentName: s.name, class: s.class, fromDate: from, toDate: to, reason: document.getElementById('leave-reason').value.trim(), status: 'Pending', submittedAt: new Date().toISOString() }; STATE.leaveRequests.unshift(l); localStorage.setItem('shiksha_leave_requests', JSON.stringify(STATE.leaveRequests)); await postToCloud({ action: 'addLeaveRequest', leave: l }); e.target.reset(); renderLeaveRequests(); alert('Leave request submitted.');
+        }
+        async function updateLeaveStatus(id, status) {
+            if (!['admin', 'teacher'].includes(STATE.currentRole)) return; const l = STATE.leaveRequests.find(x => String(x.id) === String(id)); if (!l) return; l.status = status; l.reviewedAt = new Date().toISOString(); l.reviewedBy = STATE.currentUserPhone || STATE.currentRole;
+            if (status === 'Approved') { const log = STATE.attendanceLogs[l.studentId] || { daily: {} }; log.daily = log.daily || {}; let d = new Date(l.fromDate + 'T12:00:00'), end = new Date(l.toDate + 'T12:00:00'); while (d <= end) { const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); if (!isDateHolidayOrSunday(key)) log.daily[key] = 'L'; d.setDate(d.getDate() + 1); } STATE.attendanceLogs[l.studentId] = log; localStorage.setItem('shiksha_att_logs', JSON.stringify(STATE.attendanceLogs)); await postToCloud({ action: 'saveAttendance', logs: STATE.attendanceLogs }); }
+            localStorage.setItem('shiksha_leave_requests', JSON.stringify(STATE.leaveRequests)); await postToCloud({ action: 'updateLeaveRequest', leave: l }); renderLeaveRequests(); renderAttendanceList();
+        }
+        function renderLeaveRequests() {
+            const box = document.getElementById('leave-requests-list'); if (!box) return; let list = STATE.leaveRequests || []; if (STATE.currentRole === 'parent') list = list.filter(x => String(x.studentId) === String(STATE.currentStudentId));
+            box.innerHTML = [...list].sort((a, b) => String(b.submittedAt || b.id).localeCompare(String(a.submittedAt || a.id))).map(l => `<article class="bg-white border border-slate-300 rounded-xl p-3"><div class="flex justify-between gap-2"><div><h4 class="text-sm font-extrabold text-slate-950">${escapeFeeHtml(l.studentName)} <span class="text-xs text-slate-600">Class ${escapeFeeHtml(l.class)}</span></h4><p class="text-xs text-slate-700 mt-1">${escapeFeeHtml(l.fromDate)} to ${escapeFeeHtml(l.toDate)}</p></div><span class="text-[10px] font-black px-2 py-1 rounded-full ${l.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : l.status === 'Rejected' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-900'}">${escapeFeeHtml(l.status)}</span></div><p class="text-xs text-slate-700 mt-2">${escapeFeeHtml(l.reason)}</p>${['admin', 'teacher'].includes(STATE.currentRole) && l.status === 'Pending' ? `<div class="flex gap-2 mt-2"><button onclick="updateLeaveStatus('${String(l.id).replace(/'/g, "\\'")}','Approved')" class="bg-emerald-600 text-white rounded-lg px-3 py-1.5 text-xs font-bold">Approve</button><button onclick="updateLeaveStatus('${String(l.id).replace(/'/g, "\\'")}','Rejected')" class="bg-rose-600 text-white rounded-lg px-3 py-1.5 text-xs font-bold">Reject</button></div>` : ''}</article>`).join('') || '<p class="text-xs text-slate-600 p-3 bg-white rounded-xl">No leave applications.</p>';
+        }
+
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(() => {});
-            });
+            window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(() => {}); });
         }
     </script>
-
-<script>
-function setSelectOptions(id,values,includeAll=false){const el=document.getElementById(id);if(!el)return;el.innerHTML=(includeAll?'<option value="all">All Classes</option>':'')+values.map(v=>`<option value="${escapeFeeHtml(v)}">${escapeFeeHtml(v)}</option>`).join('');}
-function initializeNewErpModules(){
-    ['hw-class','tt-class'].forEach(id=>setSelectOptions(id,ALL_CLASSES));
-    ['hw-filter-class','tt-filter-class'].forEach(id=>setSelectOptions(id,ALL_CLASSES,true));
-    const teach=document.getElementById('tt-teacher');if(teach)teach.innerHTML='<option value="">Select Faculty</option>'+getValidUniqueTeachers().map(t=>`<option value="${escapeFeeHtml(t.name)}">${escapeFeeHtml(t.name)}</option>`).join('');
-    const staff=['admin','teacher'].includes(STATE.currentRole);
-    const a=document.getElementById('homework-create-form'),b=document.getElementById('timetable-create-form'),c=document.getElementById('leave-request-form'),d=document.getElementById('admin-fee-chart-panel');
-    if(a)a.classList.toggle('hidden',!staff);if(b)b.classList.toggle('hidden',STATE.currentRole!=='admin');if(c)c.classList.toggle('hidden',STATE.currentRole!=='parent');if(d)d.classList.toggle('hidden',STATE.currentRole!=='admin');
-    const from=document.getElementById('fee-report-from'),to=document.getElementById('fee-report-to');
-    if(from&&!from.value){const n=new Date(),y=n.getMonth()>=3?n.getFullYear():n.getFullYear()-1;from.value=`${y}-04`;}
-    if(to&&!to.value)to.value=new Date().toISOString().slice(0,7);
-    const cm=document.getElementById('fee-chart-month');if(cm&&!cm.value)cm.value=new Date().toISOString().slice(0,7);
-}
-async function saveHomeworkEntry(e){
-    e.preventDefault();if(!['admin','teacher'].includes(STATE.currentRole))return;
-    const h={id:'HW-'+Date.now(),title:document.getElementById('hw-title').value.trim(),class:document.getElementById('hw-class').value,subject:document.getElementById('hw-subject').value.trim(),desc:document.getElementById('hw-desc').value.trim(),dueDate:document.getElementById('hw-due').value,author:STATE.currentRole==='admin'?'Admin':(STATE.registeredTeachers.find(t=>cleanPhone(t.phone)===cleanPhone(STATE.currentUserPhone))?.name||'Faculty'),createdAt:new Date().toISOString(),completedBy:[]};
-    STATE.homeworkDiary.unshift(h);localStorage.setItem('shiksha_homework',JSON.stringify(STATE.homeworkDiary));await postToCloud({action:'addHomework',homework:h});e.target.reset();renderHomeworkDiary();alert('Homework published.');
-}
-function renderHomeworkDiary(){
-    const box=document.getElementById('homework-list');if(!box)return;let list=STATE.homeworkDiary||[],filter=document.getElementById('hw-filter-class')?.value||'all';
-    if(STATE.currentRole==='parent'){const s=STATE.students.find(x=>String(x.id)===String(STATE.currentStudentId));list=s?list.filter(h=>String(h.class)===String(s.class)):[];}else if(filter!=='all')list=list.filter(h=>String(h.class)===String(filter));
-    box.innerHTML=[...list].sort((a,b)=>String(b.createdAt||b.id).localeCompare(String(a.createdAt||a.id))).map(h=>{const done=(h.completedBy||[]).map(String).includes(String(STATE.currentStudentId));return `<article class="border border-slate-200 rounded-xl p-3 bg-slate-50"><div class="flex justify-between gap-2"><div><span class="text-[10px] font-black bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">Class ${escapeFeeHtml(h.class)} • ${escapeFeeHtml(h.subject)}</span><h4 class="font-extrabold text-sm text-slate-950 mt-1">${escapeFeeHtml(h.title)}</h4></div><span class="text-[10px] font-bold text-slate-600">Due ${escapeFeeHtml(h.dueDate||'—')}</span></div><p class="text-xs text-slate-700 mt-2 whitespace-pre-wrap">${escapeFeeHtml(h.desc||'')}</p><div class="mt-2 flex justify-between gap-2"><span class="text-[10px] text-slate-600">By ${escapeFeeHtml(h.author||'Faculty')} ${STATE.currentRole!=='parent'?'• Completed: '+(h.completedBy||[]).length:''}</span>${STATE.currentRole==='parent'?`<button onclick="toggleHomeworkComplete('${String(h.id).replace(/'/g,"\\'")}')" class="text-xs px-3 py-1.5 rounded-lg font-bold ${done?'bg-emerald-100 text-emerald-800':'bg-indigo-600 text-white'}">${done?'Completed ✓':'Mark Completed'}</button>`:''}</div></article>`;}).join('')||'<p class="text-xs text-slate-600 p-3">No homework found.</p>';
-}
-async function toggleHomeworkComplete(id){
-    if(STATE.currentRole!=='parent')return;const h=STATE.homeworkDiary.find(x=>String(x.id)===String(id));if(!h)return;h.completedBy=h.completedBy||[];const sid=String(STATE.currentStudentId);h.completedBy=h.completedBy.map(String).includes(sid)?h.completedBy.filter(x=>String(x)!==sid):[...h.completedBy,sid];localStorage.setItem('shiksha_homework',JSON.stringify(STATE.homeworkDiary));await postToCloud({action:'updateHomework',homework:h});renderHomeworkDiary();
-}
-async function saveTimetableEntry(e){
-    e.preventDefault();if(STATE.currentRole!=='admin')return;const t={id:'TT-'+Date.now(),class:document.getElementById('tt-class').value,day:document.getElementById('tt-day').value,startTime:document.getElementById('tt-start').value,endTime:document.getElementById('tt-end').value,subject:document.getElementById('tt-subject').value.trim(),teacher:document.getElementById('tt-teacher').value};STATE.timetable.push(t);localStorage.setItem('shiksha_timetable',JSON.stringify(STATE.timetable));await postToCloud({action:'saveTimetableEntry',entry:t});e.target.reset();renderTimetable();
-}
-async function deleteTimetableEntry(id){if(STATE.currentRole!=='admin'||!confirm('Delete this timetable slot?'))return;STATE.timetable=STATE.timetable.filter(x=>String(x.id)!==String(id));localStorage.setItem('shiksha_timetable',JSON.stringify(STATE.timetable));await postToCloud({action:'deleteTimetableEntry',id});renderTimetable();}
-function renderTimetable(){
-    const box=document.getElementById('timetable-list');if(!box)return;let list=STATE.timetable||[],cls=document.getElementById('tt-filter-class')?.value||'all',day=document.getElementById('tt-filter-day')?.value||'all';
-    if(STATE.currentRole==='parent'){const s=STATE.students.find(x=>String(x.id)===String(STATE.currentStudentId));list=s?list.filter(x=>String(x.class)===String(s.class)):[];}else if(cls!=='all')list=list.filter(x=>String(x.class)===String(cls));if(day!=='all')list=list.filter(x=>x.day===day);
-    const days=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];list.sort((a,b)=>days.indexOf(a.day)-days.indexOf(b.day)||String(a.startTime).localeCompare(String(b.startTime)));
-    box.innerHTML=list.map(t=>`<div class="flex items-center justify-between gap-2 border border-slate-200 rounded-xl p-3 bg-slate-50"><div><div class="text-[10px] font-black text-indigo-700">${escapeFeeHtml(t.day)} • Class ${escapeFeeHtml(t.class)}</div><div class="text-sm font-extrabold text-slate-950">${escapeFeeHtml(t.subject)}</div><div class="text-xs text-slate-700">${escapeFeeHtml(t.startTime)}–${escapeFeeHtml(t.endTime)} • ${escapeFeeHtml(t.teacher||'Faculty TBA')}</div></div>${STATE.currentRole==='admin'?`<button onclick="deleteTimetableEntry('${String(t.id).replace(/'/g,"\\'") }')" class="text-rose-700 text-xs p-2"><i class="fa-solid fa-trash"></i></button>`:''}</div>`).join('')||'<p class="text-xs text-slate-600 p-3">No timetable entries found.</p>';
-}
-async function submitLeaveRequest(e){
-    e.preventDefault();if(STATE.currentRole!=='parent')return;const s=STATE.students.find(x=>String(x.id)===String(STATE.currentStudentId));if(!s)return;const from=document.getElementById('leave-from').value,to=document.getElementById('leave-to').value;if(to<from)return alert('To Date cannot be earlier than From Date.');
-    const l={id:'LV-'+Date.now(),studentId:String(s.id),studentName:s.name,class:s.class,fromDate:from,toDate:to,reason:document.getElementById('leave-reason').value.trim(),status:'Pending',submittedAt:new Date().toISOString()};STATE.leaveRequests.unshift(l);localStorage.setItem('shiksha_leave_requests',JSON.stringify(STATE.leaveRequests));await postToCloud({action:'addLeaveRequest',leave:l});e.target.reset();renderLeaveRequests();alert('Leave request submitted.');
-}
-async function updateLeaveStatus(id,status){
-    if(!['admin','teacher'].includes(STATE.currentRole))return;const l=STATE.leaveRequests.find(x=>String(x.id)===String(id));if(!l)return;l.status=status;l.reviewedAt=new Date().toISOString();l.reviewedBy=STATE.currentUserPhone||STATE.currentRole;
-    if(status==='Approved'){const log=STATE.attendanceLogs[l.studentId]||{daily:{}};log.daily=log.daily||{};let d=new Date(l.fromDate+'T12:00:00'),end=new Date(l.toDate+'T12:00:00');while(d<=end){const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(!isDateHolidayOrSunday(key))log.daily[key]='L';d.setDate(d.getDate()+1);}STATE.attendanceLogs[l.studentId]=log;localStorage.setItem('shiksha_att_logs',JSON.stringify(STATE.attendanceLogs));await postToCloud({action:'saveAttendance',logs:STATE.attendanceLogs});}
-    localStorage.setItem('shiksha_leave_requests',JSON.stringify(STATE.leaveRequests));await postToCloud({action:'updateLeaveRequest',leave:l});renderLeaveRequests();renderAttendanceList();
-}
-function renderLeaveRequests(){
-    const box=document.getElementById('leave-requests-list');if(!box)return;let list=STATE.leaveRequests||[];if(STATE.currentRole==='parent')list=list.filter(x=>String(x.studentId)===String(STATE.currentStudentId));
-    box.innerHTML=[...list].sort((a,b)=>String(b.submittedAt||b.id).localeCompare(String(a.submittedAt||a.id))).map(l=>`<article class="bg-white border border-slate-300 rounded-xl p-3"><div class="flex justify-between gap-2"><div><h4 class="text-sm font-extrabold text-slate-950">${escapeFeeHtml(l.studentName)} <span class="text-xs text-slate-600">Class ${escapeFeeHtml(l.class)}</span></h4><p class="text-xs text-slate-700 mt-1">${escapeFeeHtml(l.fromDate)} to ${escapeFeeHtml(l.toDate)}</p></div><span class="text-[10px] font-black px-2 py-1 rounded-full ${l.status==='Approved'?'bg-emerald-100 text-emerald-800':l.status==='Rejected'?'bg-rose-100 text-rose-800':'bg-amber-100 text-amber-900'}">${escapeFeeHtml(l.status)}</span></div><p class="text-xs text-slate-700 mt-2">${escapeFeeHtml(l.reason)}</p>${['admin','teacher'].includes(STATE.currentRole)&&l.status==='Pending'?`<div class="flex gap-2 mt-2"><button onclick="updateLeaveStatus('${String(l.id).replace(/'/g,"\\'")}','Approved')" class="bg-emerald-600 text-white rounded-lg px-3 py-1.5 text-xs font-bold">Approve</button><button onclick="updateLeaveStatus('${String(l.id).replace(/'/g,"\\'")}','Rejected')" class="bg-rose-600 text-white rounded-lg px-3 py-1.5 text-xs font-bold">Reject</button></div>`:''}</article>`).join('')||'<p class="text-xs text-slate-600 p-3 bg-white rounded-xl">No leave applications.</p>';
-}
-document.addEventListener('DOMContentLoaded',()=>{initializeNewErpModules();renderFeeAnalytics();renderFeeReport();});
-</script>
-
 </body>
 </html>
