@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SHIKSHA Coaching Institute - Official Website & Smart ERP</title>
-    <!-- Clean logo.png for Browser Favicon, Apple Icon & Chrome PWA Installer -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="./logo.png">
     <link rel="apple-touch-icon" href="./logo.png">
     <meta name="theme-color" content="#090d16">
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- Google Fonts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        if (window.pdfjsLib) {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         html, body {
@@ -32,9 +32,8 @@
 </head>
 <body class="bg-slate-900 text-slate-100 antialiased min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white pt-24 pb-16 md:pb-12">
 
-    <!-- ================= 2-PART FROZEN TOP HEADER (SCALED logo.png + QUICK NAV) ================= -->
+    <!-- ================= 2-PART FROZEN TOP HEADER ================= -->
     <header class="fixed top-0 left-0 right-0 z-50 bg-slate-950/95 backdrop-blur-md border-b border-slate-800 shadow-lg">
-        <!-- PART 1 (TOP BAR): Properly Scaled Logo + Title + User Controls -->
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-2 border-b border-slate-800/80">
             <div class="flex items-center space-x-2.5 cursor-pointer min-w-0" onclick="STATE.currentRole ? openPortalView() : showPublicSection('home')">
                 <div class="w-10 h-10 rounded-xl bg-[#090d16] border border-indigo-500/40 flex items-center justify-center p-0.5 shrink-0 overflow-hidden shadow">
@@ -46,7 +45,6 @@
                 </div>
             </div>
 
-            <!-- Right User Controls -->
             <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
                 <button onclick="fetchCloudDatabase(true)" id="global-sync-badge" title="Sync Now" class="flex text-[10px] font-bold text-emerald-400 items-center gap-1 bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-800">
                     <i class="fa-solid fa-circle-check text-[8px]"></i> <span>Synced</span>
@@ -69,7 +67,6 @@
             </div>
         </div>
 
-        <!-- PART 2 (SUB-HEADER BAR): Quick Navigation Always in Front -->
         <div class="bg-slate-900/95 h-10 flex items-center">
             <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 w-full flex items-center justify-between gap-2 overflow-x-auto hide-scrollbar text-xs font-bold">
                 <div class="flex items-center space-x-2 sm:space-x-4 shrink-0">
@@ -245,7 +242,7 @@
         </div>
     </div>
 
-    <!-- ================= FACULTY DIRECTORY VIEW (PUBLIC ONLY) ================= -->
+    <!-- ================= FACULTY DIRECTORY VIEW ================= -->
     <div id="view-public-faculty" class="hidden flex-1 flex flex-col bg-slate-900 py-5 w-full overflow-x-hidden">
         <div class="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 w-full">
             <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
@@ -259,11 +256,10 @@
         </div>
     </div>
 
-    <!-- ================= UNIFIED PORTAL VIEW (DARKER, LARGER BLACK TEXT) ================= -->
+    <!-- ================= UNIFIED PORTAL VIEW ================= -->
     <div id="view-portal" class="hidden flex-1 bg-slate-900 md:py-4 md:px-6 lg:px-8 w-full max-w-full overflow-x-hidden">
         <div class="max-w-7xl mx-auto bg-slate-50 min-h-[calc(100vh-10rem)] md:rounded-3xl shadow-2xl flex flex-col md:flex-row overflow-hidden text-slate-950 md:border md:border-slate-800 w-full">
 
-            <!-- DESKTOP SIDEBAR -->
             <aside class="hidden md:flex flex-col justify-between w-64 bg-slate-950 p-4 border-r border-slate-800 text-white shrink-0">
                 <div class="space-y-4">
                     <div class="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-between">
@@ -309,14 +305,11 @@
                 </div>
             </aside>
 
-            <!-- MAIN WORKSPACE -->
             <div class="flex-1 flex flex-col min-w-0 w-full max-w-full">
                 <div class="flex-1 p-3.5 sm:p-5 lg:p-6 overflow-y-auto overflow-x-hidden w-full">
 
                     <!-- TAB: HOME -->
                     <section id="portal-tab-home" class="space-y-4 w-full">
-
-                        <!-- 1. TOPMOST: OFFICIAL SOCIAL MEDIA NETWORK BUTTONS -->
                         <div class="bg-slate-950 text-white p-3.5 rounded-2xl border border-slate-800 shadow-sm w-full">
                             <div class="flex items-center justify-between mb-2">
                                 <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-400">SHIKSHA Official Social Channels</span>
@@ -337,7 +330,6 @@
                             </div>
                         </div>
 
-                        <!-- 2. RIGHT BELOW SOCIAL BUTTONS: IMPORTANT NOTICES (WITH ENTER LINE BREAKS) -->
                         <div class="bg-white rounded-2xl border border-slate-300 p-4 shadow-sm w-full">
                             <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-200">
                                 <h3 class="text-sm font-black text-slate-950 uppercase tracking-wider flex items-center gap-1.5">
@@ -350,7 +342,6 @@
                             <div id="portal-notices-container" class="space-y-2.5 max-h-64 overflow-y-auto pr-0.5"></div>
                         </div>
 
-                        <!-- 3. KPI CARDS (TOTAL STUDENTS HIDDEN FROM STUDENTS) -->
                         <div id="portal-kpis-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full">
                             <div id="kpi-total-students-card" class="bg-white p-4 rounded-2xl border border-slate-300 shadow-sm flex items-center justify-between">
                                 <div>
@@ -375,7 +366,6 @@
                             </div>
                         </div>
 
-                        <!-- 4. PARENT GROWTH CHART & REMARKS -->
                         <div id="parent-growth-analytics-section" class="hidden bg-white rounded-2xl border border-slate-300 p-4 shadow-sm space-y-3 w-full">
                             <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-200">
                                 <div>
@@ -404,7 +394,6 @@
                             </div>
                         </div>
 
-                        <!-- 5. FACULTY PROFILE CARD (ADMIN SEES ALL; TEACHER SEES ONLY OWN; STUDENT HIDDEN) -->
                         <div id="admin-teachers-card" class="bg-white rounded-2xl border border-slate-300 p-4 shadow-sm w-full">
                             <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-200">
                                 <h3 id="faculty-card-heading" class="text-sm font-black text-slate-950 uppercase tracking-wider flex items-center gap-1.5">
@@ -502,7 +491,7 @@
                         </div>
                     </section>
 
-                    <!-- TAB: TEACHER-STUDENT ONLY CHAT (COMPLETELY REMOVED FOR ADMIN) -->
+                    <!-- TAB: TEACHER-STUDENT ONLY CHAT -->
                     <section id="portal-tab-chat" class="hidden space-y-3 w-full">
                         <div class="flex items-center justify-between pb-2 border-b border-slate-300">
                             <div>
@@ -606,7 +595,7 @@
         <span>CBSE &bull; ICSE &bull; UP Board &bull; Smart ERP Portal</span>
     </footer>
 
-    <!-- ================= ALL 14 MODALS (WITH 50 MCQ CAP + 30 MIN TO 2 HR TIMER) ================= -->
+    <!-- ================= ALL 14 MODALS ================= -->
     <!-- 1. GALLERY UPLOAD MODAL -->
     <div id="modal-upload-gallery" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl text-slate-950 max-h-[90vh] overflow-y-auto">
@@ -653,11 +642,11 @@
         </div>
     </div>
 
-    <!-- 2. AI TEST CREATOR MODAL (UP TO 50 MCQs + 30 MIN TO 2 HR TIMER) -->
+    <!-- 2. AI TEST CREATOR MODAL -->
     <div id="modal-create-ai-test" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-2xl rounded-3xl p-5 shadow-2xl text-slate-950 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
-                <h4 class="text-sm font-black"><i class="fa-solid fa-wand-magic-sparkles text-indigo-700 mr-1.5"></i> AI Online Test Creator (Max 50 MCQs)</h4>
+                <h4 class="text-sm font-black"><i class="fa-solid fa-wand-magic-sparkles text-indigo-700 mr-1.5"></i> AI Online Test Creator (PDF / Photo / Topic &bull; Max 50 MCQs)</h4>
                 <button onclick="closeModal('modal-create-ai-test')" class="text-slate-700 hover:text-black"><i class="fa-solid fa-xmark text-base"></i></button>
             </div>
             <form onsubmit="handlePublishAiTest(event)" class="space-y-3">
@@ -686,10 +675,9 @@
                     </div>
                 </div>
 
-                <!-- AI QUESTION GENERATOR BOX -->
                 <div class="bg-indigo-50 border border-indigo-300 p-3 rounded-2xl space-y-2.5">
                     <div class="flex justify-between items-center">
-                        <span class="text-xs font-black text-indigo-950">AI Question Generator (Photo or Topic)</span>
+                        <span class="text-xs font-black text-indigo-950">AI Question Generator (Upload PDF, Photo, or Type Topic)</span>
                         <span id="ai-ocr-status" class="text-xs font-extrabold text-indigo-700">Ready</span>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -703,9 +691,9 @@
                         </select>
                         <input type="password" id="gemini-api-key-inp" placeholder="Optional: Gemini API Key" class="w-full border border-indigo-300 rounded-xl px-3 py-1.5 text-xs font-semibold bg-white">
                     </div>
-                    <div class="flex flex-col sm:flex-row gap-2">
-                        <input type="file" id="ai-book-photo" accept="image/*" class="flex-1 text-xs font-semibold">
-                        <button type="button" onclick="scanBookPhotoWithAi()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs shadow flex items-center justify-center gap-1.5">
+                    <div class="flex flex-col sm:flex-row gap-2 items-center">
+                        <input type="file" id="ai-book-photo" accept="image/*,.pdf,application/pdf" class="flex-1 text-xs font-semibold w-full">
+                        <button type="button" onclick="scanBookPhotoWithAi()" class="w-full sm:w-auto px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs shadow flex items-center justify-center gap-1.5 shrink-0">
                             <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Generate Questions
                         </button>
                     </div>
@@ -731,7 +719,7 @@
         </div>
     </div>
 
-    <!-- 3. ATTEMPT ONLINE TEST MODAL (WITH LIVE COUNTDOWN TIMER) -->
+    <!-- 3. ATTEMPT ONLINE TEST MODAL -->
     <div id="modal-attempt-test" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-xl rounded-3xl p-5 shadow-2xl text-slate-950 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-300 sticky top-0 bg-white z-10 py-1">
@@ -1014,7 +1002,7 @@
                     <div><label class="block text-xs font-extrabold mb-1">Class *</label><select id="inp-note-class" class="w-full border border-slate-400 rounded-xl px-2 py-2 text-xs bg-white font-bold"><option value="10th">10th</option><option value="9th">9th</option><option value="8th">8th</option><option value="7th">7th</option><option value="6th">6th</option><option value="5th">5th</option><option value="4th">4th</option><option value="3rd">3rd</option><option value="2nd">2nd</option><option value="1st">1st</option></select></div>
                     <div><label class="block text-xs font-extrabold mb-1">Subject *</label><select id="inp-note-subject" class="w-full border border-slate-400 rounded-xl px-2 py-2 text-xs bg-white font-bold"><option value="Science">Science</option><option value="Maths">Maths</option><option value="Social Science">Social Science</option><option value="English">English</option><option value="Hindi & Sanskrit">Hindi & Sanskrit</option><option value="Computer">Computer</option></select></div>
                 </div>
-                <div class="bg-slate-100 p-3 rounded-2xl border border-slate-300 space-y-2"><input type="file" id="inp-note-file" class="w-full text-xs font-semibold"><input type="url" id="inp-note-url" placeholder="Or Google Drive link" class="w-full border border-slate-400 rounded-lg px-2.5 py-1.5 text-xs bg-white font-semibold"></div>
+                <div class="bg-slate-100 p-3 rounded-2xl border border-slate-300 space-y-2"><input type="file" id="inp-note-file" accept=".pdf,image/*,.doc,.docx" class="w-full text-xs font-semibold"><input type="url" id="inp-note-url" placeholder="Or Google Drive link" class="w-full border border-slate-400 rounded-lg px-2.5 py-1.5 text-xs bg-white font-semibold"></div>
                 <button type="submit" class="w-full py-2.5 bg-indigo-600 text-white font-bold rounded-xl text-xs">Publish</button>
             </form>
         </div>
@@ -2218,17 +2206,31 @@
             tipsList.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
         }
 
-        // ================= AI QUESTION PAPER GENERATOR (MAX 50 MCQs + TIMER) =================
-        function openCreateAiTestModal() {
-            document.getElementById('ai-test-title').value = '';
-            document.getElementById('ai-topic-prompt').value = '';
+        // ================= AI QUESTION PAPER GENERATOR (PDF + PHOTO + TOPIC, MAX 50 MCQs, TIMER) =================
+        function openCreateAiTestModal(prefillData = null) {
+            document.getElementById('ai-test-title').value = prefillData?.title ? `${prefillData.title} - Online Test` : '';
+            document.getElementById('ai-topic-prompt').value = prefillData?.title || '';
             document.getElementById('ai-book-photo').value = '';
             document.getElementById('ai-test-duration').value = '30';
             document.getElementById('ai-ocr-status').innerText = 'Ready';
             document.getElementById('ai-questions-container').innerHTML = '';
+
+            if (prefillData?.class) document.getElementById('ai-test-class').value = prefillData.class;
+            if (prefillData?.subject) document.getElementById('ai-test-subject').value = prefillData.subject;
+
             populateTestStudentCheckboxes(document.getElementById('ai-test-class').value);
             addQuestionBlock();
             document.getElementById('modal-create-ai-test').classList.remove('hidden');
+
+            if (prefillData) {
+                scanBookPhotoWithAi(prefillData.link || null);
+            }
+        }
+
+        function createTestFromStudyNote(noteId) {
+            const note = STATE.materials.find(m => String(m.id) === String(noteId));
+            if (!note) return;
+            openCreateAiTestModal(note);
         }
 
         function populateTestStudentCheckboxes(cls) {
@@ -2274,7 +2276,20 @@
             return generated;
         }
 
-        async function scanBookPhotoWithAi() {
+        async function extractTextFromPdfArrayBuffer(arrayBuffer) {
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            let fullText = '';
+            const maxPages = Math.min(pdf.numPages, 15);
+            for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
+                const page = await pdf.getPage(pageNum);
+                const textContent = await page.getTextContent();
+                const pageText = textContent.items.map(item => item.str).join(' ');
+                fullText += pageText + '\n';
+            }
+            return fullText;
+        }
+
+        async function scanBookPhotoWithAi(noteLinkUrl = null) {
             const file = document.getElementById('ai-book-photo').files[0];
             const topic = (document.getElementById('ai-topic-prompt')?.value || '').trim();
             const requestedCount = Math.min(50, Math.max(1, parseInt(document.getElementById('ai-num-questions')?.value || '10', 10)));
@@ -2282,15 +2297,65 @@
             const subj = document.getElementById('ai-test-subject').value;
             const statusEl = document.getElementById('ai-ocr-status');
 
-            if (!file && !topic) {
-                alert("Please select a Book/Notebook photo OR type a Chapter/Topic name first!");
+            if (!file && !topic && !noteLinkUrl) {
+                alert("Please upload a PDF/Photo OR type a Chapter/Topic name first!");
                 return;
             }
 
             const apiKey = (document.getElementById('gemini-api-key-inp')?.value || '').trim();
             if (apiKey) localStorage.setItem('shiksha_gemini_api_key', apiKey);
 
-            if (file) {
+            // CASE 1: PDF FILE UPLOADED
+            if (file && (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))) {
+                if (apiKey) {
+                    statusEl.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> Gemini AI Reading PDF (${requestedCount} MCQs)...`;
+                    try {
+                        const pdfDataUrl = await readFileAsBase64(file);
+                        const base64Pdf = pdfDataUrl.split(',')[1];
+                        const promptText = `Read this uploaded PDF document for Class ${cls} ${subj} and generate ${requestedCount} multiple choice questions (MCQs) (strictly maximum 50). Return ONLY a valid JSON array of objects with exact keys: "q", "A", "B", "C", "D", "ans" ("A", "B", "C", or "D"). No markdown.`;
+
+                        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{ parts: [{ text: promptText }, { inline_data: { mime_type: 'application/pdf', data: base64Pdf } }] }]
+                            })
+                        });
+                        const resJson = await resp.json();
+                        let rawText = resJson?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                        rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+                        const generatedQs = JSON.parse(rawText).slice(0, 50);
+                        if (Array.isArray(generatedQs) && generatedQs.length > 0) {
+                            document.getElementById('ai-questions-container').innerHTML = '';
+                            generatedQs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans || 'A'));
+                            statusEl.innerHTML = `<span class="text-emerald-700">AI Generated ${generatedQs.length} MCQs from PDF!</span>`;
+                            return;
+                        }
+                    } catch (err) {
+                        console.warn("Gemini PDF fallback to local PDF.js:", err);
+                    }
+                }
+
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Extracting PDF Text...';
+                try {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const pdfText = await extractTextFromPdfArrayBuffer(arrayBuffer);
+                    if (pdfText && pdfText.trim().length > 20) {
+                        const qs = buildSmartQuestionsFromText(pdfText, cls, subj, requestedCount);
+                        if (qs.length > 0) {
+                            document.getElementById('ai-questions-container').innerHTML = '';
+                            qs.forEach(item => addQuestionBlock(item.q, item.A, item.B, item.C, item.D, item.ans));
+                            statusEl.innerHTML = `<span class="text-emerald-700">Generated ${qs.length} Questions from PDF!</span>`;
+                            return;
+                        }
+                    }
+                } catch (err) {
+                    statusEl.innerText = 'Scanned PDF requires Gemini API Key. Using topic fallback...';
+                }
+            }
+
+            // CASE 2: IMAGE FILE UPLOADED
+            if (file && file.type.startsWith('image/')) {
                 statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Compressing Photo...';
                 const compressedDataUrl = await compressImage(file, 950, 0.8);
                 if (!compressedDataUrl) {
@@ -2351,6 +2416,7 @@
                 } catch (err) { console.warn("Cloud OCR fallback:", err); }
             }
 
+            // CASE 3: TOPIC PROMPT / SAVED STUDY NOTE TITLE
             const effectiveTopic = topic || `${subj} Chapter Assessment`;
             if (apiKey) {
                 statusEl.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> Generating ${requestedCount} MCQs...`;
@@ -2991,16 +3057,30 @@
             renderNotes(); closeModal('modal-add-note');
             await postToCloud({ action: 'addNote', note });
         }
+
         function renderNotes() {
             const container = document.getElementById('portal-notes-grid');
             if (!container) return;
             let list = STATE.materials;
+            const isStaff = (STATE.currentRole === 'admin' || STATE.currentRole === 'teacher');
             if (STATE.currentRole === 'parent' && STATE.currentStudentId) {
                 const stu = STATE.students.find(s => s.id === STATE.currentStudentId);
                 if (stu) list = list.filter(m => m.class === stu.class);
             }
-            container.innerHTML = list.map(m => `<div class="p-4 bg-white border border-slate-300 rounded-2xl flex items-center justify-between gap-2 shadow-sm"><div class="min-w-0"><span class="text-xs font-extrabold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">Class ${m.class} &bull; ${m.subject}</span><h4 class="text-sm font-extrabold text-slate-950 mt-1 truncate">${m.title}</h4></div><a href="${m.link}" target="_blank" class="text-xs bg-indigo-600 text-white font-bold px-3.5 py-2 rounded-xl shrink-0"><i class="fa-solid fa-download"></i></a></div>`).join('') || `<p class="text-xs font-bold text-slate-800">No notes available.</p>`;
+            container.innerHTML = list.map(m => `
+                <div class="p-4 bg-white border border-slate-300 rounded-2xl flex items-center justify-between gap-2 shadow-sm">
+                    <div class="min-w-0">
+                        <span class="text-xs font-extrabold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">Class ${m.class} &bull; ${m.subject}</span>
+                        <h4 class="text-sm font-extrabold text-slate-950 mt-1 truncate">${m.title}</h4>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        ${isStaff ? `<button onclick="createTestFromStudyNote('${m.id}')" title="Generate AI Test from Note" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 font-extrabold px-2.5 py-2 rounded-xl"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>AI Test</button>` : ''}
+                        <a href="${m.link}" target="_blank" title="Download Note" class="text-xs bg-indigo-600 text-white font-bold px-3 py-2 rounded-xl"><i class="fa-solid fa-download"></i></a>
+                    </div>
+                </div>
+            `).join('') || `<p class="text-xs font-bold text-slate-800">No notes available.</p>`;
         }
+
         function openHolidayModal() { document.getElementById('inp-holiday-date').value = getTodayDateKey(); document.getElementById('modal-holiday').classList.remove('hidden'); }
         async function handleSaveHoliday(e) {
             e.preventDefault();
